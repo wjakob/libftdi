@@ -21,6 +21,9 @@
 /* Even on 93xx66 at max 256 bytes are used (AN_121)*/
 #define FTDI_MAX_EEPROM_SIZE 256
 
+/** Max Power adjustment factor. */
+#define MAX_POWER_MILLIAMP_PER_UNIT 2
+
 /**
     \brief FTDI eeprom structure
 */

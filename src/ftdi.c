@@ -2577,7 +2577,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     output[0x08] = j;
 
     // Addr 09: Max power consumption: max power = value * 2 mA
-    output[0x09] = eeprom->max_power>>1;
+    output[0x09] = eeprom->max_power / MAX_POWER_MILLIAMP_PER_UNIT;
 
     if (ftdi->type != TYPE_AM)
     {
@@ -3048,7 +3048,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     eeprom->remote_wakeup = buf[0x08] & 0x20;
 
     // Addr 09: Max power consumption: max power = value * 2 mA
-    eeprom->max_power = buf[0x09];
+    eeprom->max_power = MAX_POWER_MILLIAMP_PER_UNIT * buf[0x09];
 
     // Addr 0A: Chip configuration
     // Bit 7: 0 - reserved
@@ -3264,7 +3264,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         if (eeprom->self_powered)
             fprintf(stdout, "Self-Powered%s", (eeprom->remote_wakeup)?", USB Remote Wake Up\n":"\n");
         else
-            fprintf(stdout, "Bus Powered: %3d mA%s", eeprom->max_power * 2,
+            fprintf(stdout, "Bus Powered: %3d mA%s", eeprom->max_power,
                     (eeprom->remote_wakeup)?" USB Remote Wake Up\n":"\n");
         if (eeprom->manufacturer)
             fprintf(stdout, "Manufacturer: %s\n",eeprom->manufacturer);
