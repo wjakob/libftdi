@@ -2,7 +2,9 @@
 project(libftdi)
 set(MAJOR_VERSION 1)
 set(MINOR_VERSION 0)
+set(PACKAGE libftdi)
 set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION})
+set(VERSION ${VERSION_STRING})
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
 
 # CMake
@@ -116,12 +118,11 @@ add_custom_target(dist
 
 option(DOCUMENTATION "Generate API documentation with Doxygen" ON)
 
+
 find_package(Doxygen)
 if(DOCUMENTATION AND DOXYGEN_FOUND)
 
    # Set variables
-   set(PACKAGE libftdi)
-   set(VERSION ${VERSION_STRING})
    set(top_srcdir ${CMAKE_SOURCE_DIR})
 
    # Find doxy config
