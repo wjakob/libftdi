@@ -3,9 +3,9 @@ exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
 
-Name: libftdipp
-Description: C++ wrapper for libftdi
-Requires: libftdi
+Name: libftdipp1
+Description: C++ wrapper for libftdi1
+Requires: libftdi1
 Version: @VERSION@
-Libs: -L${libdir} -lftdipp
+Libs: -L${libdir} -lftdipp1
 Cflags: -I${includedir}
