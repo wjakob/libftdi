@@ -1,8 +1,4 @@
 *** TODO for 1.0 release ***
-Build related:
-- Rename the library and header file,
-  so libftdi 0.x and 1.x can co-exist
-
 Python wrapper:
 - Find out the following:
   - Rename wrapper library to "ftdi1", users have to "import ftdi1"
