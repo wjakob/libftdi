@@ -13,15 +13,15 @@ Prefix:    /usr
 URL:       http://www.intra2net.com/en/developer/libftdi
 
 %package   devel
-Summary:   Header files and static libraries for libftdi
+Summary:   Header files and static libraries for libftdi1
 Group:     Development/Libraries
-Requires:  libftdi = %{version}, libusb-devel
+Requires:  libftdi1 = %{version}, libusb1-devel
 
 %description 
 Library to program and control the FTDI USB controller
 
 %description devel
-Header files and static libraries for libftdi
+Header files and static libraries for libftdi1
 
 %prep
 %setup -q
@@ -55,7 +55,7 @@ rm -fr $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root)
 %doc COPYING.LIB COPYING.GPL LICENSE
-%{_libdir}/libftdi*.so*
+%{_libdir}/libftdi1*.so*
 
 %files devel
 %defattr(-,root,root)
@@ -63,5 +63,5 @@ rm -fr $RPM_BUILD_ROOT
 %{_bindir}/libftdi1-config
 %{prefix}/include/*.h
 %{prefix}/include/*.hpp
-%{_libdir}/libftdi*.*a
+%{_libdir}/libftdi1*.*a
 %{_libdir}/pkgconfig/*.pc

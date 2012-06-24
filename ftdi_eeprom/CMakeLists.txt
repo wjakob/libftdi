@@ -27,7 +27,7 @@ if (FTDI_EEPROM)
         )
 
         add_executable(ftdi_eeprom main.c)
-        target_link_libraries(ftdi_eeprom ftdi)
+        target_link_libraries(ftdi_eeprom ftdi1)
         target_link_libraries(ftdi_eeprom ${Confuse_LIBRARIES})
 
     else(Confuse_FOUND)

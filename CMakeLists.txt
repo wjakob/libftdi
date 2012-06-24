@@ -1,8 +1,8 @@
 # Project
-project(libftdi)
+project(libftdi1)
 set(MAJOR_VERSION 1)
 set(MINOR_VERSION 0)
-set(PACKAGE libftdi)
+set(PACKAGE libftdi1)
 set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION})
 set(VERSION ${VERSION_STRING})
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
@@ -37,7 +37,7 @@ set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "C++ Headers")
 set(CPACK_COMPONENT_SHAREDLIBS_DESCRIPTION
 "Shared library for general use.")
 set(CPACK_COMPONENT_STATICLIBS_DESCRIPTION
-"Static library, good if you want to embed libftdi in your application.")
+"Static library, good if you want to embed libftdi1 in your application.")
 set(CPACK_COMPONENT_HEADERS_DESCRIPTION
 "C/C++ header files.")
 
@@ -65,7 +65,7 @@ endif(NOT APPLE)
 # Package information
 set(CPACK_PACKAGE_VERSION              ${VERSION_STRING})
 set(CPACK_PACKAGE_CONTACT              "Intra2net AG <libftdi@developer.intra2net.com>")
-set(CPACK_PACKAGE_DESCRIPTION          "libftdi library.")
+set(CPACK_PACKAGE_DESCRIPTION          "libftdi1 library.")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY  ${CPACK_PACKAGE_DESCRIPTION}
                                        )
 # Package settings
@@ -81,9 +81,9 @@ if(${WIN32})
   set(CPACK_CMAKE_GENERATOR              "MinGW Makefiles")
   set(CPACK_PACKAGE_NAME                 "${PROJECT_NAME}")
   set(CPACK_PACKAGE_VENDOR               "")
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY    "libftdi")
+  set(CPACK_PACKAGE_INSTALL_DIRECTORY    "libftdi1")
   set(CPACK_PACKAGE_FILE_NAME            "${PROJECT_NAME}-${VERSION_STRING}-win32")
-  set(CPACK_NSIS_DISPLAY_NAME            "libftdi")
+  set(CPACK_NSIS_DISPLAY_NAME            "libftdi1")
   set(CPACK_NSIS_MODIFY_PATH             "ON")
 endif(${WIN32})
 
@@ -138,7 +138,7 @@ if(DOCUMENTATION AND DOXYGEN_FOUND)
    OUTPUT ${CMAKE_BINARY_DIR}/doc
    COMMAND rm -rf ${CMAKE_BINARY_DIR}/doc/{html,man}
    COMMAND mkdir -p ${CMAKE_BINARY_DIR}/doc
-   DEPENDS ftdi ftdipp
+   DEPENDS ftdi1 ftdipp1
    )
 
    # Run doxygen

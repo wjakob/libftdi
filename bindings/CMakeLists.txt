@@ -11,7 +11,7 @@ if(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
     LINK_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/../src)
 
     SWIG_ADD_MODULE(ftdi python ftdi.i)
-    SWIG_LINK_LIBRARIES(ftdi ftdi ${PYTHON_LIBRARIES})
+    SWIG_LINK_LIBRARIES(ftdi ftdi1 ${PYTHON_LIBRARIES})
 
     execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import sys; print '%d.%d' % ( sys.version_info[0], sys.version_info[1] )"
                       OUTPUT_VARIABLE PYTHON_VERSION

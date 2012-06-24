@@ -1,7 +1,7 @@
 # Check
 set(FTDI_BUILD_CPP False PARENT_SCOPE)
 
-option(FTDIPP "Build C++ binding library libftdi++" ON)
+option(FTDIPP "Build C++ binding library libftdi1++" ON)
 
 if (FTDIPP)
 
@@ -19,32 +19,32 @@ if (FTDIPP)
         set(cpp_headers   ftdi.hpp)
 
         set(FTDI_BUILD_CPP True PARENT_SCOPE)
-        message(STATUS "Building libftdi++")
+        message(STATUS "Building libftdi1++")
 
         # Shared library
-        add_library(ftdipp SHARED ${cpp_sources})
+        add_library(ftdipp1 SHARED ${cpp_sources})
 
         math(EXPR VERSION_FIXUP "${MAJOR_VERSION} + 1")    # Compatiblity with previous releases
-        set_target_properties(ftdipp PROPERTIES VERSION ${VERSION_FIXUP}.${MINOR_VERSION}.0 SOVERSION 2)
+        set_target_properties(ftdipp1 PROPERTIES VERSION ${VERSION_FIXUP}.${MINOR_VERSION}.0 SOVERSION 2)
 
         # Static library
-        add_library(ftdipp-static STATIC ${cpp_sources})
-        set_target_properties(ftdipp-static PROPERTIES OUTPUT_NAME "ftdipp")
+        add_library(ftdipp1-static STATIC ${cpp_sources})
+        set_target_properties(ftdipp1-static PROPERTIES OUTPUT_NAME "ftdipp1")
 
         # Prevent clobbering each other during the build
-        set_target_properties(ftdipp PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-        set_target_properties(ftdipp-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        set_target_properties(ftdipp1 PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        set_target_properties(ftdipp1-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
 
         # Dependencies
-        target_link_libraries(ftdipp ftdi ${LIBUSB_LIBRARIES} ${BOOST_LIBRARIES})
+        target_link_libraries(ftdipp1 ftdi1 ${LIBUSB_LIBRARIES} ${BOOST_LIBRARIES})
 
         # Install
         if(${UNIX})
-            install( TARGETS ftdipp
+            install( TARGETS ftdipp1
                         LIBRARY DESTINATION lib${LIB_SUFFIX}
                         COMPONENT sharedlibs
                         )
-            install( TARGETS ftdipp-static
+            install( TARGETS ftdipp1-static
                         ARCHIVE DESTINATION lib${LIB_SUFFIX}
                         COMPONENT staticlibs
                         )
@@ -55,11 +55,11 @@ if (FTDIPP)
         endif(${UNIX})
 
         if(${WIN32})
-            install( TARGETS ftdipp
+            install( TARGETS ftdipp1
                         DESTINATION bin
                         COMPONENT sharedlibs
                         )
-            install( TARGETS ftdipp-static
+            install( TARGETS ftdipp1-static
                         DESTINATION bin
                         COMPONENT staticlibs
                         )
@@ -70,11 +70,11 @@ if (FTDIPP)
         endif(${WIN32})
 
     else(Boost_FOUND)
-        message(STATUS "Boost not found, won't build libftdi++")
+        message(STATUS "Boost not found, won't build libftdi1++")
     endif(Boost_FOUND)
 
 else(FTDIPP)
 
-    message(STATUS "Not building libftdi++")
+    message(STATUS "Not building libftdi1++")
 
 endif(FTDIPP)

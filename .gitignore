@@ -39,7 +39,7 @@ examples/simple
 
 # libftdi specific
 libftdi1-config
-libftdi.spec
+libftdi1.spec
 
 # CMake
 CMakeCache.txt

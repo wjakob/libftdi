@@ -15,13 +15,13 @@ if(Boost_UNIT_TEST_FRAMEWORK_FOUND)
         baudrate.cpp
     )
 
-    add_executable(test_libftdi ${cpp_tests})
-    target_link_libraries(test_libftdi ftdi ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
+    add_executable(test_libftdi1 ${cpp_tests})
+    target_link_libraries(test_libftdi1 ftdi1 ${Boost_UNIT_TEST_FRAMEWORK_LIBRARIES})
 
-    add_test(test_libftdi test_libftdi)
+    add_test(test_libftdi1 test_libftdi1)
 
     # Add custom target so we run easily run "make check"
-    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS test_libftdi)
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS test_libftdi1)
 
 else(Boost_UNIT_TEST_FRAMEWORK_FOUND)
 

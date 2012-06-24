@@ -1,6 +1,6 @@
 /* File: ftdi.i */
 
-%module(docstring="Python interface to libftdi") ftdi
+%module(docstring="Python interface to libftdi1") ftdi
 
 %include <typemaps.i>
 %include <cstring.i>
