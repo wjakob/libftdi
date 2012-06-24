@@ -38,7 +38,7 @@ examples/simple
 .*.swp
 
 # libftdi specific
-libftdi-config
+libftdi1-config
 libftdi.spec
 
 # CMake

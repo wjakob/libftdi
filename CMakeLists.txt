@@ -174,8 +174,8 @@ install(FILES ${CMAKE_BINARY_DIR}/libftdi.pc ${CMAKE_BINARY_DIR}/libftdipp.pc
         DESTINATION lib${LIB_SUFFIX}/pkgconfig)
 
 if(${UNIX})
-    configure_file(${CMAKE_SOURCE_DIR}/libftdi-config.in ${CMAKE_BINARY_DIR}/libftdi-config @ONLY)
-    install(PROGRAMS ${CMAKE_BINARY_DIR}/libftdi-config DESTINATION bin)
+    configure_file(${CMAKE_SOURCE_DIR}/libftdi1-config.in ${CMAKE_BINARY_DIR}/libftdi1-config @ONLY)
+    install(PROGRAMS ${CMAKE_BINARY_DIR}/libftdi1-config DESTINATION bin)
 endif(${UNIX})
 
 include(CPack)

@@ -60,7 +60,7 @@ rm -fr $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %doc doc/html doc/man
-%{_bindir}/libftdi-config
+%{_bindir}/libftdi1-config
 %{prefix}/include/*.h
 %{prefix}/include/*.hpp
 %{_libdir}/libftdi*.*a
