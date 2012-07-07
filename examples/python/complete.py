@@ -9,7 +9,7 @@ of the swig generated python wrapper
 You need to build and install the wrapper first"""
 
 import os
-import ftdi
+import ftdi1 as ftdi
 import time
 
 # initialize
