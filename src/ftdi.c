@@ -39,7 +39,10 @@
 #include "ftdi_version_i.h"
 
 #define ftdi_error_return(code, str) do {  \
-        ftdi->error_str = str;             \
+        if ( ftdi )                        \
+            ftdi->error_str = str;         \
+        else                               \
+            fprintf(stderr, str);          \
         return code;                       \
    } while(0);
 
