@@ -1,10 +1,4 @@
 *** TODO for 1.0 release ***
-Python wrapper:
-- Find out the following:
-  - Rename wrapper library to "ftdi1", users have to "import ftdi1"
-  - All other code in the examples can continue
-    to use "ftdi.xxx" instead of "ftdi1.xxx"
-
 Misc:
 - Resolve TODO entries in ftdi_eeprom
 - Look into merging ftdi_eeprom and examples/eeprom
