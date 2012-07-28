@@ -1,11 +1,4 @@
 *** TODO for 1.0 release ***
-Build related:
-- Rename the library and header file,
-  so libftdi 0.x and 1.x can co-exist
-
-API extentions:
-- TO DECIDE: Make ftdi structure opaque?
-
 Misc:
 - Resolve TODO entries in ftdi_eeprom
 - Look into merging ftdi_eeprom and examples/eeprom

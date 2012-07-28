@@ -1,14 +1,11 @@
-/* File: ftdi.i */
+/* File: ftdi1.i */
 
-%module(docstring="Python interface to libftdi") ftdi
+%module(docstring="Python interface to libftdi1") ftdi1
 
 %include <typemaps.i>
 %include <cstring.i>
 
 %typemap(in) unsigned char* = char*;
-
-%ignore ftdi_write_data_async;
-%ignore ftdi_async_complete;
 
 %immutable ftdi_version_info::version_str;
 %immutable ftdi_version_info::snapshot_str;

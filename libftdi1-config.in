@@ -7,7 +7,7 @@ exec_prefix_set=no
 usage()
 {
 	cat <<EOF
-Usage: libftdi-config [OPTIONS] [LIBRARIES]
+Usage: libftdi1-config [OPTIONS] [LIBRARIES]
 Options:
 	[--prefix[=DIR]]
 	[--exec-prefix[=DIR]]
@@ -75,5 +75,5 @@ if test "$echo_cflags" = "yes"; then
 	echo $includes
 fi
 if test "$echo_libs" = "yes"; then
-	echo -L@libdir@ -lftdi @LIBS@
+	echo -L@libdir@ -lftdi1 @LIBS@
 fi

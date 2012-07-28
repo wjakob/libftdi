@@ -1,4 +1,4 @@
-The C library "libftdi" is distributed under the
+The C library "libftdi1" is distributed under the
 GNU Library General Public License version 2.
 
 A copy of the GNU Library General Public License (LGPL) is included
@@ -6,7 +6,7 @@ in this distribution, in the file COPYING.LIB.
 
 ----------------------------------------------------------------------
 
-The C++ wrapper "ftdipp" is distributed under the GNU General
+The C++ wrapper "ftdipp1" is distributed under the GNU General
 Public License version 2 (with a special exception described below).
 
 A copy of the GNU General Public License (GPL) is included
