@@ -2409,9 +2409,9 @@ void set_ft232h_cbus(struct ftdi_eeprom *eeprom, unsigned char * output)
         if (eeprom->cbus_function[2*i+1]> CBUSH_CLK7_5)
             mode_high = CBUSH_TRISTATE;
         else
-            mode_high = eeprom->cbus_function[2*i];
+            mode_high = eeprom->cbus_function[2*i+1];
 
-        output[0x18+i] = mode_high <<4 | mode_low;
+        output[0x18+i] = (mode_high <<4) | mode_low;
     }
 }
 /* Return the bits for the encoded EEPROM Structure of a requested Mode
