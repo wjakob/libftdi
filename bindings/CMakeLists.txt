@@ -19,7 +19,7 @@ if(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
         swig_link_libraries ( ftdi1 ${PYTHON_LIBRARIES} )
     endif ()
 
-    execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import sys; print '%d.%d' % ( sys.version_info[0], sys.version_info[1] )"
+    execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import sys; print( '%d.%d' % ( sys.version_info[0], sys.version_info[1] ) )"
                       OUTPUT_VARIABLE PYTHON_VERSION
                       OUTPUT_STRIP_TRAILING_WHITESPACE )
 

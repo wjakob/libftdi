@@ -2,6 +2,17 @@
 
 %module(docstring="Python interface to libftdi1") ftdi1
 
+%{
+#include "Python.h"
+
+inline PyObject* convertString( const char *v, Py_ssize_t len )
+#if PY_MAJOR_VERSION >= 3
+{ return PyUnicode_FromStringAndSize(v, len); }
+#else
+{ return PyString_FromStringAndSize(v, len); }
+#endif
+%}
+
 %include <typemaps.i>
 %include <cstring.i>
 
@@ -36,7 +47,7 @@
 %clear int mnf_len, int desc_len, int serial_len;
 
 %typemap(in,numinputs=1) (unsigned char *buf, int size) %{ $2 = PyInt_AsLong($input);$1 = (unsigned char*)malloc($2*sizeof(char)); %}
-%typemap(argout) (unsigned char *buf, int size) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, PyString_FromStringAndSize((char*)$1, $2)); free($1); %}
+%typemap(argout) (unsigned char *buf, int size) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, convertString((char*)$1, $2)); free($1); %}
     int ftdi_read_data(struct ftdi_context *ftdi, unsigned char *buf, int size);
 %clear (unsigned char *buf, int size);
 
@@ -62,7 +73,7 @@
 %clear int* value;
 
 %typemap(in,numinputs=1) (unsigned char *buf, int size) %{ $2 = PyInt_AsLong($input);$1 = (unsigned char*)malloc($2*sizeof(char)); %}
-%typemap(argout) (unsigned char *buf, int size) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, PyString_FromStringAndSize((char*)$1, $2)); free($1); %}
+%typemap(argout) (unsigned char *buf, int size) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, convertString((char*)$1, $2)); free($1); %}
     int ftdi_get_eeprom_buf(struct ftdi_context *ftdi, unsigned char * buf, int size);
 %clear (unsigned char *buf, int size);
 
