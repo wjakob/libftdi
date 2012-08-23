@@ -477,7 +477,6 @@ extern "C"
     int ftdi_readstream(struct ftdi_context *ftdi, FTDIStreamCallback *callback,
                         void *userdata, int packetsPerTransfer, int numTransfers);
     struct ftdi_transfer_control *ftdi_write_data_submit(struct ftdi_context *ftdi, unsigned char *buf, int size);
-    void ftdi_async_complete(struct ftdi_context *ftdi, int wait_for_more);
 
     struct ftdi_transfer_control *ftdi_read_data_submit(struct ftdi_context *ftdi, unsigned char *buf, int size);
     int ftdi_transfer_data_done(struct ftdi_transfer_control *tc);
