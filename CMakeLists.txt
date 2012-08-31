@@ -122,31 +122,19 @@ option(DOCUMENTATION "Generate API documentation with Doxygen" ON)
 find_package(Doxygen)
 if(DOCUMENTATION AND DOXYGEN_FOUND)
 
-   # Set variables
-   set(top_srcdir ${CMAKE_SOURCE_DIR})
-
    # Find doxy config
    message(STATUS "Doxygen found.")
-   set(DOXY_DIR "${CMAKE_SOURCE_DIR}/doc")
-   set(DOXY_CONFIG "${DOXY_DIR}/Doxyfile.in")
 
    # Copy doxy.config.in
-   configure_file("${DOXY_CONFIG}" "${CMAKE_BINARY_DIR}/doxy.config")
-
-   # Create doc directory
-   add_custom_command(
-   OUTPUT ${CMAKE_BINARY_DIR}/doc
-   COMMAND rm -rf ${CMAKE_BINARY_DIR}/doc/{html,man}
-   COMMAND mkdir -p ${CMAKE_BINARY_DIR}/doc
-   DEPENDS ftdi1 ftdipp1
-   )
+   set(top_srcdir ${CMAKE_SOURCE_DIR})
+   configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile )
 
    # Run doxygen
    add_custom_command(
-   OUTPUT ${CMAKE_BINARY_DIR}/doc/html/index.html
-   COMMAND ${DOXYGEN_EXECUTABLE} "${CMAKE_BINARY_DIR}/doxy.config"
-   DEPENDS "${CMAKE_BINARY_DIR}/doxy.config" "${CMAKE_BINARY_DIR}/doc"
-   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/doc
+    OUTPUT ${CMAKE_BINARY_DIR}/doc/html/index.html
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc
+    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
+    DEPENDS ${c_headers};${c_sources};${cpp_sources};${cpp_headers}
    )
 
    add_custom_target(docs ALL DEPENDS ${CMAKE_BINARY_DIR}/doc/html/index.html)

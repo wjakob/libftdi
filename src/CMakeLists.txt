@@ -18,8 +18,8 @@ message(STATUS "Detected git snapshot version: ${SNAPSHOT_VERSION}")
 configure_file(ftdi_version_i.h.in "${CMAKE_CURRENT_BINARY_DIR}/ftdi_version_i.h" @ONLY)
 
 # Targets
-set(c_sources     ftdi.c ftdi_stream.c)
-set(c_headers     ftdi.h)
+set(c_sources     ${CMAKE_CURRENT_SOURCE_DIR}/ftdi.c ${CMAKE_CURRENT_SOURCE_DIR}/ftdi_stream.c CACHE INTERNAL "List of c sources" )
+set(c_headers     ${CMAKE_CURRENT_SOURCE_DIR}/ftdi.h CACHE INTERNAL "List of c headers" )
 
 add_library(ftdi1 SHARED ${c_sources})
 

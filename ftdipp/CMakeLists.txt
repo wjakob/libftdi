@@ -3,6 +3,10 @@ set(FTDI_BUILD_CPP False PARENT_SCOPE)
 
 option(FTDIPP "Build C++ binding library libftdi1++" ON)
 
+# Targets
+set(cpp_sources   ${CMAKE_CURRENT_SOURCE_DIR}/ftdi.cpp CACHE INTERNAL "List of cpp sources" )
+set(cpp_headers   ${CMAKE_CURRENT_SOURCE_DIR}/ftdi.hpp CACHE INTERNAL "List of cpp headers" )
+        
 if (FTDIPP)
 
     if(Boost_FOUND)
@@ -14,9 +18,7 @@ if (FTDIPP)
 
         include_directories(${Boost_INCLUDE_DIRS})
 
-        # Targets
-        set(cpp_sources   ftdi.cpp)
-        set(cpp_headers   ftdi.hpp)
+
 
         set(FTDI_BUILD_CPP True PARENT_SCOPE)
         message(STATUS "Building libftdi1++")
