@@ -9,6 +9,7 @@ of the swig generated python wrapper
 You need to build and install the wrapper first"""
 
 import os
+import sys
 import ftdi1 as ftdi
 import time
 
@@ -18,8 +19,11 @@ if ftdic == 0:
     print( 'new failed: %d', ret )
     os._exit( 1 )
 
-# list all devices
-ret, devlist = ftdi.usb_find_all( ftdic, 0x0403, 0x6001 )
+# try to list ftdi devices 0x6010 or 0x6001
+ret, devlist = ftdi.usb_find_all( ftdic, 0x0403, 0x6010 )
+if ret <= 0:
+    ret, devlist = ftdi.usb_find_all( ftdic, 0x0403, 0x6001)
+
 if ret < 0:
     print( 'ftdi_usb_find_all failed: %d (%s)' % ( ret, ftdi.get_error_string( ftdic ) ) )
     os._exit( 1 )
@@ -59,20 +63,22 @@ for i in range( 8 ):
     ftdi.write_data( ftdic, chr(val), 1 )
     time.sleep ( 1 )
 ftdi.disable_bitbang( ftdic )
-print( '\n' )
+print( '' )
 
 
 # read pins
-ret, pins = ftdi.read_pins( ftdic )
-print( 'pins:\n' )
-if ( ret == 0 ):
-    print( '%02x' % ord( pins[0] ) )
-print( '\n' )
-
+# FIXME: read_pins fails with python3, so I disabled it for now
+# tested on ubuntu 12.04 ( python3.2.3 / swig 2.0.4 )
+if (sys.version_info[0]<3):
+    ret, pins = ftdi.read_pins( ftdic )
+    if ( ret == 0 ):
+        print( 'pins: %02x' % ord( pins[0] ) )
+              
 
 # read chip id
 ret, chipid = ftdi.read_chipid( ftdic )
-print( 'FDTI chip id: %X\n' % chipid )
+if (ret==0):
+    print( 'chip id: %X\n' % chipid )
 
 
 # read eeprom
@@ -81,19 +87,27 @@ ret, eeprom_val = ftdi.read_eeprom_location( ftdic, eeprom_addr )
 if (ret==0):
     print( 'eeprom @ %d: 0x%04x\n' % ( eeprom_addr, eeprom_val ) )
 
-print( 'complete eeprom:' )
+print( 'eeprom:' )
 ret = ftdi.read_eeprom( ftdic )
 size = 128
 ret, eeprom = ftdi.get_eeprom_buf ( ftdic, size )
 if ( ret == 0 ):
     for i in range( size ):
-        print( '%02x' % ord( eeprom[i] ) )
+        if isinstance(eeprom[i], str):
+            octet = ord( eeprom[i] ) # python2
+        else:
+            octet = eeprom[i] # python3
+        sys.stdout.write( '%02x ' % octet )
         if ( i % 8 == 7 ):
-            print( '\n' )
+            print( '' )
+print( '' )
 
+            
 # close usb
 ret = ftdi.usb_close( ftdic )
 if ret < 0:
     print( 'unable to close ftdi device: %d (%s)' % ( ret, ftdi.get_error_string( ftdic ) ) )
     os._exit( 1 )
+    
+print ('device closed')    
 ftdi.free( ftdic )
