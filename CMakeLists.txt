@@ -128,6 +128,7 @@ if(DOCUMENTATION AND DOXYGEN_FOUND)
    # Copy doxy.config.in
    set(top_srcdir ${CMAKE_SOURCE_DIR})
    configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile )
+   configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.xml.in ${CMAKE_BINARY_DIR}/Doxyfile.xml )
 
    # Run doxygen
    add_custom_command(

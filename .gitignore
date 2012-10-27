@@ -16,9 +16,11 @@ build/
 
 # Doxygen documentation
 Doxyfile
+Doxyfile.xml
 doc/Doxyfile
 doc/html
 doc/man
+doc/xml
 
 # examples
 examples/baud_test
