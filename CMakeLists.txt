@@ -98,14 +98,6 @@ if(${UNIX})
   set(CPACK_SET_DESTDIR "ON")
 endif(${UNIX})
 
-add_subdirectory(src)
-add_subdirectory(ftdipp)
-add_subdirectory(bindings)
-add_subdirectory(ftdi_eeprom)
-add_subdirectory(examples)
-add_subdirectory(packages)
-add_subdirectory(test)
-
 # "make dist" target
 set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${VERSION_STRING})
 add_custom_target(dist
@@ -144,6 +136,14 @@ if(DOCUMENTATION AND DOXYGEN_FOUND)
 else(DOCUMENTATION AND DOXYGEN_FOUND)
    message(STATUS "Not generating API documentation")
 endif(DOCUMENTATION AND DOXYGEN_FOUND)
+
+add_subdirectory(src)
+add_subdirectory(ftdipp)
+add_subdirectory(bindings)
+add_subdirectory(ftdi_eeprom)
+add_subdirectory(examples)
+add_subdirectory(packages)
+add_subdirectory(test)
 
 # PkgConfig
 set(prefix      ${CMAKE_INSTALL_PREFIX})

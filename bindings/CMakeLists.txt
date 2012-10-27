@@ -10,6 +10,31 @@ if(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
     INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
     LINK_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/../src)
 
+    if(DOCUMENTATION AND DOXYGEN_FOUND)
+        set(SWIG_MODULE_ftdi1_EXTRA_DEPS ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i)
+        set(CMAKE_SWIG_FLAGS -DDOXYGEN=${DOXYGEN_FOUND})
+
+        # Run doxygen to only generate the xml
+        add_custom_command(
+            OUTPUT ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc
+            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile.xml
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            DEPENDS ${c_headers};${c_sources};${cpp_sources};${cpp_headers}
+        )
+        add_custom_target(doc_xml ALL DEPENDS ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml)
+
+        # generate .i from doxygen .xml
+        add_custom_command(
+            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i
+            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/doxy2swig.py -n
+                ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i
+            DEPENDS doc_xml
+        )
+
+    endif(DOCUMENTATION AND DOXYGEN_FOUND)
+
     swig_add_module ( ftdi1 python ftdi1.i )
     swig_link_libraries ( ftdi1 ftdi1 )
 

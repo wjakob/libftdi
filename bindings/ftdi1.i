@@ -2,6 +2,9 @@
 
 %module(docstring="Python interface to libftdi1") ftdi1
 %feature("autodoc","1");
+#ifdef DOXYGEN
+%include "ftdi1_doc.i"
+#endif
 
 %{
 #include "Python.h"
