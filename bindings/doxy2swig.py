@@ -237,6 +237,7 @@ class Doxy2SWIG:
             if key == 'kind':
                 if val == 'param': text = 'Parameters'
                 elif val == 'exception': text = 'Exceptions'
+                elif val == 'retval': text = 'Returns'
                 else: text = val
                 break
         self.add_text(['\n', '\n', text, ':', '\n'])
@@ -410,8 +411,8 @@ class Doxy2SWIG:
         _data = "".join(ret)
         ret = []
         for i in _data.split('\n\n'):
-            if i == 'Parameters:' or i == 'Exceptions:':
-                ret.extend([i, '\n-----------', '\n\n'])
+            if i == 'Parameters:' or i == 'Exceptions:' or i == 'Returns:':
+                ret.extend([i, '\n'+'-'*len(i), '\n\n'])
             elif i.find('// File:') > -1: # leave comments alone.
                 ret.extend([i, '\n'])
             else:
