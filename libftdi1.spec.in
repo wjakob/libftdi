@@ -64,6 +64,7 @@ rm -fr $RPM_BUILD_ROOT
 %files devel
 %defattr(-,root,root)
 %doc doc/html doc/man
+%{_bindir}/ftdi_eeprom
 %{_bindir}/libftdi1-config
 %{prefix}/include/libftdi1/*.h
 %{prefix}/include/libftdi1/*.hpp

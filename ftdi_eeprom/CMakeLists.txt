@@ -30,6 +30,8 @@ if (FTDI_EEPROM)
         target_link_libraries(ftdi_eeprom ftdi1)
         target_link_libraries(ftdi_eeprom ${Confuse_LIBRARIES})
 
+        install(TARGETS ftdi_eeprom DESTINATION bin)
+
     else(Confuse_FOUND)
         message(STATUS "libConfuse not found, won't build ftdi_eeprom")
     endif(Confuse_FOUND)
