@@ -1,3 +1,32 @@
+New in 0.20 - 2012-03-19
+------------------------
+* Support for FT232H (Uwe Bonnes)
+* Fixed install location of header files (Uwe Bonnes and Intra2net)
+* Backported serial_test tool from libftdi 1.x (Uwe Bonnes)
+
+New in 0.19 - 2011-05-23
+------------------------
+* Make kernel driver detach configurable (Thomas Klose)
+* Correct ftdi_poll_modem_status() result code (Tom Saunders)
+* cmake build system improvements (Evgeny Sinelnikov)
+* Fix uninitialized memory access in async mode (Intra2net)
+* Support for FT232R eeprom features (Hermann Kraus)
+* Fix size returned by ftdi_read_data (Hermann Kraus)
+* C++ wrapper: Fix infinite recursion in set_bitmode (Intra2net)
+* Improvements to the python wrapper (Flynn Marquardt and Chris Zeh)
+
+New in 0.18 - 2010-06-25
+------------------------
+* Add ftdi_eeprom_free() to free allocated memory in eeprom (Wilfried Holzke)
+* More generic error message for the FTDI kernel driver (Intra2net)
+* Honor CPPFLAGS in python wrapper build (Alexander Lehmann)
+* cmake: Fix package creation on 32-bit machines (Uwe Bonnes)
+* Fix swig argument constraints (Intra2net)
+* Don't segfault if device is closed or ftdi context is invalid (Intra2net)
+* Ability to disable build of examples / documentation (Mike Frysinger and Intra2net)
+* Fix typo in python wrapper build (Mike Frysinger)
+* Autoconf build system improvements (Mike Frysinger)
+
 New in 0.17 - 2009-12-19
 ------------------------
 * C++ wrapper: Reduced code duplication and small other changes (Intra2net)
