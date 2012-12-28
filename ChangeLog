@@ -1,4 +1,4 @@
-New in 1.0 - 2013-01-XX
+New in 1.0rc1 - 2013-01-XX
 -----------------------
 * Ported to libusb 1.x (initial work by Jie Zhang)
 * Many eeprom handling improvements (Uwe Bonnes, Anders Larsen)
