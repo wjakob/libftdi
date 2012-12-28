@@ -24,7 +24,7 @@ Requires:  libftdi1 = %{version}, libusb1-devel
 Summary: Python bindings for libftdi
 License: LGPL
 Group: Development/Libraries
-Requires: %{name}-libs = %{version}-%{release}
+Requires: %{name} = %{version}-%{release}
 
 %description 
 Library to program and control the FTDI USB controller
