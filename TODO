@@ -1,9 +1,3 @@
 *** TODO for 1.0 release ***
-Misc:
-- Resolve TODO entries in ftdi_eeprom
-- Look into merging ftdi_eeprom and examples/eeprom
-
 Documentation:
-- Mention libusb-1.0 dependency
-- Comparison between 1.0 and 0.19
 - Document the new EEPROM function

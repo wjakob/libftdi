@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
-libftdi version 0.99
+libftdi version 1.0
 --------------------------------------------------------------------
 
 libftdi - A library (using libusb) to talk to FTDI's UART/FIFO chips
@@ -12,6 +12,8 @@ The following chips are supported:
 - FT232BM / FT245BM (and the BL/BQ variants)
 - FT8U232AM / FT8U245AM
 
+libftdi requires libusb 1.x.
+
 The AUTHORS file contains a list of all the people
 that made libftdi possible what it is today.
 
@@ -22,5 +24,5 @@ You'll find the newest version of libftdi at:
 http://www.intra2net.com/en/developer/libftdi
 
 --------------------------------------------------------------------
-www.intra2net.com                             2003-201x Intra2net AG
+www.intra2net.com                             2003-2013 Intra2net AG
 --------------------------------------------------------------------
