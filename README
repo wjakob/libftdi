@@ -23,6 +23,16 @@ Changes
 You'll find the newest version of libftdi at:
 http://www.intra2net.com/en/developer/libftdi
 
+
+Quick start
+-----------
+mkdir build
+cd build
+
+cmake -DCMAKE_INSTALL_PREFIX="/usr" ../
+make
+make install
+
 --------------------------------------------------------------------
 www.intra2net.com                             2003-2013 Intra2net AG
 --------------------------------------------------------------------
