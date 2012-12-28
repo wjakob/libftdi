@@ -1,3 +1,17 @@
+New in 1.0 - 2013-01-XX
+-----------------------
+* Ported to libusb 1.x (initial work by Jie Zhang)
+* Many eeprom handling improvements (Uwe Bonnes, Anders Larsen)
+* Renamed pkconfig, library .so etc. files to "libftdi1" (Intra2net)
+* ftdi_eeprom is part of libftdi now (Intra2net)
+
+* New baudrate calculation code + unit tests (Uwe Bonnes and Intra2net)
+* Improved python bindings including python3 support (Michel Zou)
+* Switched completly to cmake build system (Intra2net)
+* eeprom handling now done via get()/set() functions (Uwe Bonnes)
+* C++ wrapper: Fixed use-after-free in List::find_all() (Intra2net)
+* See the git history for more changes and fixes
+
 New in 0.20 - 2012-03-19
 ------------------------
 * Support for FT232H (Uwe Bonnes)
