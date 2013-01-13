@@ -52,7 +52,7 @@ int main(void)
     if (f < 0 && f != -5)
     {
         fprintf(stderr, "unable to open ftdi device: %d (%s)\n", f, ftdi_get_error_string(ftdi));
-        ftdi_deinit(ftdi);
+        ftdi_free(ftdi);
         exit(-1);
     }
     printf("ftdi open succeeded: %d\n",f);
@@ -69,7 +69,7 @@ int main(void)
         {
             fprintf(stderr, "set_bitmode failed for 0x%x, error %d (%s)\n", bitmask, f, ftdi_get_error_string(ftdi));
             ftdi_usb_close(ftdi);
-            ftdi_deinit(ftdi);
+            ftdi_free(ftdi);
             exit(-1);
         }
 
@@ -79,7 +79,7 @@ int main(void)
         {
             fprintf(stderr, "read_pins failed, error %d (%s)\n", f, ftdi_get_error_string(ftdi));
             ftdi_usb_close(ftdi);
-            ftdi_deinit(ftdi);
+            ftdi_free(ftdi);
             exit(-1);
         }
         printf("Read returned 0x%01x\n", buf[0] & 0x0f);

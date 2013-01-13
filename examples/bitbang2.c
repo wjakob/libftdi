@@ -41,7 +41,7 @@ void ftdi_fatal (struct ftdi_context *ftdi, char *str)
 {
     fprintf (stderr, "%s: %s\n",
              str, ftdi_get_error_string (ftdi));
-    ftdi_deinit(ftdi);
+    ftdi_free(ftdi);
     exit (1);
 }
 

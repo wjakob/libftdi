@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     if (f < 0 && f != -5)
     {
         fprintf(stderr, "unable to open ftdi device: %d (%s)\n", f, ftdi_get_error_string(ftdi));
-        ftdi_deinit(ftdi);
+        ftdi_free(ftdi);
         exit(-1);
     }
     printf("ftdi open succeeded(channel 1): %d\n",f);
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
     if (f < 0 && f != -5)
     {
         fprintf(stderr, "unable to open ftdi device: %d (%s)\n", f, ftdi_get_error_string(ftdi2));
-        ftdi_deinit(ftdi2);
+        ftdi_free(ftdi2);
         exit(-1);
     }
     printf("ftdi open succeeded(channel 2): %d\n",f);
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
     printf("disabling bitbang mode(channel 1)\n");
     ftdi_disable_bitbang(ftdi);
     ftdi_usb_close(ftdi);
-    ftdi_deinit(ftdi);
+    ftdi_free(ftdi);
 
     printf("disabling bitbang mode(channel 2)\n");
     ftdi_disable_bitbang(ftdi2);
