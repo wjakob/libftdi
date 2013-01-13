@@ -41,6 +41,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <libusb.h>
 
 #include "ftdi.h"
 

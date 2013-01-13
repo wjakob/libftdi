@@ -2,12 +2,10 @@ prefix=@prefix@
 exec_prefix=@exec_prefix@
 libdir=@libdir@
 includedir=@includedir@
-libusb_libs=@LIBUSB_1_0_LIBS@
-libusb_cflags=@LIBUSB_1_0_CFLAGS@
 
 Name: libftdi1
 Description: Library to program and control the FTDI USB controller
 Requires: libusb-1.0
 Version: @VERSION@
-Libs: -L${libdir} -lftdi1 ${libusb_libs}
-Cflags: -I${includedir} ${libusb_cflags}
+Libs: -L${libdir} -lftdi1
+Cflags: -I${includedir}
