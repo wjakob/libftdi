@@ -9,12 +9,14 @@
 %{
 #include "Python.h"
 
-inline PyObject* convertString( const char *v, Py_ssize_t len )
+PyObject* convertString( const char *v, Py_ssize_t len )
+{
 #if PY_MAJOR_VERSION >= 3
-{ return PyBytes_FromStringAndSize(v, len); }
+  return PyBytes_FromStringAndSize(v, len);
 #else
-{ return PyString_FromStringAndSize(v, len); }
+  return PyString_FromStringAndSize(v, len);
 #endif
+}
 %}
 
 %include <typemaps.i>
