@@ -10,31 +10,6 @@ if(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
     INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_PATH})
     LINK_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR}/../src)
 
-    if(DOCUMENTATION AND DOXYGEN_FOUND)
-        set(SWIG_MODULE_ftdi1_EXTRA_DEPS ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i)
-        set(CMAKE_SWIG_FLAGS -DDOXYGEN=${DOXYGEN_FOUND})
-
-        # Run doxygen to only generate the xml
-        add_custom_command(
-            OUTPUT ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
-            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc
-            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile.xml
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-            DEPENDS ${c_headers};${c_sources};${cpp_sources};${cpp_headers}
-        )
-        add_custom_target(doc_xml ALL DEPENDS ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml)
-
-        # generate .i from doxygen .xml
-        add_custom_command(
-            OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i
-            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/doxy2swig.py -n
-                ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
-                ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i
-            DEPENDS doc_xml
-        )
-
-    endif(DOCUMENTATION AND DOXYGEN_FOUND)
-
     swig_add_module ( ftdi1 python ftdi1.i )
     swig_link_libraries ( ftdi1 ftdi1 )
 
@@ -43,7 +18,7 @@ if(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
     if ( NOT UNIX OR ( UNIX AND NOT EXISTS "/etc/debian_version" ) )
       swig_link_libraries ( ftdi1 ${PYTHON_LIBRARIES} )
     endif ()
-
+    
     execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import sys; print( '%d.%d' % ( sys.version_info[0], sys.version_info[1] ) )"
                       OUTPUT_VARIABLE PYTHON_VERSION
                       OUTPUT_STRIP_TRAILING_WHITESPACE )
@@ -53,6 +28,32 @@ if(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
     INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/_ftdi1.so DESTINATION ${SITEPACKAGE})
     INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/ftdi1.py DESTINATION ${SITEPACKAGE})
 
+    if(DOCUMENTATION AND DOXYGEN_FOUND)
+
+        set(CMAKE_SWIG_FLAGS -DDOXYGEN=${DOXYGEN_FOUND})
+
+        # Run doxygen to only generate the xml
+        add_custom_target ( doc_xml
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc
+            COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile.xml
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            DEPENDS ${c_headers};${c_sources};${cpp_sources};${cpp_headers}
+        )
+
+        # generate .i from doxygen .xml
+        add_custom_target ( doc_i
+            COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/doxy2swig.py -n
+                ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
+                ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i
+        )
+        add_dependencies( doc_i doc_xml )
+        add_dependencies( ${SWIG_MODULE_ftdi1_REAL_NAME} doc_i )
+        
+    endif(DOCUMENTATION AND DOXYGEN_FOUND)
+
+
+
+    
     message(STATUS "Building python bindings via swig. Will be installed under ${CMAKE_INSTALL_PREFIX}/${SITEPACKAGE}")
 else(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
     message(STATUS "Not building python bindings")
