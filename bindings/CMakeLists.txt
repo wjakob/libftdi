@@ -33,7 +33,7 @@ if(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
         set(CMAKE_SWIG_FLAGS -DDOXYGEN=${DOXYGEN_FOUND})
 
         # Run doxygen to only generate the xml
-        add_custom_target ( doc_xml
+        add_custom_command ( OUTPUT ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
             COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc
             COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile.xml
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
@@ -41,12 +41,13 @@ if(PYTHON_BINDINGS AND SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND)
         )
 
         # generate .i from doxygen .xml
-        add_custom_target ( doc_i
+        add_custom_command ( OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i
             COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/doxy2swig.py -n
                 ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
                 ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i
+            DEPENDS ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
         )
-        add_dependencies( doc_i doc_xml )
+        add_custom_target ( doc_i DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/ftdi1_doc.i )
         add_dependencies( ${SWIG_MODULE_ftdi1_REAL_NAME} doc_i )
         
     endif(DOCUMENTATION AND DOXYGEN_FOUND)
