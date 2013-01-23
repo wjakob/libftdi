@@ -168,6 +168,11 @@ if ( UNIX )
   install ( PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libftdi1-config
             DESTINATION bin )
 
+  # config script install path
+  if ( NOT DEFINED LIBFTDI_CMAKE_CONFIG_DIR )
+    set ( LIBFTDI_CMAKE_CONFIG_DIR lib${LIB_SUFFIX}/cmake/libftdi )
+  endif ()
+  
   get_target_property( _LIBFTDI_LIBRARY_LOCATION ftdi1 LOCATION )
   get_filename_component ( _LIBFTDI_LIBRARY_NAME ${_LIBFTDI_LIBRARY_LOCATION} NAME )
   set ( LIBFTDI_INCLUDE_DIR ${includedir} )
@@ -179,10 +184,11 @@ if ( UNIX )
   set ( LIBFTDI_VERSION_STRING ${VERSION_STRING} )
   set ( LIBFTDI_VERSION_MAJOR ${MAJOR_VERSION} )
   set ( LIBFTDI_VERSION_MINOR ${MINOR_VERSION} )
-  set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/lib/cmake/libftdi/UseLibFTDI.cmake )
+  
+  set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI.cmake )
   configure_file ( LibFTDIConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDIConfig.cmake @ONLY )
   install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/LibFTDIConfig.cmake UseLibFTDI.cmake
-            DESTINATION lib/cmake/libftdi
+            DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
           )
 endif ()
 
