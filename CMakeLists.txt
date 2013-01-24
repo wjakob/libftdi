@@ -22,8 +22,9 @@ if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
    add_definitions(-DDEBUG)
 endif(${CMAKE_BUILD_TYPE} STREQUAL Debug)
 
-FIND_PACKAGE(USB1 REQUIRED)
-INCLUDE_DIRECTORIES(${LIBUSB_INCLUDE_DIR})
+# find libusb
+find_package ( USB1 REQUIRED )
+include_directories ( ${LIBUSB_INCLUDE_DIR} )
 
 # Find Boost (optional package)
 find_package(Boost)
@@ -69,23 +70,23 @@ set(CPACK_PACKAGE_DESCRIPTION          "libftdi1 library.")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY  ${CPACK_PACKAGE_DESCRIPTION}
                                        )
 # Package settings
-if(${UNIX})
+if ( UNIX )
   set(CPACK_GENERATOR                    "DEB;RPM")
   set(CPACK_CMAKE_GENERATOR              "Unix Makefiles")
   set(CPACK_PACKAGE_NAME                 ${PROJECT_NAME})
   set(CPACK_PACKAGE_FILE_NAME            ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}${PACK_ARCH})
-endif(${UNIX})
+endif ()
 
-if(${WIN32})
-  set(CPACK_GENERATOR                    "NSIS")
-  set(CPACK_CMAKE_GENERATOR              "MinGW Makefiles")
-  set(CPACK_PACKAGE_NAME                 "${PROJECT_NAME}")
-  set(CPACK_PACKAGE_VENDOR               "")
-  set(CPACK_PACKAGE_INSTALL_DIRECTORY    "libftdi1")
-  set(CPACK_PACKAGE_FILE_NAME            "${PROJECT_NAME}-${VERSION_STRING}-win32")
-  set(CPACK_NSIS_DISPLAY_NAME            "libftdi1")
-  set(CPACK_NSIS_MODIFY_PATH             "ON")
-endif(${WIN32})
+if ( WIN32 )
+  set ( CPACK_GENERATOR                    "NSIS" )
+  set ( CPACK_CMAKE_GENERATOR              "MinGW Makefiles" )
+  set ( CPACK_PACKAGE_NAME                 "${PROJECT_NAME}" )
+  set ( CPACK_PACKAGE_VENDOR               "" )
+  set ( CPACK_PACKAGE_INSTALL_DIRECTORY    "libftdi1" )
+  set ( CPACK_PACKAGE_FILE_NAME            "${PROJECT_NAME}-${VERSION_STRING}-win32")
+  set ( CPACK_NSIS_DISPLAY_NAME            "libftdi1" )
+  set ( CPACK_NSIS_MODIFY_PATH             ON )
+endif ()
 
 set(CPACK_RESOURCE_FILE_LICENSE        ${CMAKE_SOURCE_DIR}/LICENSE)
 
@@ -94,9 +95,9 @@ set(CPACK_SOURCE_IGNORE_FILES          "\\\\.git;~$;build/")
 set(CPACK_SOURCE_PACKAGE_FILE_NAME     ${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION})
 
 # Subdirectories
-if(${UNIX})
-  set(CPACK_SET_DESTDIR "ON")
-endif(${UNIX})
+if ( UNIX )
+  set ( CPACK_SET_DESTDIR ON )
+endif ()
 
 # "make dist" target
 set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${VERSION_STRING})
@@ -107,12 +108,11 @@ add_custom_target(dist
 
 
 # Documentation
+option ( DOCUMENTATION "Generate API documentation with Doxygen" ON )
 
-option(DOCUMENTATION "Generate API documentation with Doxygen" ON)
 
-
-find_package(Doxygen)
-if(DOCUMENTATION AND DOXYGEN_FOUND)
+find_package ( Doxygen )
+if ( DOCUMENTATION AND DOXYGEN_FOUND )
 
    # Find doxy config
    message(STATUS "Doxygen found.")
@@ -170,7 +170,7 @@ if ( UNIX )
 
   # config script install path
   if ( NOT DEFINED LIBFTDI_CMAKE_CONFIG_DIR )
-    set ( LIBFTDI_CMAKE_CONFIG_DIR lib${LIB_SUFFIX}/cmake/libftdi )
+    set ( LIBFTDI_CMAKE_CONFIG_DIR lib${LIB_SUFFIX}/cmake/libftdi1 )
   endif ()
   
   get_target_property( _LIBFTDI_LIBRARY_LOCATION ftdi1 LOCATION )
@@ -185,9 +185,9 @@ if ( UNIX )
   set ( LIBFTDI_VERSION_MAJOR ${MAJOR_VERSION} )
   set ( LIBFTDI_VERSION_MINOR ${MINOR_VERSION} )
   
-  set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI.cmake )
-  configure_file ( LibFTDIConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDIConfig.cmake @ONLY )
-  install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/LibFTDIConfig.cmake UseLibFTDI.cmake
+  set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI1.cmake )
+  configure_file ( LibFTDI1Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake @ONLY )
+  install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake UseLibFTDI1.cmake
             DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
           )
 endif ()

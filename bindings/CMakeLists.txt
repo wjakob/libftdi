@@ -1,7 +1,8 @@
-include(FindSWIG)
-include(FindPythonLibs)
-include(FindPythonInterp)
+
+find_package ( SWIG )
 include(UseSWIG)
+find_package ( PythonLibs ) 
+find_package ( PythonInterp ) 
 
 option(PYTHON_BINDINGS "Build python bindings via swig" ON)
 
