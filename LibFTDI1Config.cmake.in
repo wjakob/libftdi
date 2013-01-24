@@ -18,7 +18,9 @@
 #  LIBFTDI_INCLUDE_DIRS       - Directory where OT.hxx can be found
 #  LIBFTDI_INCLUDE_DIRS       - List of directories of LibFTDI and it's dependencies
 #  LIBFTDI_LIBRARY            - LibFTDI library location
-#  LIBFTDI_LIBRARIES          - List of libraries to link against
+#  LIBFTDI_LIBRARIES          - List of libraries to link against LibFTDI library
+#  LIBFTDIPP_LIBRARY          - LibFTDI C++ wrapper library location
+#  LIBFTDIPP_LIBRARIES        - List of libraries to link against LibFTDI C++ wrapper
 #  LIBFTDI_LIBRARY_DIRS       - List of directories containing LibFTDI' libraries
 #  LIBFTDI_ROOT_DIR           - The base directory of LibFTDI
 #  LIBFTDI_VERSION_STRING     - A human-readable string containing the version
@@ -35,6 +37,8 @@ set ( LIBFTDI_INCLUDE_DIR  "@LIBFTDI_INCLUDE_DIR@" )
 set ( LIBFTDI_INCLUDE_DIRS "@LIBFTDI_INCLUDE_DIRS@" )
 set ( LIBFTDI_LIBRARY      "@LIBFTDI_LIBRARY@" )
 set ( LIBFTDI_LIBRARIES    "@LIBFTDI_LIBRARIES@" )
+set ( LIBFTDIPP_LIBRARY    "@LIBFTDIPP_LIBRARY@" )
+set ( LIBFTDIPP_LIBRARIES  "@LIBFTDIPP_LIBRARIES@" )
 set ( LIBFTDI_LIBRARY_DIRS "@LIBFTDI_LIBRARY_DIRS@" )
 set ( LIBFTDI_ROOT_DIR     "@LIBFTDI_ROOT_DIR@" )
 
