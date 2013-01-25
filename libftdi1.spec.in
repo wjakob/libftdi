@@ -83,7 +83,7 @@ rm -fr $RPM_BUILD_ROOT
 %{_libdir}/libftdi1*.*a
 %{_libdir}/libftdipp1*.*a
 %{_libdir}/pkgconfig/*.pc
-%{_libdir}/cmake/libftdi/*
+%{_libdir}/cmake/libftdi1/*
 
 %files python
 %defattr(-,root,root,-)
