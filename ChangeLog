@@ -1,4 +1,4 @@
-New in 1.0rc2 - 2013-01-XX
+New in 1.0rc3 - 2013-01-XX
 -----------------------
 * Ported to libusb 1.x (initial work by Jie Zhang)
 * Many eeprom handling improvements (Uwe Bonnes, Anders Larsen)
@@ -8,6 +8,7 @@ New in 1.0rc2 - 2013-01-XX
 * New baudrate calculation code + unit tests (Uwe Bonnes and Intra2net)
 * Improved python bindings including python3 support (Michel Zou)
 * Switched completly to cmake build system (Intra2net)
+* cmake: Easy libftdi discovery via find_package() (Michel Zou)
 * eeprom handling now done via get()/set() functions (Uwe Bonnes)
 * C++ wrapper: Fixed use-after-free in List::find_all() (Intra2net)
 * Documentation updates (Xiaofan Chen)
