@@ -11,9 +11,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#ifdef __WIN32__
-#define sleep(x) Sleep(x)
-#endif
 #include <ftdi.h>
 
 int main(int argc, char **argv)
@@ -70,28 +67,28 @@ int main(int argc, char **argv)
         f = ftdi_write_data(ftdi, buf, 1);
         if (f < 0)
             fprintf(stderr,"write failed on channel 1 for 0x%x, error %d (%s)\n", buf[0], f, ftdi_get_error_string(ftdi));
-        sleep(1);
+        usleep(1000);
 
         buf[0] =  0x2;
         printf("porta: %02i: 0x%02x \n",i,buf[0]);
         f = ftdi_write_data(ftdi, buf, 1);
         if (f < 0)
             fprintf(stderr,"write failed on channel 1 for 0x%x, error %d (%s)\n", buf[0], f, ftdi_get_error_string(ftdi));
-        sleep(1);
+        usleep(1000);
 
         buf[0] =  0x1;
         printf("portb: %02i: 0x%02x \n",i,buf[0]);
         f = ftdi_write_data(ftdi2, buf, 1);
         if (f < 0)
             fprintf(stderr,"write failed on channel 2 for 0x%x, error %d (%s)\n", buf[0], f, ftdi_get_error_string(ftdi2));
-        sleep(1);
+        usleep(1000);
 
         buf[0] =  0x2;
         printf("portb: %02i: 0x%02x \n",i,buf[0]);
         f = ftdi_write_data(ftdi2, buf, 1);
         if (f < 0)
             fprintf(stderr,"write failed on channel 2 for 0x%x, error %d (%s)\n", buf[0], f, ftdi_get_error_string(ftdi2));
-        sleep(1);
+        usleep(1000);
     }
     printf("\n");
 

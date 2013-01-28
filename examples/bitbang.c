@@ -3,9 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#ifdef __WIN32__
-#define sleep(x) Sleep(x)
-#endif
 #include <ftdi.h>
 
 int main(int argc, char **argv)
@@ -35,7 +32,7 @@ int main(int argc, char **argv)
     printf("enabling bitbang mode\n");
     ftdi_set_bitmode(ftdi, 0xFF, BITMODE_BITBANG);
 
-    sleep(3);
+    usleep(3000);
 
     buf[0] = 0x0;
     printf("turning everything on\n");
@@ -45,7 +42,7 @@ int main(int argc, char **argv)
         fprintf(stderr,"write failed for 0x%x, error %d (%s)\n",buf[0],f, ftdi_get_error_string(ftdi));
     }
 
-    sleep(3);
+    usleep(3000);
 
     buf[0] = 0xFF;
     printf("turning everything off\n");
@@ -55,7 +52,7 @@ int main(int argc, char **argv)
         fprintf(stderr,"write failed for 0x%x, error %d (%s)\n",buf[0],f, ftdi_get_error_string(ftdi));
     }
 
-    sleep(3);
+    usleep(3000);
 
     for (i = 0; i < 32; i++)
     {
@@ -71,7 +68,7 @@ int main(int argc, char **argv)
         {
             fprintf(stderr,"write failed for 0x%x, error %d (%s)\n",buf[0],f, ftdi_get_error_string(ftdi));
         }
-        sleep(1);
+        usleep(1000);
     }
 
     printf("\n");

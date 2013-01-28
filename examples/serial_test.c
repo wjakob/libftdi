@@ -8,9 +8,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#ifdef __WIN32__
-#define sleep(x) Sleep(x)
-#endif
 #include <getopt.h>
 #include <signal.h>
 #include <ftdi.h>
@@ -162,7 +159,7 @@ int main(int argc, char **argv)
         else
             f = ftdi_read_data(ftdi, buf, sizeof(buf));
         if (f<0)
-            sleep(1);
+            usleep(1000);
         else if(f> 0 && !do_write)
         {
             fprintf(stderr, "read %d bytes\n", f);
