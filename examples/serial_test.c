@@ -159,7 +159,7 @@ int main(int argc, char **argv)
         else
             f = ftdi_read_data(ftdi, buf, sizeof(buf));
         if (f<0)
-            usleep(1000);
+            usleep(1 * 1000000);
         else if(f> 0 && !do_write)
         {
             fprintf(stderr, "read %d bytes\n", f);

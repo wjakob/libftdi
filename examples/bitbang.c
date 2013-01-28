@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     printf("enabling bitbang mode\n");
     ftdi_set_bitmode(ftdi, 0xFF, BITMODE_BITBANG);
 
-    usleep(3000);
+    usleep(3 * 1000000);
 
     buf[0] = 0x0;
     printf("turning everything on\n");
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
         fprintf(stderr,"write failed for 0x%x, error %d (%s)\n",buf[0],f, ftdi_get_error_string(ftdi));
     }
 
-    usleep(3000);
+    usleep(3 * 1000000);
 
     buf[0] = 0xFF;
     printf("turning everything off\n");
@@ -52,7 +52,7 @@ int main(int argc, char **argv)
         fprintf(stderr,"write failed for 0x%x, error %d (%s)\n",buf[0],f, ftdi_get_error_string(ftdi));
     }
 
-    usleep(3000);
+    usleep(3 * 1000000);
 
     for (i = 0; i < 32; i++)
     {
@@ -68,7 +68,7 @@ int main(int argc, char **argv)
         {
             fprintf(stderr,"write failed for 0x%x, error %d (%s)\n",buf[0],f, ftdi_get_error_string(ftdi));
         }
-        usleep(1000);
+        usleep(1 * 1000000);
     }
 
     printf("\n");
