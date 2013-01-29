@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
-libftdi version 1.0rc3
+libftdi version 1.0
 --------------------------------------------------------------------
 
 libftdi - A library (using libusb) to talk to FTDI's UART/FIFO chips
@@ -19,6 +19,19 @@ that made libftdi possible what it is today.
 
 Changes
 -------
+* Ported to libusb 1.x (initial work by Jie Zhang)
+* Many eeprom handling improvements (Uwe Bonnes, Anders Larsen)
+* Renamed pkconfig, library .so etc. files to "libftdi1" (Intra2net)
+* ftdi_eeprom is part of libftdi now (Intra2net)
+
+* New baudrate calculation code + unit tests (Uwe Bonnes and Intra2net)
+* Improved python bindings including python3 support (Michel Zou)
+* Switched completely to cmake build system (Intra2net)
+* cmake: Easy libftdi discovery via find_package() (Michel Zou)
+* eeprom handling now done via get()/set() functions (Uwe Bonnes)
+* C++ wrapper: Fixed use-after-free in List::find_all() (Intra2net)
+* Documentation updates (Xiaofan Chen)
+* See the git history for more changes and fixes
 
 You'll find the newest version of libftdi at:
 http://www.intra2net.com/en/developer/libftdi
