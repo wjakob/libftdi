@@ -46,10 +46,12 @@ set(CPACK_COMPONENT_SHAREDLIBS_GROUP "Development")
 set(CPACK_COMPONENT_STATICLIBS_GROUP "Development")
 set(CPACK_COMPONENT_HEADERS_GROUP    "Development")
 
-# automatically set lib suffix
-if ( UNIX AND NOT APPLE AND NOT CMAKE_CROSSCOMPILING AND NOT EXISTS "/etc/debian_version" )
-  if ( CMAKE_SIZEOF_VOID_P EQUAL 8 AND NOT LIB_SUFFIX )
-    set ( LIB_SUFFIX 64 )
+# guess LIB_SUFFIX, don't take debian multiarch into account 
+if ( NOT DEFINED LIB_SUFFIX )
+  if ( CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT CMAKE_CROSSCOMPILING AND NOT EXISTS "/etc/debian_version" )
+    if ( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )
+      set ( LIB_SUFFIX 64 )
+    endif ()
   endif ()
 endif ()
 
