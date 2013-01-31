@@ -2,6 +2,7 @@
 
 %module(docstring="Python interface to libftdi1") ftdi1
 %feature("autodoc","1");
+
 #ifdef DOXYGEN
 %include "ftdi1_doc.i"
 #endif
@@ -128,4 +129,8 @@ PyObject* convertString( const char *v, Py_ssize_t len )
 %include ftdi_i.h
 %{
 #include <ftdi_i.h>
+%}
+
+%pythoncode %{
+__version__ = get_library_version().version_str
 %}
