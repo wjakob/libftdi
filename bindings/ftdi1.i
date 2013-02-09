@@ -79,11 +79,13 @@ PyObject* convertString( const char *v, Py_ssize_t len )
 "read_pins(context) -> (return_code, pins)"
 %enddef
 %feature("autodoc", ftdi_read_pins_docstring) ftdi_read_pins;
-%apply char *OUTPUT { unsigned char *pins };
+%typemap(in,numinputs=0) unsigned char *pins ($*ltype temp) %{ $1 = &temp; %}
+%typemap(argout) (unsigned char *pins) %{ $result = SWIG_Python_AppendOutput($result, convertString((char*)$1, 1)); %}
     int ftdi_read_pins(struct ftdi_context *ftdi, unsigned char *pins);
 %clear unsigned char *pins;
 
-%apply char *OUTPUT { unsigned char *latency };
+%typemap(in,numinputs=0) unsigned char *latency ($*ltype temp) %{ $1 = &temp; %}
+%typemap(argout) (unsigned char *latency) %{ $result = SWIG_Python_AppendOutput($result, convertString((char*)$1, 1)); %}
     int ftdi_get_latency_timer(struct ftdi_context *ftdi, unsigned char *latency);
 %clear unsigned char *latency;
 
@@ -114,7 +116,7 @@ PyObject* convertString( const char *v, Py_ssize_t len )
 %feature("autodoc", ftdi_read_eeprom_docstring) ftdi_read_eeprom;
 
 %define ftdi_read_chipid_docstring
-"read_pins(context) -> (return_code, chipid)"
+"ftdi_read_chipid(context) -> (return_code, chipid)"
 %enddef
 %feature("autodoc", ftdi_read_chipid_docstring) ftdi_read_chipid;
 %apply int *OUTPUT { unsigned int *chipid };

@@ -13,10 +13,13 @@ import sys
 import ftdi1 as ftdi
 import time
 
+# version
+print ( 'version: %s\n' % ftdi.__version__  )
+
 # initialize
 ftdic = ftdi.new()
 if ftdic == 0:
-    print( 'new failed: %d', ret )
+    print( 'new failed: %d' % ret )
     os._exit( 1 )
 
 # try to list ftdi devices 0x6010 or 0x6001
@@ -27,7 +30,7 @@ if ret <= 0:
 if ret < 0:
     print( 'ftdi_usb_find_all failed: %d (%s)' % ( ret, ftdi.get_error_string( ftdic ) ) )
     os._exit( 1 )
-print( 'Number of FTDI devices found: %d\n' % ret )
+print( 'devices: %d' % ret )
 curnode = devlist
 i = 0
 while( curnode != None ):
@@ -35,7 +38,7 @@ while( curnode != None ):
     if ret < 0:
         print( 'ftdi_usb_get_strings failed: %d (%s)' % ( ret, ftdi.get_error_string( ftdic ) ) )
         os._exit( 1 )
-    print( 'Device #%d: manufacturer="%s" description="%s" serial="%s"\n' % ( i, manufacturer, description, serial ) )
+    print( '#%d: manufacturer="%s" description="%s" serial="%s"\n' % ( i, manufacturer, description, serial ) )
     curnode = curnode.next
     i += 1
 
@@ -67,18 +70,19 @@ print( '' )
 
 
 # read pins
-# FIXME: read_pins fails with python3, so I disabled it for now
-# tested on ubuntu 12.04 ( python3.2.3 / swig 2.0.4 )
-if (sys.version_info[0]<3):
-    ret, pins = ftdi.read_pins( ftdic )
-    if ( ret == 0 ):
-        print( 'pins: %02x' % ord( pins[0] ) )
+ret, pins = ftdi.read_pins( ftdic )
+if ( ret == 0 ):
+    if sys.version_info[0] < 3: # python 2
+        pins = ord( pins )
+    else:
+        pins = pins[0]
+    print( 'pins: 0x%x' % pins )
               
 
 # read chip id
 ret, chipid = ftdi.read_chipid( ftdic )
 if (ret==0):
-    print( 'chip id: %X\n' % chipid )
+    print( 'chip id: %x\n' % chipid )
 
 
 # read eeprom
@@ -93,15 +97,13 @@ size = 128
 ret, eeprom = ftdi.get_eeprom_buf ( ftdic, size )
 if ( ret == 0 ):
     for i in range( size ):
-        if isinstance(eeprom[i], str):
-            octet = ord( eeprom[i] ) # python2
-        else:
-            octet = eeprom[i] # python3
+        octet = eeprom[i]
+        if sys.version_info[0] < 3: # python 2
+            octet = ord( octet )
         sys.stdout.write( '%02x ' % octet )
         if ( i % 8 == 7 ):
             print( '' )
 print( '' )
-
             
 # close usb
 ret = ftdi.usb_close( ftdic )
