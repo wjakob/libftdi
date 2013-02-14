@@ -2573,9 +2573,9 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     // Bit 5: 1 if this device uses remote wakeup
     // Bit 4-0: reserved - 0
     j = 0x80;
-    if (eeprom->self_powered == 1)
+    if (eeprom->self_powered)
         j |= 0x40;
-    if (eeprom->remote_wakeup == 1)
+    if (eeprom->remote_wakeup)
         j |= 0x20;
     output[0x08] = j;
 
@@ -2595,9 +2595,9 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
         // Bit 0: 1 - In EndPoint is Isochronous
         //
         j = 0;
-        if (eeprom->in_is_isochronous == 1)
+        if (eeprom->in_is_isochronous)
             j = j | 1;
-        if (eeprom->out_is_isochronous == 1)
+        if (eeprom->out_is_isochronous)
             j = j | 2;
         output[0x0A] = j;
     }
@@ -2721,15 +2721,15 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             else
                 output[0x01] &= ~HIGH_CURRENT_DRIVE;
 
-            if (eeprom->in_is_isochronous == 1)
+            if (eeprom->in_is_isochronous)
                 output[0x0A] |= 0x1;
             else
                 output[0x0A] &= ~0x1;
-            if (eeprom->out_is_isochronous == 1)
+            if (eeprom->out_is_isochronous)
                 output[0x0A] |= 0x2;
             else
                 output[0x0A] &= ~0x2;
-            if (eeprom->suspend_pull_downs == 1)
+            if (eeprom->suspend_pull_downs)
                 output[0x0A] |= 0x4;
             else
                 output[0x0A] &= ~0x4;
@@ -2747,7 +2747,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
                 output[0x00] |= HIGH_CURRENT_DRIVE_R;
             output[0x01] = 0x40; /* Hard coded Endpoint Size*/
 
-            if (eeprom->suspend_pull_downs == 1)
+            if (eeprom->suspend_pull_downs)
                 output[0x0A] |= 0x4;
             else
                 output[0x0A] &= ~0x4;
@@ -2797,7 +2797,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             else
                 output[0x01] &= ~SUSPEND_DBUS7_BIT;
 
-            if (eeprom->suspend_pull_downs == 1)
+            if (eeprom->suspend_pull_downs)
                 output[0x0A] |= 0x4;
             else
                 output[0x0A] &= ~0x4;
@@ -2859,7 +2859,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             else
                 output[0x01] &= ~(DRIVER_VCP << 4);
 
-            if (eeprom->suspend_pull_downs == 1)
+            if (eeprom->suspend_pull_downs)
                 output[0x0a] |= 0x4;
             else
                 output[0x0a] &= ~0x4;
