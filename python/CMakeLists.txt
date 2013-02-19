@@ -57,6 +57,8 @@ if ( SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND )
   set ( LIBFTDI_PYTHON_MODULE_PATH ${CMAKE_INSTALL_PREFIX}/${SITEPACKAGE} )
   set ( LIBFTDI_PYTHON_MODULE_PATH ${LIBFTDI_PYTHON_MODULE_PATH} PARENT_SCOPE ) # for ftdiconfig.cmake
   message(STATUS "Building python bindings via swig. Will be installed under ${LIBFTDI_PYTHON_MODULE_PATH}")
+
+  add_subdirectory ( examples )
 else ()
   message(STATUS "Not building python bindings")
 endif ()

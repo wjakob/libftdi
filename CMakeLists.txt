@@ -141,7 +141,7 @@ endif(DOCUMENTATION AND DOXYGEN_FOUND)
 
 add_subdirectory(src)
 add_subdirectory(ftdipp)
-add_subdirectory(bindings)
+add_subdirectory(python)
 add_subdirectory(ftdi_eeprom)
 add_subdirectory(examples)
 add_subdirectory(packages)
