@@ -30,12 +30,16 @@ if (FTDIPP)
         set_target_properties(ftdipp1 PROPERTIES VERSION ${VERSION_FIXUP}.${MINOR_VERSION}.0 SOVERSION 2)
 
         # Static library
-        add_library(ftdipp1-static STATIC ${cpp_sources})
-        set_target_properties(ftdipp1-static PROPERTIES OUTPUT_NAME "ftdipp1")
+        if (STATICLIBS)
+            add_library(ftdipp1-static STATIC ${cpp_sources})
+            set_target_properties(ftdipp1-static PROPERTIES OUTPUT_NAME "ftdipp1")
+        endif (STATICLIBS)
 
         # Prevent clobbering each other during the build
         set_target_properties(ftdipp1 PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-        set_target_properties(ftdipp1-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        if (STATICLIBS)
+            set_target_properties(ftdipp1-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+        endif (STATICLIBS)
 
         # Dependencies
         target_link_libraries(ftdipp1 ftdi1 ${LIBUSB_LIBRARIES} ${BOOST_LIBRARIES})
@@ -46,10 +50,12 @@ if (FTDIPP)
                         LIBRARY DESTINATION lib${LIB_SUFFIX}
                         COMPONENT sharedlibs
                         )
-            install( TARGETS ftdipp1-static
-                        ARCHIVE DESTINATION lib${LIB_SUFFIX}
-                        COMPONENT staticlibs
-                        )
+            if (STATICLIBS)
+                install( TARGETS ftdipp1-static
+                            ARCHIVE DESTINATION lib${LIB_SUFFIX}
+                            COMPONENT staticlibs
+                            )
+            endif (STATICLIBS)
             install( FILES ${cpp_headers}
                         DESTINATION include/${PROJECT_NAME}
                         COMPONENT headers
@@ -61,10 +67,12 @@ if (FTDIPP)
                         DESTINATION bin
                         COMPONENT sharedlibs
                         )
-            install( TARGETS ftdipp1-static
-                        DESTINATION bin
-                        COMPONENT staticlibs
-                        )
+            if (STATICLIBS)
+                install( TARGETS ftdipp1-static
+                            DESTINATION bin
+                            COMPONENT staticlibs
+                            )
+            endif (STATICLIBS)
             install( FILES ${cpp_headers}
                         DESTINATION include/${PROJECT_NAME}
                         COMPONENT headers

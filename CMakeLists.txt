@@ -46,6 +46,8 @@ set(CPACK_COMPONENT_SHAREDLIBS_GROUP "Development")
 set(CPACK_COMPONENT_STATICLIBS_GROUP "Development")
 set(CPACK_COMPONENT_HEADERS_GROUP    "Development")
 
+option ( STATICLIBS "Build static libraries" ON )
+
 # guess LIB_SUFFIX, don't take debian multiarch into account 
 if ( NOT DEFINED LIB_SUFFIX )
   if ( CMAKE_SYSTEM_NAME MATCHES "Linux" AND NOT CMAKE_CROSSCOMPILING AND NOT EXISTS "/etc/debian_version" )
