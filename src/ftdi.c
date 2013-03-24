@@ -2392,7 +2392,32 @@ int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi, char * manufacturer,
         }
         eeprom->size = -1;
     }
-    eeprom->initialized_for_connected_device = 1;
+    switch (ftdi->type)
+    {
+        case TYPE_AM:
+            eeprom->release_number = 0x0200;
+            break;
+        case TYPE_BM:
+            eeprom->release_number = 0x0400;
+            break;
+        case TYPE_2232C:
+            eeprom->release_number = 0x0500;
+            break;
+        case TYPE_R:
+            eeprom->release_number = 0x0600;
+            break;
+        case TYPE_2232H:
+            eeprom->release_number = 0x0700;
+            break;
+        case TYPE_4232H:
+            eeprom->release_number = 0x0800;
+            break;
+        case TYPE_232H:
+            eeprom->release_number = 0x0900;
+            break;
+        default:
+            eeprom->release_number = 0x00;
+    }
     return 0;
 }
 /*FTD2XX doesn't check for values not fitting in the ACBUS Signal oprtions*/
@@ -2539,33 +2564,8 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     output[0x05] = eeprom->product_id >> 8;
 
     // Addr 06: Device release number (0400h for BM features)
-    output[0x06] = 0x00;
-    switch (ftdi->type)
-    {
-        case TYPE_AM:
-            output[0x07] = 0x02;
-            break;
-        case TYPE_BM:
-            output[0x07] = 0x04;
-            break;
-        case TYPE_2232C:
-            output[0x07] = 0x05;
-            break;
-        case TYPE_R:
-            output[0x07] = 0x06;
-            break;
-        case TYPE_2232H:
-            output[0x07] = 0x07;
-            break;
-        case TYPE_4232H:
-            output[0x07] = 0x08;
-            break;
-        case TYPE_232H:
-            output[0x07] = 0x09;
-            break;
-        default:
-            output[0x07] = 0x00;
-    }
+    output[0x06] = eeprom->release_number;
+    output[0x07] = eeprom->release_number >> 8;
 
     // Addr 08: Config descriptor
     // Bit 7: always 1
@@ -2983,6 +2983,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     output[eeprom->size-2] = checksum;
     output[eeprom->size-1] = checksum >> 8;
 
+    eeprom->initialized_for_connected_device = 1;
     return user_area_size;
 }
 /* Decode the encoded EEPROM field for the FTDI Mode into a value for the abstracted 
@@ -3025,7 +3026,6 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     int eeprom_size;
     struct ftdi_eeprom *eeprom;
     unsigned char *buf = ftdi->eeprom->buf;
-    int release;
 
     if (ftdi == NULL)
         ftdi_error_return(-1,"No context");
@@ -3041,7 +3041,8 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     // Addr 04: Product ID
     eeprom->product_id = buf[0x04] + (buf[0x05] << 8);
 
-    release = buf[0x06] + (buf[0x07]<<8);
+    // Addr 06: Device release number
+    eeprom->release_number = buf[0x06] + (buf[0x07]<<8);
 
     // Addr 08: Config descriptor
     // Bit 7: always 1
@@ -3262,7 +3263,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         char *channel_mode[] = {"UART", "FIFO", "CPU", "OPTO", "FT1284"};
         fprintf(stdout, "VID:     0x%04x\n",eeprom->vendor_id);
         fprintf(stdout, "PID:     0x%04x\n",eeprom->product_id);
-        fprintf(stdout, "Release: 0x%04x\n",release);
+        fprintf(stdout, "Release: 0x%04x\n",eeprom->release_number);
 
         if (eeprom->self_powered)
             fprintf(stdout, "Self-Powered%s", (eeprom->remote_wakeup)?", USB Remote Wake Up\n":"\n");
@@ -3416,6 +3417,9 @@ int ftdi_get_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
             break;
         case PRODUCT_ID:
             *value = ftdi->eeprom->product_id;
+            break;
+        case RELEASE_NUMBER:
+            *value = ftdi->eeprom->release_number;
             break;
         case SELF_POWERED:
             *value = ftdi->eeprom->self_powered;
@@ -3604,6 +3608,9 @@ int ftdi_set_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
         case PRODUCT_ID:
             ftdi->eeprom->product_id = value;
             break;
+        case RELEASE_NUMBER:
+            ftdi->eeprom->release_number = value;
+            break;
         case SELF_POWERED:
             ftdi->eeprom->self_powered = value;
             break;
@@ -3765,6 +3772,7 @@ int ftdi_set_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
         default :
             ftdi_error_return(-1, "Request to unknown EEPROM value");
     }
+    eeprom->initialized_for_connected_device = 0;
     return 0;
 }
 

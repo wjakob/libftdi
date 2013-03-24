@@ -129,5 +129,8 @@ struct ftdi_eeprom
     /* EEPROM Type 0x46 for 93xx46, 0x56 for 93xx56 and 0x66 for 93xx66*/
     int chip;
     unsigned char buf[FTDI_MAX_EEPROM_SIZE];
+
+    /** device release number */
+    int release_number;
 };
 
