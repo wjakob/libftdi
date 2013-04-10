@@ -21,7 +21,16 @@
 #include <sys/time.h>
 
 /** FTDI chip type */
-enum ftdi_chip_type { TYPE_AM=0, TYPE_BM=1, TYPE_2232C=2, TYPE_R=3, TYPE_2232H=4, TYPE_4232H=5, TYPE_232H=6 };
+enum ftdi_chip_type {
+    TYPE_AM=0,
+    TYPE_BM=1,
+    TYPE_2232C=2,
+    TYPE_R=3,
+    TYPE_2232H=4,
+    TYPE_4232H=5,
+    TYPE_232H=6,
+    TYPE_230X=7,
+};
 /** Parity mode for ftdi_set_line_property() */
 enum ftdi_parity_type { NONE=0, ODD=1, EVEN=2, MARK=3, SPACE=4 };
 /** Number of stop bits for ftdi_set_line_property() */
@@ -336,7 +345,9 @@ enum ftdi_cbus_func {/* FIXME: Recheck value, especially the last */
 enum ftdi_cbush_func {/* FIXME: Recheck value, especially the last */
     CBUSH_TRISTATE = 0, CBUSH_RXLED = 1, CBUSH_TXLED = 2, CBUSH_TXRXLED = 3, CBUSH_PWREN = 4,
     CBUSH_SLEEP = 5, CBUSH_DRIVE_0 = 6, CBUSG_DRIVE1 = 7, CBUSH_IOMODE = 8, CBUSH_TXDEN =  9,
-    CBUSH_CLK30 = 0xa, CBUSH_CLK15 = 0xb, CBUSH_CLK7_5 = 0xc};
+    CBUSH_CLK30 = 10, CBUSH_CLK15 = 11, CBUSH_CLK7_5 = 12, CBUSH_BAT_DETECT = 13,
+    CBUSH_BAT_DETECT_NEG = 14, CBUSH_I2C_TXE = 15, CBUSH_I2C_RXF = 16, CBUSH_VBUS_SENSE = 17,
+    CBUSH_BB_WR = 18, CBUSH_BB_RD = 19, CBUSH_TIME_STAMP = 20, CBUSH_AWAKE = 21,};
 
 /** Invert TXD# */
 #define INVERT_TXD 0x01
