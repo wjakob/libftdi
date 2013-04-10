@@ -3025,7 +3025,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     unsigned char manufacturer_size = 0, product_size = 0, serial_size = 0;
     int eeprom_size;
     struct ftdi_eeprom *eeprom;
-    unsigned char *buf = ftdi->eeprom->buf;
+    unsigned char *buf = NULL;
 
     if (ftdi == NULL)
         ftdi_error_return(-1,"No context");
@@ -3034,6 +3034,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
 
     eeprom = ftdi->eeprom;
     eeprom_size = eeprom->size;
+    buf = ftdi->eeprom->buf;
 
     // Addr 02: Vendor ID
     eeprom->vendor_id = buf[0x02] + (buf[0x03] << 8);
