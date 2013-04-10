@@ -295,7 +295,7 @@ struct ftdi_version_info ftdi_get_library_version()
     Finds all ftdi devices with given VID:PID on the usb bus. Creates a new
     ftdi_device_list which needs to be deallocated by ftdi_list_free() after
     use.  With VID:PID 0:0, search for the default devices
-    (0x403:0x6001, 0x403:0x6010, 0x403:0x6011, 0x403:0x6014) 
+    (0x403:0x6001, 0x403:0x6010, 0x403:0x6011, 0x403:0x6014)
 
     \param ftdi pointer to ftdi_context
     \param devlist Pointer where to store list of found devices
@@ -328,11 +328,11 @@ int ftdi_usb_find_all(struct ftdi_context *ftdi, struct ftdi_device_list **devli
         if (libusb_get_device_descriptor(dev, &desc) < 0)
             ftdi_error_return_free_device_list(-6, "libusb_get_device_descriptor() failed", devs);
 
-        if (((vendor != 0 && product != 0) && 
-             desc.idVendor == vendor && desc.idProduct == product) ||
-            ((vendor == 0 && product == 0) && 
-             (desc.idVendor == 0x403) && (desc.idProduct == 0x6001 || desc.idProduct == 0x6010
-                                          || desc.idProduct == 0x6011 || desc.idProduct == 0x6014)))
+        if (((vendor != 0 && product != 0) &&
+                desc.idVendor == vendor && desc.idProduct == product) ||
+                ((vendor == 0 && product == 0) &&
+                 (desc.idVendor == 0x403) && (desc.idProduct == 0x6001 || desc.idProduct == 0x6010
+                                              || desc.idProduct == 0x6011 || desc.idProduct == 0x6014)))
         {
             *curdev = (struct ftdi_device_list*)malloc(sizeof(struct ftdi_device_list));
             if (!*curdev)
@@ -999,7 +999,7 @@ int ftdi_usb_close(struct ftdi_context *ftdi)
     return rtn;
 }
 
-/*  ftdi_to_clkbits_AM For the AM device, convert a requested baudrate 
+/*  ftdi_to_clkbits_AM For the AM device, convert a requested baudrate
                     to encoded divisor and the achievable baudrate
     Function is only used internally
     \internal
@@ -1111,7 +1111,7 @@ static int ftdi_to_clkbits_AM(int baudrate, unsigned long *encoded_divisor)
    H Type have all features above with
    {index[8],value[15:14]} is the encoded subdivisor
 
-   FT232R, FT2232 and FT232BM have no option for 12 MHz and with 
+   FT232R, FT2232 and FT232BM have no option for 12 MHz and with
    {index[0],value[15:14]} is the encoded subdivisor
 
    AM Type chips have only four fractional subdivisors at value[15:14]
@@ -1155,7 +1155,7 @@ static int ftdi_to_clkbits(int baudrate, unsigned int clk, int clk_div, unsigned
         *encoded_divisor = (best_divisor >> 3) | (frac_code[best_divisor & 0x7] << 14);
     }
     return best_baud;
-} 
+}
 /**
     ftdi_convert_baudrate returns nearest supported baud rate to that requested.
     Function is only used internally
@@ -1180,7 +1180,7 @@ static int ftdi_convert_baudrate(int baudrate, struct ftdi_context *ftdi,
         if(baudrate*10 > H_CLK /0x3fff)
         {
             /* On H Devices, use 12 000 000 Baudrate when possible
-               We have a 14 bit divisor, a 1 bit divisor switch (10 or 16) 
+               We have a 14 bit divisor, a 1 bit divisor switch (10 or 16)
                three fractional bits and a 120 MHz clock
                Assume AN_120 "Sub-integer divisors between 0 and 2 are not allowed" holds for
                DIV/10 CLK too, so /1, /1.5 and /2 can be handled the same*/
@@ -1218,7 +1218,7 @@ static int ftdi_convert_baudrate(int baudrate, struct ftdi_context *ftdi,
  * Do not use, it's only for the unit test framework
  **/
 int convert_baudrate_UT_export(int baudrate, struct ftdi_context *ftdi,
-                                 unsigned short *value, unsigned short *index)
+                               unsigned short *value, unsigned short *index)
 {
     return ftdi_convert_baudrate(baudrate, ftdi, value, index);
 }
@@ -2351,16 +2351,16 @@ int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi, char * manufacturer,
         const char* default_product;
         switch(ftdi->type)
         {
-        case TYPE_AM:    default_product = "AM"; break;
-        case TYPE_BM:    default_product = "BM"; break;
-        case TYPE_2232C: default_product = "Dual RS232"; break;
-        case TYPE_R:     default_product = "FT232R USB UART"; break;
-        case TYPE_2232H: default_product = "Dual RS232-HS"; break;
-        case TYPE_4232H: default_product = "FT4232H"; break;
-        case TYPE_232H:  default_product = "Single-RS232-HS"; break;
-        case TYPE_230X:  default_product = "FT230X Basic UART"; break;
-        default:
-        ftdi_error_return(-3, "Unknown chip type");
+            case TYPE_AM:    default_product = "AM"; break;
+            case TYPE_BM:    default_product = "BM"; break;
+            case TYPE_2232C: default_product = "Dual RS232"; break;
+            case TYPE_R:     default_product = "FT232R USB UART"; break;
+            case TYPE_2232H: default_product = "Dual RS232-HS"; break;
+            case TYPE_4232H: default_product = "FT4232H"; break;
+            case TYPE_232H:  default_product = "Single-RS232-HS"; break;
+            case TYPE_230X:  default_product = "FT230X Basic UART"; break;
+            default:
+                ftdi_error_return(-3, "Unknown chip type");
         }
         eeprom->product = malloc(strlen(default_product) +1);
         if (eeprom->product)
@@ -2439,7 +2439,7 @@ int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi, char * manufacturer,
 }
 
 int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
-                             char * product, char * serial)
+                            char * product, char * serial)
 {
     struct ftdi_eeprom *eeprom;
 
@@ -2454,7 +2454,8 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
     if (ftdi->usb_dev == NULL)
         ftdi_error_return(-3, "No connected device or device not yet opened");
 
-    if (manufacturer) {
+    if (manufacturer)
+    {
         if (eeprom->manufacturer)
             free (eeprom->manufacturer);
         eeprom->manufacturer = malloc(strlen(manufacturer)+1);
@@ -2462,7 +2463,8 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
             strcpy(eeprom->manufacturer, manufacturer);
     }
 
-    if(product) {
+    if(product)
+    {
         if (eeprom->product)
             free (eeprom->product);
         eeprom->product = malloc(strlen(product)+1);
@@ -2470,11 +2472,13 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
             strcpy(eeprom->product, product);
     }
 
-    if (serial) {
+    if (serial)
+    {
         if (eeprom->serial)
             free (eeprom->serial);
         eeprom->serial = malloc(strlen(serial)+1);
-        if (eeprom->serial) {
+        if (eeprom->serial)
+        {
             strcpy(eeprom->serial, serial);
             eeprom->use_serial = 1;
         }
@@ -2487,7 +2491,7 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
 void set_ft232h_cbus(struct ftdi_eeprom *eeprom, unsigned char * output)
 {
     int i;
-    for(i=0; i<5;i++)
+    for(i=0; i<5; i++)
     {
         int mode_low, mode_high;
         if (eeprom->cbus_function[2*i]> CBUSH_CLK7_5)
@@ -2509,35 +2513,35 @@ static unsigned char type2bit(unsigned char type, enum ftdi_chip_type chip)
 {
     switch (chip)
     {
-    case TYPE_2232H:
-    case TYPE_2232C:
-    {
-        switch (type)
+        case TYPE_2232H:
+        case TYPE_2232C:
         {
-        case CHANNEL_IS_UART: return 0;
-        case CHANNEL_IS_FIFO: return 0x01;
-        case CHANNEL_IS_OPTO: return 0x02;
-        case CHANNEL_IS_CPU : return 0x04;
-        default: return 0;
+            switch (type)
+            {
+                case CHANNEL_IS_UART: return 0;
+                case CHANNEL_IS_FIFO: return 0x01;
+                case CHANNEL_IS_OPTO: return 0x02;
+                case CHANNEL_IS_CPU : return 0x04;
+                default: return 0;
+            }
         }
-    }
-    case TYPE_232H:
-    {
-        switch (type)
+        case TYPE_232H:
         {
-        case CHANNEL_IS_UART   : return 0;
-        case CHANNEL_IS_FIFO   : return 0x01;
-        case CHANNEL_IS_OPTO   : return 0x02;
-        case CHANNEL_IS_CPU    : return 0x04;
-        case CHANNEL_IS_FT1284 : return 0x08;
-        default: return 0;
+            switch (type)
+            {
+                case CHANNEL_IS_UART   : return 0;
+                case CHANNEL_IS_FIFO   : return 0x01;
+                case CHANNEL_IS_OPTO   : return 0x02;
+                case CHANNEL_IS_CPU    : return 0x04;
+                case CHANNEL_IS_FT1284 : return 0x08;
+                default: return 0;
+            }
         }
-    }
-    case TYPE_230X: /* FT230X is only UART */
-    default: return 0;
+        case TYPE_230X: /* FT230X is only UART */
+        default: return 0;
     }
     return 0;
-}    
+}
 
 /**
     Build binary buffer from ftdi_eeprom structure.
@@ -2573,7 +2577,8 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     if (eeprom->chip == -1)
         ftdi_error_return(-6,"No connected EEPROM or EEPROM type unknown");
 
-    if (eeprom->size == -1) {
+    if (eeprom->size == -1)
+    {
         if ((eeprom->chip == 0x56) || (eeprom->chip == 0x66))
             eeprom->size = 0x100;
         else
@@ -2618,12 +2623,15 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
         ftdi_error_return(-1,"eeprom size exceeded");
 
     // empty eeprom
-    if (ftdi->type == TYPE_230X) {
+    if (ftdi->type == TYPE_230X)
+    {
         /* FT230X have a reserved section in the middle of the MTP,
            which cannot be written to, but must be included in the checksum */
         memset(ftdi->eeprom->buf, 0, 0x80);
         memset((ftdi->eeprom->buf + 0xa0), 0, (FTDI_MAX_EEPROM_SIZE - 0xa0));
-    } else {
+    }
+    else
+    {
         memset(ftdi->eeprom->buf, 0, FTDI_MAX_EEPROM_SIZE);
     }
 
@@ -3047,7 +3055,8 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             output[0x00] = 0x80; /* Actually, leave the default value */
             output[0x0a] = 0x08; /* Enable USB Serial Number */
             output[0x0c] = (0x01) | (0x3 << 4); /* DBUS drive 4mA, CBUS drive 16mA */
-            for (j = 0; j <= 6; j++) {
+            for (j = 0; j <= 6; j++)
+            {
                 output[0x1a + j] = eeprom->cbus_function[j];
             }
             break;
@@ -3058,7 +3067,8 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
 
     for (i = 0; i < eeprom->size/2-1; i++)
     {
-        if ((ftdi->type == TYPE_230X) && (i == 0x12)) {
+        if ((ftdi->type == TYPE_230X) && (i == 0x12))
+        {
             /* FT230X has a user section in the MTP which is not part of the checksum */
             i = 0x40;
         }
@@ -3075,7 +3085,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     eeprom->initialized_for_connected_device = 1;
     return user_area_size;
 }
-/* Decode the encoded EEPROM field for the FTDI Mode into a value for the abstracted 
+/* Decode the encoded EEPROM field for the FTDI Mode into a value for the abstracted
  * EEPROM structure
  *
  * FTD2XX doesn't allow to set multiple bits in the interface mode bitfield, and so do we
@@ -3084,14 +3094,14 @@ static unsigned char bit2type(unsigned char bits)
 {
     switch (bits)
     {
-    case   0: return CHANNEL_IS_UART;
-    case   1: return CHANNEL_IS_FIFO;
-    case   2: return CHANNEL_IS_OPTO;
-    case   4: return CHANNEL_IS_CPU;
-    case   8: return CHANNEL_IS_FT1284;
-    default:
-        fprintf(stderr," Unexpected value %d for Hardware Interface type\n",
-                bits);
+        case   0: return CHANNEL_IS_UART;
+        case   1: return CHANNEL_IS_FIFO;
+        case   2: return CHANNEL_IS_OPTO;
+        case   4: return CHANNEL_IS_CPU;
+        case   8: return CHANNEL_IS_FT1284;
+        default:
+            fprintf(stderr," Unexpected value %d for Hardware Interface type\n",
+                    bits);
     }
     return 0;
 }
@@ -3176,7 +3186,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         {
             // Decode manufacturer
             i = buf[0x0E] & (eeprom_size -1); // offset
-            for (j=0;j<manufacturer_size-1;j++)
+            for (j=0; j<manufacturer_size-1; j++)
             {
                 eeprom->manufacturer[j] = buf[2*j+i+2];
             }
@@ -3197,7 +3207,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         {
             // Decode product name
             i = buf[0x10] & (eeprom_size -1); // offset
-            for (j=0;j<product_size-1;j++)
+            for (j=0; j<product_size-1; j++)
             {
                 eeprom->product[j] = buf[2*j+i+2];
             }
@@ -3218,7 +3228,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         {
             // Decode serial
             i = buf[0x12] & (eeprom_size -1); // offset
-            for (j=0;j<serial_size-1;j++)
+            for (j=0; j<serial_size-1; j++)
             {
                 eeprom->serial[j] = buf[2*j+i+2];
             }
@@ -3232,7 +3242,8 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
 
     for (i = 0; i < eeprom_size/2-1; i++)
     {
-        if ((ftdi->type == TYPE_230X) && (i == 0x12)) {
+        if ((ftdi->type == TYPE_230X) && (i == 0x12))
+        {
             /* FT230X has a user section in the MTP which is not part of the checksum */
             i = 0x40;
         }
@@ -3353,7 +3364,8 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     }
     else if (ftdi->type == TYPE_230X)
     {
-        for(i=0; i<4; i++) {
+        for(i=0; i<4; i++)
+        {
             eeprom->cbus_function[i] =  buf[0x1a + i] & 0xFF;
         }
         eeprom->group0_drive   =  buf[0x0c]       & 0x03;
@@ -3395,7 +3407,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         {
             if(ftdi->type >= TYPE_232H)
                 fprintf(stdout,"Enter low power state on ACBUS7\n");
-        } 
+        }
         if (eeprom->remote_wakeup)
             fprintf(stdout, "Enable Remote Wake Up\n");
         fprintf(stdout, "PNP: %d\n",(eeprom->is_not_pnp)?0:1);
@@ -3410,7 +3422,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
                     (eeprom->clock_polarity)?"HIGH":"LOW",
                     (eeprom->data_order)?"LSB":"MSB",
                     (eeprom->flow_control)?"":"No ");
-        }        
+        }
         if ((ftdi->type >= TYPE_2232C) && (ftdi->type != TYPE_R) && (ftdi->type != TYPE_232H))
             fprintf(stdout,"Channel B has Mode %s%s%s\n",
                     channel_mode[eeprom->channel_b_type],
@@ -3447,9 +3459,9 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         {
             int i;
             char *cbush_mux[] = {"TRISTATE","RXLED","TXLED", "TXRXLED","PWREN",
-                                "SLEEP","DRIVE_0","DRIVE_1","IOMODE","TXDEN",
-                                "CLK30","CLK15","CLK7_5"
-                               };
+                                 "SLEEP","DRIVE_0","DRIVE_1","IOMODE","TXDEN",
+                                 "CLK30","CLK15","CLK7_5"
+                                };
             fprintf(stdout,"ACBUS has %d mA drive%s%s\n",
                     (eeprom->group0_drive+1) *4,
                     (eeprom->group0_schmitt)?" Schmitt Input":"",
@@ -3469,11 +3481,11 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         {
             int i;
             char *cbush_mux[] = {"TRISTATE","RXLED","TXLED", "TXRXLED","PWREN",
-                                "SLEEP","DRIVE_0","DRIVE_1","IOMODE","TXDEN",
-                                "CLK24","CLK12","CLK6","BAT_DETECT","BAT_DETECT#",
-                                "I2C_TXE#", "I2C_RXF#", "VBUS_SENSE", "BB_WR#",
-                                "BBRD#", "TIME_STAMP", "AWAKE#",
-                               };
+                                 "SLEEP","DRIVE_0","DRIVE_1","IOMODE","TXDEN",
+                                 "CLK24","CLK12","CLK6","BAT_DETECT","BAT_DETECT#",
+                                 "I2C_TXE#", "I2C_RXF#", "VBUS_SENSE", "BB_WR#",
+                                 "BBRD#", "TIME_STAMP", "AWAKE#",
+                                };
             fprintf(stdout,"IOBUS has %d mA drive%s%s\n",
                     (eeprom->group0_drive+1) *4,
                     (eeprom->group0_schmitt)?" Schmitt Input":"",
@@ -3691,19 +3703,19 @@ int ftdi_get_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
         case GROUP3_SLEW:
             *value = ftdi->eeprom->group3_slew;
             break;
-         case POWER_SAVE:
+        case POWER_SAVE:
             *value = ftdi->eeprom->powersave;
             break;
-          case CLOCK_POLARITY:
+        case CLOCK_POLARITY:
             *value = ftdi->eeprom->clock_polarity;
             break;
-         case DATA_ORDER:
+        case DATA_ORDER:
             *value = ftdi->eeprom->data_order;
             break;
-         case FLOW_CONTROL:
+        case FLOW_CONTROL:
             *value = ftdi->eeprom->flow_control;
             break;
-       case CHIP_TYPE:
+        case CHIP_TYPE:
             *value = ftdi->eeprom->chip;
             break;
         case CHIP_SIZE:
@@ -3884,16 +3896,16 @@ int ftdi_set_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
         case CHIP_TYPE:
             ftdi->eeprom->chip = value;
             break;
-         case POWER_SAVE:
+        case POWER_SAVE:
             ftdi->eeprom->powersave = value;
             break;
-         case CLOCK_POLARITY:
+        case CLOCK_POLARITY:
             ftdi->eeprom->clock_polarity = value;
             break;
-         case DATA_ORDER:
+        case DATA_ORDER:
             ftdi->eeprom->data_order = value;
             break;
-         case FLOW_CONTROL:
+        case FLOW_CONTROL:
             ftdi->eeprom->flow_control = value;
             break;
         case CHIP_SIZE:
@@ -4164,7 +4176,8 @@ int ftdi_write_eeprom(struct ftdi_context *ftdi)
     for (i = 0; i < ftdi->eeprom->size/2; i++)
     {
         /* Do not try to write to reserved area */
-        if ((ftdi->type == TYPE_230X) && (i == 0x40)) {
+        if ((ftdi->type == TYPE_230X) && (i == 0x40))
+        {
             i = 0x50;
         }
         usb_val = eeprom[i*2];

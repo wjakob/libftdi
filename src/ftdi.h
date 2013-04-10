@@ -21,7 +21,8 @@
 #include <sys/time.h>
 
 /** FTDI chip type */
-enum ftdi_chip_type {
+enum ftdi_chip_type
+{
     TYPE_AM=0,
     TYPE_BM=1,
     TYPE_2232C=2,
@@ -48,7 +49,7 @@ enum ftdi_mpsse_mode
     BITMODE_MPSSE  = 0x02,    /**< MPSSE mode, available on 2232x chips */
     BITMODE_SYNCBB = 0x04,    /**< synchronous bitbang mode, available on 2232x and R-type chips  */
     BITMODE_MCU    = 0x08,    /**< MCU Host Bus Emulation mode, available on 2232x chips */
-                              /* CPU-style fifo mode gets set via EEPROM */
+    /* CPU-style fifo mode gets set via EEPROM */
     BITMODE_OPTO   = 0x10,    /**< Fast Opto-Isolated Serial Interface Mode, available on 2232x chips  */
     BITMODE_CBUS   = 0x20,    /**< Bitbang on CBUS pins of R-type chips, configure in EEPROM before */
     BITMODE_SYNCFF = 0x40,    /**< Single Channel Synchronous FIFO mode, available on 2232H chips */
@@ -180,12 +181,12 @@ enum ftdi_module_detach_mode
 #define FTDI_URB_USERCONTEXT_COOKIE ((void *)0x1)
 
 #ifdef __GNUC__
-    #define DEPRECATED(func) func __attribute__ ((deprecated))
+#define DEPRECATED(func) func __attribute__ ((deprecated))
 #elif defined(_MSC_VER)
-    #define DEPRECATED(func) __declspec(deprecated) func
+#define DEPRECATED(func) __declspec(deprecated) func
 #else
-    #pragma message("WARNING: You need to implement DEPRECATED for this compiler")
-    #define DEPRECATED(func) func
+#pragma message("WARNING: You need to implement DEPRECATED for this compiler")
+#define DEPRECATED(func) func
 #endif
 
 struct ftdi_transfer_control
@@ -337,17 +338,21 @@ struct ftdi_device_list
 #define POWER_SAVE_DISABLE_H 0x80
 
 #define USE_SERIAL_NUM 0x08
-enum ftdi_cbus_func {/* FIXME: Recheck value, especially the last */
+enum ftdi_cbus_func  /* FIXME: Recheck value, especially the last */
+{
     CBUS_TXDEN = 0, CBUS_PWREN = 1, CBUS_RXLED = 2, CBUS_TXLED = 3, CBUS_TXRXLED = 4,
     CBUS_SLEEP = 5, CBUS_CLK48 = 6, CBUS_CLK24 = 7, CBUS_CLK12 = 8, CBUS_CLK6 =  9,
-    CBUS_IOMODE = 0xa, CBUS_BB_WR = 0xb, CBUS_BB_RD = 0xc, CBUS_BB   = 0xd};
+    CBUS_IOMODE = 0xa, CBUS_BB_WR = 0xb, CBUS_BB_RD = 0xc, CBUS_BB   = 0xd
+};
 
-enum ftdi_cbush_func {/* FIXME: Recheck value, especially the last */
+enum ftdi_cbush_func  /* FIXME: Recheck value, especially the last */
+{
     CBUSH_TRISTATE = 0, CBUSH_RXLED = 1, CBUSH_TXLED = 2, CBUSH_TXRXLED = 3, CBUSH_PWREN = 4,
     CBUSH_SLEEP = 5, CBUSH_DRIVE_0 = 6, CBUSG_DRIVE1 = 7, CBUSH_IOMODE = 8, CBUSH_TXDEN =  9,
     CBUSH_CLK30 = 10, CBUSH_CLK15 = 11, CBUSH_CLK7_5 = 12, CBUSH_BAT_DETECT = 13,
     CBUSH_BAT_DETECT_NEG = 14, CBUSH_I2C_TXE = 15, CBUSH_I2C_RXF = 16, CBUSH_VBUS_SENSE = 17,
-    CBUSH_BB_WR = 18, CBUSH_BB_RD = 19, CBUSH_TIME_STAMP = 20, CBUSH_AWAKE = 21,};
+    CBUSH_BB_WR = 18, CBUSH_BB_RD = 19, CBUSH_TIME_STAMP = 20, CBUSH_AWAKE = 21,
+};
 
 /** Invert TXD# */
 #define INVERT_TXD 0x01
@@ -399,8 +404,8 @@ enum ftdi_cbush_func {/* FIXME: Recheck value, especially the last */
 */
 struct size_and_time
 {
-        uint64_t totalBytes;
-        struct timeval time;
+    uint64_t totalBytes;
+    struct timeval time;
 };
 
 typedef struct
@@ -458,13 +463,13 @@ extern "C"
                              char * description, int desc_len,
                              char * serial, int serial_len);
     int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
-                             char * product, char * serial);
+                                char * product, char * serial);
 
     int ftdi_usb_open(struct ftdi_context *ftdi, int vendor, int product);
     int ftdi_usb_open_desc(struct ftdi_context *ftdi, int vendor, int product,
                            const char* description, const char* serial);
     int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
-                           const char* description, const char* serial, unsigned int index);
+                                 const char* description, const char* serial, unsigned int index);
     int ftdi_usb_open_dev(struct ftdi_context *ftdi, struct libusb_device *dev);
     int ftdi_usb_open_string(struct ftdi_context *ftdi, const char* description);
 
@@ -515,9 +520,9 @@ extern "C"
     int ftdi_set_error_char(struct ftdi_context *ftdi, unsigned char errorch, unsigned char enable);
 
     /* init eeprom for the given FTDI type */
-    int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi, 
-                                  char * manufacturer, char *product, 
-                                  char * serial);
+    int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi,
+                                 char * manufacturer, char *product,
+                                 char * serial);
     int ftdi_eeprom_build(struct ftdi_context *ftdi);
     int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose);
 

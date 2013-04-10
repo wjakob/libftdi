@@ -61,7 +61,7 @@ struct ftdi_eeprom
     int usb_version;
     /** Use usb version on FT2232 devices*/
     int use_usb_version;
-     /** maximum power */
+    /** maximum power */
     int max_power;
 
     /** manufacturer name */
@@ -72,7 +72,7 @@ struct ftdi_eeprom
     char *serial;
 
     /* 2232D/H specific */
-    /* Hardware type, 0 = RS232 Uart, 1 = 245 FIFO, 2 = CPU FIFO, 
+    /* Hardware type, 0 = RS232 Uart, 1 = 245 FIFO, 2 = CPU FIFO,
        4 = OPTO Isolate */
     int channel_a_type;
     int channel_b_type;
