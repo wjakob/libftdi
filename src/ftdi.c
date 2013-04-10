@@ -1542,7 +1542,7 @@ struct ftdi_transfer_control *ftdi_write_data_submit(struct ftdi_context *ftdi, 
     tc->size = size;
     tc->offset = 0;
 
-    if (size < ftdi->writebuffer_chunksize)
+    if (size < (int)ftdi->writebuffer_chunksize)
         write_size = size;
     else
         write_size = ftdi->writebuffer_chunksize;
@@ -1595,7 +1595,7 @@ struct ftdi_transfer_control *ftdi_read_data_submit(struct ftdi_context *ftdi, u
     tc->buf = buf;
     tc->size = size;
 
-    if (size <= ftdi->readbuffer_remaining)
+    if (size <= (int)ftdi->readbuffer_remaining)
     {
         memcpy (buf, ftdi->readbuffer+ftdi->readbuffer_offset, size);
 
@@ -1759,7 +1759,7 @@ int ftdi_read_data(struct ftdi_context *ftdi, unsigned char *buf, int size)
         ftdi_error_return(-1, "max_packet_size is bogus (zero)");
 
     // everything we want is still in the readbuffer?
-    if (size <= ftdi->readbuffer_remaining)
+    if (size <= (int)ftdi->readbuffer_remaining)
     {
         memcpy (buf, ftdi->readbuffer+ftdi->readbuffer_offset, size);
 
