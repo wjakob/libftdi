@@ -3772,7 +3772,7 @@ int ftdi_set_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
         default :
             ftdi_error_return(-1, "Request to unknown EEPROM value");
     }
-    eeprom->initialized_for_connected_device = 0;
+    ftdi->eeprom->initialized_for_connected_device = 0;
     return 0;
 }
 
