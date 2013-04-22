@@ -180,6 +180,26 @@ int Context::set_line_property(enum ftdi_bits_type bits, enum ftdi_stopbits_type
     return ftdi_set_line_property2(d->ftdi, bits, sbit, parity, break_type);
 }
 
+int Context::get_usb_read_timeout() const
+{
+    return d->ftdi->usb_read_timeout;
+}
+
+void Context::set_usb_read_timeout(int usb_read_timeout)
+{
+    d->ftdi->usb_read_timeout = usb_read_timeout;
+}
+
+int Context::get_usb_write_timeout() const
+{
+    return d->ftdi->usb_write_timeout;
+}
+
+void Context::set_usb_write_timeout(int usb_write_timeout)
+{
+    d->ftdi->usb_write_timeout = usb_write_timeout;
+}
+
 int Context::read(unsigned char *buf, int size)
 {
     return ftdi_read_data(d->ftdi, buf, size);

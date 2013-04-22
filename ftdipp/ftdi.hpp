@@ -93,6 +93,10 @@ public:
     int set_baud_rate(int baudrate);
     int set_line_property(enum ftdi_bits_type bits, enum ftdi_stopbits_type sbit, enum ftdi_parity_type parity);
     int set_line_property(enum ftdi_bits_type bits, enum ftdi_stopbits_type sbit, enum ftdi_parity_type parity, enum ftdi_break_type break_type);
+    int get_usb_read_timeout() const;
+    void set_usb_read_timeout(int usb_read_timeout);
+    int get_usb_write_timeout() const;
+    void set_usb_write_timeout(int usb_write_timeout);
 
     /* I/O */
     int read(unsigned char *buf, int size);
