@@ -4126,7 +4126,7 @@ int ftdi_write_eeprom_location(struct ftdi_context *ftdi, int eeprom_addr,
     }
 
     if (ftdi_read_eeprom_location( ftdi, chip_type_location>>1, &chip_type))
-        ftdi_error_return(-5, "Reading failed failed");
+        ftdi_error_return(-5, "Reading failed");
     fprintf(stderr," loc 0x%04x val 0x%04x\n", chip_type_location,chip_type);
     if ((chip_type & 0xff) != 0x66)
     {
@@ -4232,7 +4232,7 @@ int ftdi_erase_eeprom(struct ftdi_context *ftdi)
                                 NULL, 0, ftdi->usb_write_timeout) != 0)
         ftdi_error_return(-3, "Writing magic failed");
     if (ftdi_read_eeprom_location( ftdi, 0x00, &eeprom_value))
-        ftdi_error_return(-4, "Reading failed failed");
+        ftdi_error_return(-4, "Reading failed");
     if (eeprom_value == MAGIC)
     {
         ftdi->eeprom->chip = 0x46;
@@ -4240,13 +4240,13 @@ int ftdi_erase_eeprom(struct ftdi_context *ftdi)
     else
     {
         if (ftdi_read_eeprom_location( ftdi, 0x40, &eeprom_value))
-            ftdi_error_return(-4, "Reading failed failed");
+            ftdi_error_return(-4, "Reading failed");
         if (eeprom_value == MAGIC)
             ftdi->eeprom->chip = 0x56;
         else
         {
             if (ftdi_read_eeprom_location( ftdi, 0xc0, &eeprom_value))
-                ftdi_error_return(-4, "Reading failed failed");
+                ftdi_error_return(-4, "Reading failed");
             if (eeprom_value == MAGIC)
                 ftdi->eeprom->chip = 0x66;
             else
