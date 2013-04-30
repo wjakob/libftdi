@@ -3,6 +3,7 @@ option(FTDI_EEPROM "Build ftdi_eeprom" ON)
 
 if ( FTDI_EEPROM )
   find_package ( Confuse )
+  find_package ( Libintl )
 else(FTDI_EEPROM)
   message(STATUS "ftdi_eeprom build is disabled")
 endif ()
@@ -11,7 +12,7 @@ endif ()
 if ( CONFUSE_FOUND )
   message(STATUS "Building ftdi_eeprom")
 
-  include_directories ( ${CONFUSE_INCLUDE_DIRS} )
+  include_directories ( ${CONFUSE_INCLUDE_DIRS} ${LIBINTL_INCLUDE_DIR} )
 
   list ( APPEND libs ${CONFUSE_LIBRARIES} )
 
@@ -30,8 +31,8 @@ if ( CONFUSE_FOUND )
 
   add_executable ( ftdi_eeprom main.c )
   target_link_libraries ( ftdi_eeprom ftdi1 )
-  target_link_libraries ( ftdi_eeprom ${CONFUSE_LIBRARIES} )
-
+  target_link_libraries ( ftdi_eeprom ${CONFUSE_LIBRARIES} ${LIBINTL_LIBRARIES} )
+  
   install ( TARGETS ftdi_eeprom DESTINATION bin )
 else ()
   message ( STATUS "libConfuse not found, won't build ftdi_eeprom" )
