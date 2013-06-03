@@ -21,14 +21,19 @@ if ( SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND )
     swig_link_libraries ( ftdi1 ${PYTHON_LIBRARIES} )
   endif ()
 
-  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "import sys; print( '%d.%d' % ( sys.version_info[0], sys.version_info[1] ) )"
-                    OUTPUT_VARIABLE PYTHON_VERSION
+  execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print( sysconfig.get_python_lib( plat_specific=True, prefix='${CMAKE_INSTALL_PREFIX}' ) )"
+                    OUTPUT_VARIABLE _ABS_PYTHON_MODULE_PATH
                     OUTPUT_STRIP_TRAILING_WHITESPACE )
-
-  set ( SITEPACKAGE lib${LIB_SUFFIX}/python${PYTHON_VERSION}/site-packages )
-
-  INSTALL ( FILES ${CMAKE_CURRENT_BINARY_DIR}/_ftdi1.so DESTINATION ${SITEPACKAGE} )
-  INSTALL ( FILES ${CMAKE_CURRENT_BINARY_DIR}/ftdi1.py DESTINATION ${SITEPACKAGE} )
+                      
+  get_filename_component ( _ABS_PYTHON_MODULE_PATH ${_ABS_PYTHON_MODULE_PATH} ABSOLUTE )
+  file ( RELATIVE_PATH _REL_PYTHON_MODULE_PATH ${CMAKE_INSTALL_PREFIX} ${_ABS_PYTHON_MODULE_PATH} )                   
+                        
+  set ( PYTHON_MODULE_PATH
+        ${_REL_PYTHON_MODULE_PATH}
+      )
+        
+  INSTALL ( FILES ${CMAKE_CURRENT_BINARY_DIR}/_ftdi1.so DESTINATION ${PYTHON_MODULE_PATH} )
+  INSTALL ( FILES ${CMAKE_CURRENT_BINARY_DIR}/ftdi1.py DESTINATION ${PYTHON_MODULE_PATH} )
 
   if ( DOCUMENTATION AND DOXYGEN_FOUND )
 
@@ -54,7 +59,7 @@ if ( SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND )
 
   endif ()
   
-  set ( LIBFTDI_PYTHON_MODULE_PATH ${CMAKE_INSTALL_PREFIX}/${SITEPACKAGE} )
+  set ( LIBFTDI_PYTHON_MODULE_PATH ${CMAKE_INSTALL_PREFIX}/${PYTHON_MODULE_PATH} )
   set ( LIBFTDI_PYTHON_MODULE_PATH ${LIBFTDI_PYTHON_MODULE_PATH} PARENT_SCOPE ) # for ftdiconfig.cmake
   message(STATUS "Building python bindings via swig. Will be installed under ${LIBFTDI_PYTHON_MODULE_PATH}")
 
