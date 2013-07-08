@@ -1,4 +1,5 @@
 option ( PYTHON_BINDINGS "Build python bindings via swig" ON )
+option ( LINK_PYTHON_LIBRARY "Link against python libraries" ON )
 
 if ( PYTHON_BINDINGS )
   find_package ( SWIG )
@@ -15,12 +16,12 @@ if ( SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND )
   swig_add_module ( ftdi1 python ftdi1.i )
   swig_link_libraries ( ftdi1 ftdi1 )
 
-  # do not link python modules on debian
-  # http://www.debian.org/doc/packaging-manuals/python-policy/ch-module_packages.html
-  if ( NOT UNIX OR ( UNIX AND NOT EXISTS "/etc/debian_version" ) )
+  if ( LINK_PYTHON_LIBRARY )
     swig_link_libraries ( ftdi1 ${PYTHON_LIBRARIES} )
   endif ()
-
+  
+  set_target_properties ( ${SWIG_MODULE_ftdi1_REAL_NAME} PROPERTIES NO_SONAME ON ) 
+  
   execute_process ( COMMAND ${PYTHON_EXECUTABLE} -c "from distutils import sysconfig; print( sysconfig.get_python_lib( plat_specific=True, prefix='${CMAKE_INSTALL_PREFIX}' ) )"
                     OUTPUT_VARIABLE _ABS_PYTHON_MODULE_PATH
                     OUTPUT_STRIP_TRAILING_WHITESPACE )
