@@ -20,6 +20,18 @@
 #include <stdint.h>
 #include <sys/time.h>
 
+/* 'interface' might be defined as a macro on Windows, so we need to
+ * undefine it so as not to break the current libftdi API, because
+ * struct ftdi_context has an 'interface' member
+ * As this can be problematic if you include windows.h after ftdi.h
+ * in your sources, we force windows.h to be included first. */
+#if defined(_WIN32) || defined(__CYGWIN__) || defined(_WIN32_WCE)
+#include <windows.h>
+#if defined(interface)
+#undef interface
+#endif
+#endif
+
 /** FTDI chip type */
 enum ftdi_chip_type
 {
