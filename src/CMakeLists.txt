@@ -11,8 +11,8 @@ execute_process(COMMAND git describe
                 OUTPUT_STRIP_TRAILING_WHITESPACE
                 )
 if(${GIT_DESCRIBE_RESULT} STREQUAL 0)
-    set(SNAPSHOT_VERSION ${GIT_DESCRIBE_OUTPUT})
-endif(${GIT_DESCRIBE_RESULT} STREQUAL 0)
+  set(SNAPSHOT_VERSION ${GIT_DESCRIBE_OUTPUT})
+endif ()
 message(STATUS "Detected git snapshot version: ${SNAPSHOT_VERSION}")
 
 configure_file(ftdi_version_i.h.in "${CMAKE_CURRENT_BINARY_DIR}/ftdi_version_i.h" @ONLY)
@@ -25,61 +25,31 @@ add_library(ftdi1 SHARED ${c_sources})
 
 math(EXPR VERSION_FIXUP "${MAJOR_VERSION} + 1")    # Compatiblity with previous releases
 set_target_properties(ftdi1 PROPERTIES VERSION ${VERSION_FIXUP}.${MINOR_VERSION}.0 SOVERSION 2)
-
-# Static library
-add_library(ftdi1-static STATIC ${c_sources})
-if (STATICLIBS)
-    set_target_properties(ftdi1-static PROPERTIES OUTPUT_NAME "ftdi1")
-endif (STATICLIBS)
-
 # Prevent clobbering each other during the build
-set_target_properties(ftdi1 PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-if (STATICLIBS)
-    set_target_properties(ftdi1-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
-endif (STATICLIBS)
+set_target_properties ( ftdi1 PROPERTIES CLEAN_DIRECT_OUTPUT 1 )
+
 
 # Dependencies
 target_link_libraries(ftdi1 ${LIBUSB_LIBRARIES})
 
-# Install
-if(${UNIX})
+install ( TARGETS ftdi1
+          RUNTIME DESTINATION bin
+          LIBRARY DESTINATION lib${LIB_SUFFIX}
+          ARCHIVE DESTINATION lib${LIB_SUFFIX}
+        )
 
-   install( TARGETS ftdi1
-            LIBRARY DESTINATION lib${LIB_SUFFIX}
-            COMPONENT sharedlibs
-            )
+if ( STATICLIBS )
+  add_library(ftdi1-static STATIC ${c_sources})
+  target_link_libraries(ftdi1-static ${LIBUSB_LIBRARIES})
+  set_target_properties(ftdi1-static PROPERTIES OUTPUT_NAME "ftdi1")
+  set_target_properties(ftdi1-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
+  install ( TARGETS ftdi1-static
+            ARCHIVE DESTINATION lib${LIB_SUFFIX}
+            COMPONENT staticlibs
+          )
+endif ()
 
-   if (STATICLIBS)
-       install( TARGETS ftdi1-static
-                ARCHIVE DESTINATION lib${LIB_SUFFIX}
-                COMPONENT staticlibs
-                )
-   endif (STATICLIBS)
-
-   install( FILES ${c_headers}
-            DESTINATION include/${PROJECT_NAME}
-            COMPONENT headers
-            )
-
-endif(${UNIX})
-
-if(${WIN32})
-
-   install( TARGETS ftdi1
-            DESTINATION bin
-            COMPONENT sharedlibs
-            )
-
-   if (STATICLIBS)
-       install( TARGETS ftdi1-static
-                DESTINATION bin
-                COMPONENT staticlibs
-                )
-   endif (STATICLIBS)
-
-   install( FILES ${c_headers}
-            DESTINATION include/${PROJECT_NAME}
-            COMPONENT headers
-            )
-
-endif(${WIN32})
+install ( FILES ${c_headers}
+          DESTINATION include/${PROJECT_NAME}
+          COMPONENT headers
+        )
