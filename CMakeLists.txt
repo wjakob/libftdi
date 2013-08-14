@@ -196,7 +196,7 @@ if ( UNIX )
   
   set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI1.cmake )
   configure_file ( LibFTDI1Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake @ONLY )
-  install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake UseLibFTDI1.cmake
+  install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake cmake/UseLibFTDI1.cmake
             DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
           )
 endif ()
