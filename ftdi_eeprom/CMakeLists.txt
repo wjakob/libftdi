@@ -12,10 +12,15 @@ endif ()
 if ( CONFUSE_FOUND )
   message(STATUS "Building ftdi_eeprom")
 
-  include_directories ( ${CONFUSE_INCLUDE_DIRS} ${LIBINTL_INCLUDE_DIR} )
-
+  include_directories ( ${CONFUSE_INCLUDE_DIRS} )
   list ( APPEND libs ${CONFUSE_LIBRARIES} )
+  
+  if ( LIBINTL_FOUND )
+    include_directories ( ${LIBINTL_INCLUDE_DIR} )
+    list ( APPEND libs ${LIBINTL_LIBRARIES} )
+  endif ()
 
+  
   # Version defines
   set ( EEPROM_MAJOR_VERSION 0 )
   set ( EEPROM_MINOR_VERSION 17 )
@@ -30,9 +35,10 @@ if ( CONFUSE_FOUND )
   )
 
   add_executable ( ftdi_eeprom main.c )
-  target_link_libraries ( ftdi_eeprom ftdi1 )
-  target_link_libraries ( ftdi_eeprom ${CONFUSE_LIBRARIES} ${LIBINTL_LIBRARIES} )
-  
+  target_link_libraries ( ftdi_eeprom ftdi1 ${CONFUSE_LIBRARIES} )
+  if ( LIBINTL_FOUND )
+    target_link_libraries ( ftdi_eeprom ${LIBINTL_LIBRARIES} )
+  endif ()
   install ( TARGETS ftdi_eeprom DESTINATION bin )
 else ()
   message ( STATUS "libConfuse not found, won't build ftdi_eeprom" )
