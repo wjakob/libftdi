@@ -1369,7 +1369,7 @@ int ftdi_set_line_property2(struct ftdi_context *ftdi, enum ftdi_bits_type bits,
     \retval <0: error code from usb_bulk_write()
     \retval >0: number of bytes written
 */
-int ftdi_write_data(struct ftdi_context *ftdi, unsigned char *buf, int size)
+int ftdi_write_data(struct ftdi_context *ftdi, const unsigned char *buf, int size)
 {
     int offset = 0;
     int actual_length;
@@ -1384,7 +1384,7 @@ int ftdi_write_data(struct ftdi_context *ftdi, unsigned char *buf, int size)
         if (offset+write_size > size)
             write_size = size-offset;
 
-        if (libusb_bulk_transfer(ftdi->usb_dev, ftdi->in_ep, buf+offset, write_size, &actual_length, ftdi->usb_write_timeout) < 0)
+        if (libusb_bulk_transfer(ftdi->usb_dev, ftdi->in_ep, (unsigned char *)buf+offset, write_size, &actual_length, ftdi->usb_write_timeout) < 0)
             ftdi_error_return(-1, "usb bulk write failed");
 
         offset += actual_length;
