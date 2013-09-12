@@ -170,38 +170,41 @@ configure_file(${CMAKE_SOURCE_DIR}/libftdipp1.pc.in ${CMAKE_BINARY_DIR}/libftdip
 install(FILES ${CMAKE_BINARY_DIR}/libftdi1.pc ${CMAKE_BINARY_DIR}/libftdipp1.pc
         DESTINATION lib${LIB_SUFFIX}/pkgconfig)
 
-if ( UNIX )
   configure_file ( libftdi1-config.in ${CMAKE_CURRENT_BINARY_DIR}/libftdi1-config @ONLY )
   install ( PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libftdi1-config
             DESTINATION bin )
 
-  # config script install path
-  if ( NOT DEFINED LIBFTDI_CMAKE_CONFIG_DIR )
-    set ( LIBFTDI_CMAKE_CONFIG_DIR lib${LIB_SUFFIX}/cmake/libftdi1 )
-  endif ()
-  
-  set ( LIBFTDI_INCLUDE_DIR ${includedir} )
-  set ( LIBFTDI_INCLUDE_DIRS ${LIBFTDI_INCLUDE_DIR} )
-  get_target_property( _LIBFTDI_LIBRARY_LOCATION ftdi1 LOCATION )
-  get_filename_component ( _LIBFTDI_LIBRARY_NAME ${_LIBFTDI_LIBRARY_LOCATION} NAME )
-  set ( LIBFTDI_LIBRARY ${libdir}/${_LIBFTDI_LIBRARY_NAME} )
-  set ( LIBFTDI_LIBRARIES ${LIBFTDI_LIBRARY} )
-  list ( APPEND LIBFTDI_LIBRARIES ${LIBUSB_LIBRARIES} )
+# config script install path
+if ( NOT DEFINED LIBFTDI_CMAKE_CONFIG_DIR )
+  set ( LIBFTDI_CMAKE_CONFIG_DIR lib${LIB_SUFFIX}/cmake/libftdi1 )
+endif ()
+
+set ( LIBFTDI_INCLUDE_DIR ${includedir} )
+set ( LIBFTDI_INCLUDE_DIRS ${LIBFTDI_INCLUDE_DIR} )
+get_target_property( _LIBFTDI_LIBRARY_LOCATION ftdi1 LOCATION )
+get_filename_component ( _LIBFTDI_LIBRARY_NAME ${_LIBFTDI_LIBRARY_LOCATION} NAME )
+set ( LIBFTDI_LIBRARY ${libdir}/${_LIBFTDI_LIBRARY_NAME} )
+if (WIN32)
+  set (LIBFTDI_LIBRARY ${CMAKE_INSTALL_PREFIX}/lib/${_LIBFTDI_LIBRARY_NAME}.a)
+endif ()
+set ( LIBFTDI_LIBRARIES ${LIBFTDI_LIBRARY} )
+list ( APPEND LIBFTDI_LIBRARIES ${LIBUSB_LIBRARIES} )
+if (FTDI_BUILD_CPP)
   get_target_property( _LIBFTDIPP_LIBRARY_LOCATION ftdipp1 LOCATION )
   get_filename_component ( _LIBFTDIPP_LIBRARY_NAME ${_LIBFTDIPP_LIBRARY_LOCATION} NAME )
   set ( LIBFTDIPP_LIBRARY ${libdir}/${_LIBFTDIPP_LIBRARY_NAME} )
   set ( LIBFTDIPP_LIBRARIES ${LIBFTDIPP_LIBRARY} )
   list ( APPEND LIBFTDIPP_LIBRARIES ${LIBUSB_LIBRARIES} )
-  set ( LIBFTDI_ROOT_DIR ${prefix} )
-  set ( LIBFTDI_VERSION_STRING ${VERSION_STRING} )
-  set ( LIBFTDI_VERSION_MAJOR ${MAJOR_VERSION} )
-  set ( LIBFTDI_VERSION_MINOR ${MINOR_VERSION} )
-  
-  set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI1.cmake )
-  configure_file ( cmake/LibFTDI1Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake @ONLY )
-  install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake cmake/UseLibFTDI1.cmake
-            DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
-          )
 endif ()
+set ( LIBFTDI_ROOT_DIR ${prefix} )
+set ( LIBFTDI_VERSION_STRING ${VERSION_STRING} )
+set ( LIBFTDI_VERSION_MAJOR ${MAJOR_VERSION} )
+set ( LIBFTDI_VERSION_MINOR ${MINOR_VERSION} )
+
+set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI1.cmake )
+configure_file ( cmake/LibFTDI1Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake @ONLY )
+install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake cmake/UseLibFTDI1.cmake
+          DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
+        )
 
 include(CPack)

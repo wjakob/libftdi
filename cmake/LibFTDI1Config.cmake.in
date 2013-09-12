@@ -15,7 +15,7 @@
 #  LIBFTDI_FOUND              - True if LibFTDI was found on your system
 #  LIBFTDI_USE_FILE           - The file making LibFTDI usable
 #  LIBFTDI_DEFINITIONS        - Definitions needed to build with LibFTDI
-#  LIBFTDI_INCLUDE_DIRS       - Directory where OT.hxx can be found
+#  LIBFTDI_INCLUDE_DIRS       - Directory where ftdi.h can be found
 #  LIBFTDI_INCLUDE_DIRS       - List of directories of LibFTDI and it's dependencies
 #  LIBFTDI_LIBRARY            - LibFTDI library location
 #  LIBFTDI_LIBRARIES          - List of libraries to link against LibFTDI library
