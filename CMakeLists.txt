@@ -170,9 +170,11 @@ configure_file(${CMAKE_SOURCE_DIR}/libftdipp1.pc.in ${CMAKE_BINARY_DIR}/libftdip
 install(FILES ${CMAKE_BINARY_DIR}/libftdi1.pc ${CMAKE_BINARY_DIR}/libftdipp1.pc
         DESTINATION lib${LIB_SUFFIX}/pkgconfig)
 
+if (UNIX OR MINGW)
   configure_file ( libftdi1-config.in ${CMAKE_CURRENT_BINARY_DIR}/libftdi1-config @ONLY )
   install ( PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/libftdi1-config
             DESTINATION bin )
+endif ()
 
 # config script install path
 if ( NOT DEFINED LIBFTDI_CMAKE_CONFIG_DIR )
