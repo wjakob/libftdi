@@ -278,7 +278,7 @@ void ftdi_set_usbdev (struct ftdi_context *ftdi, libusb_device_handle *usb)
  *
  * @return ftdi_version_info Library version information
  **/
-struct ftdi_version_info ftdi_get_library_version()
+struct ftdi_version_info ftdi_get_library_version(void)
 {
     struct ftdi_version_info ver;
 

@@ -464,7 +464,7 @@ extern "C"
     void ftdi_free(struct ftdi_context *ftdi);
     void ftdi_set_usbdev (struct ftdi_context *ftdi, struct libusb_device_handle *usbdev);
 
-    struct ftdi_version_info ftdi_get_library_version();
+    struct ftdi_version_info ftdi_get_library_version(void);
 
     int ftdi_usb_find_all(struct ftdi_context *ftdi, struct ftdi_device_list **devlist,
                           int vendor, int product);
