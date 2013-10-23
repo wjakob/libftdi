@@ -3015,6 +3015,12 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
                 output[0x01] |= POWER_SAVE_DISABLE_H;
             else
                 output[0x01] &= ~POWER_SAVE_DISABLE_H;
+
+            if (eeprom->suspend_pull_downs)
+                output[0x0a] |= 0x4;
+            else
+                output[0x0a] &= ~0x4;
+
             if (eeprom->clock_polarity)
                 output[0x01] |= FT1284_CLK_IDLE_STATE;
             else
