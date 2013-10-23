@@ -2691,8 +2691,6 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     i = 0;
     switch (ftdi->type)
     {
-        case TYPE_232H:
-            i += 2;
         case TYPE_2232H:
         case TYPE_4232H:
             i += 2;
@@ -2704,6 +2702,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
         case TYPE_BM:
             i += 0x94;
             break;
+        case TYPE_232H:
         case TYPE_230X:
             i = 0xa0;
             break;
