@@ -43,16 +43,20 @@
 
 static int str_to_cbus(char *str, int max_allowed)
 {
-    #define MAX_OPTION 14
-    const char* options[MAX_OPTION] = {
-     "TXDEN", "PWREN", "RXLED", "TXLED", "TXRXLED", "SLEEP",
-     "CLK48", "CLK24", "CLK12", "CLK6",
-     "IO_MODE", "BITBANG_WR", "BITBANG_RD", "SPECIAL"};
+#define MAX_OPTION 14
+    const char* options[MAX_OPTION] =
+    {
+        "TXDEN", "PWREN", "RXLED", "TXLED", "TXRXLED", "SLEEP",
+        "CLK48", "CLK24", "CLK12", "CLK6",
+        "IO_MODE", "BITBANG_WR", "BITBANG_RD", "SPECIAL"
+    };
     int i;
     max_allowed += 1;
     if (max_allowed > MAX_OPTION) max_allowed = MAX_OPTION;
-    for (i=0; i<max_allowed; i++) {
-        if (!(strcmp(options[i], str))) {
+    for (i=0; i<max_allowed; i++)
+    {
+        if (!(strcmp(options[i], str)))
+        {
             return i;
         }
     }
@@ -230,8 +234,8 @@ int main(int argc, char *argv[])
             }
         }
     }
-    ftdi_eeprom_initdefaults (ftdi, cfg_getstr(cfg, "manufacturer"), 
-                              cfg_getstr(cfg, "product"), 
+    ftdi_eeprom_initdefaults (ftdi, cfg_getstr(cfg, "manufacturer"),
+                              cfg_getstr(cfg, "product"),
                               cfg_getstr(cfg, "serial"));
 
     printf("FTDI read eeprom: %d\n", ftdi_read_eeprom(ftdi));
@@ -320,7 +324,9 @@ int main(int argc, char *argv[])
         printf ("Sorry, the eeprom can only contain 128 bytes (100 bytes for your strings).\n");
         printf ("You need to short your string by: %d bytes\n", size_check);
         goto cleanup;
-    } else if (size_check < 0) {
+    }
+    else if (size_check < 0)
+    {
         printf ("ftdi_eeprom_build(): error: %d\n", size_check);
     }
     else
