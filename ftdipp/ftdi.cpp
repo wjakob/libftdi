@@ -2,11 +2,11 @@
                           ftdi.cpp  -  C++ wraper for libftdi
                              -------------------
     begin                : Mon Oct 13 2008
-    copyright            : (C) 2008-2013 by Marek Vavruša / libftdi developers
+    copyright            : (C) 2008-2014 by Marek Vavruša / libftdi developers
     email                : opensource@intra2net.com and marek@vavrusa.com
  ***************************************************************************/
 /*
-Copyright (C) 2008-2013 by Marek Vavruša / libftdi developers
+Copyright (C) 2008-2014 by Marek Vavruša / libftdi developers
 
 The software in this package is distributed under the GNU General
 Public License version 2 (with a special exception described below).

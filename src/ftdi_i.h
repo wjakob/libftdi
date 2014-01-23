@@ -2,7 +2,7 @@
                           ftdi_i.h  -  description
                              -------------------
     begin                : Don Sep 9 2011
-    copyright            : (C) 2003-2013 by Intra2net AG and the libftdi developers
+    copyright            : (C) 2003-2014 by Intra2net AG and the libftdi developers
     email                : opensource@intra2net.com
  ***************************************************************************/
 
