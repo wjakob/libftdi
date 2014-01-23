@@ -1,7 +1,7 @@
 # Project
 project(libftdi1)
 set(MAJOR_VERSION 1)
-set(MINOR_VERSION 0)
+set(MINOR_VERSION 1)
 set(PACKAGE libftdi1)
 set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION})
 set(VERSION ${VERSION_STRING})

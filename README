@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
-libftdi version 1.0
+libftdi version 1.1
 --------------------------------------------------------------------
 
 libftdi - A library (using libusb) to talk to FTDI's UART/FIFO chips
@@ -19,18 +19,17 @@ that made libftdi possible what it is today.
 
 Changes
 -------
-* Ported to libusb 1.x (initial work by Jie Zhang)
-* Many eeprom handling improvements (Uwe Bonnes, Anders Larsen)
-* Renamed pkconfig, library .so etc. files to "libftdi1" (Intra2net)
-* ftdi_eeprom is part of libftdi now (Intra2net)
-
-* New baudrate calculation code + unit tests (Uwe Bonnes and Intra2net)
-* Improved python bindings including python3 support (Michel Zou)
-* Switched completely to cmake build system (Intra2net)
-* cmake: Easy libftdi discovery via find_package() (Michel Zou)
-* eeprom handling now done via get()/set() functions (Uwe Bonnes)
-* C++ wrapper: Fixed use-after-free in List::find_all() (Intra2net)
-* Documentation updates (Xiaofan Chen)
+* Fix FT232H eeprom suspend pulldown setting (Davide Michelizza)
+* Fix FT232H eeprom user area size (Davide Michelizza)
+* Improved mingw build (Paul Fertser and Michel Zou)
+* C++ wrapper: Get/set functions for USB timeouts (Jochen Sprickerhof)
+* Partial support for FT230X (Nathael Pajani)
+* New API function: ftdi_eeprom_set_strings() (Nathael Pajani)
+* Prevent possible segfault in ftdi_eeprom_decode() (Nathael Pajani)
+* Save device release number in eeprom (Jarkko Sonninen)
+* Fix "self powered" eeprom flag (Jarkko Sonninen)
+* Improved python wrapper (Michel Zou)
+* Many buildsystem improvements (Michel Zou and Mike Frysinger)
 * See the git history for more changes and fixes
 
 You'll find the newest version of libftdi at:
