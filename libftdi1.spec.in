@@ -64,6 +64,9 @@ rm -f $RPM_BUILD_ROOT/usr/bin/find_all_pp
 rm -f $RPM_BUILD_ROOT/usr/bin/serial_test
 rm -f $RPM_BUILD_ROOT/usr/bin/baud_test
 
+# Clean python compiled files in examples dir
+find $RPM_BUILD_ROOT%{prefix}/share/libftdi/examples -name "*.pyc" -or -name "*.pyo" -exec rm -f \{\} \;
+
 %clean
 rm -fr $RPM_BUILD_ROOT
 
@@ -80,6 +83,7 @@ rm -fr $RPM_BUILD_ROOT
 %{_bindir}/libftdi1-config
 %{prefix}/include/libftdi1/*.h
 %{prefix}/include/libftdi1/*.hpp
+%{prefix}/share/libftdi/examples/*
 %{_libdir}/libftdi1*.*a
 %{_libdir}/libftdipp1*.*a
 %{_libdir}/pkgconfig/*.pc
