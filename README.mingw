@@ -18,16 +18,19 @@
    6 - run
        make install DESTDIR=$HOME/i686-w64-mingw32-root/
 
-* How to run libftdi-1.x under Windows *
+* How to run libftdi 1.x under Windows *
 
-libusbx (or libusb-1.0) Windows backend will rely on a proper driver to run.
-Please refer to the following wiki page on the instruction of
-installation of the proper driver.
-https://github.com/libusbx/libusbx/wiki/Windows-Backend#wiki-How_to_use_libusbx_on_Windows
+On 26-Jan-2014, libusbx and libusb project were merged with the release
+of libusb-1.0.18 and now the project is called libusb.
 
-As of Jan 09 2013, libusb-1.0 Windows backend only supports WinUSB
-and libusbx's support of libusb0.sys and libusbk.sys are considered less
-mature than WinUSB. Therefore, WinUSB driver installation using Zadig
+libusb Windows backend will need to rely on a proper driver to run.
+Please refer to the following wiki page for proper driver installation.
+https://github.com/libusb/libusb/wiki/Windows#wiki-How_to_use_libusb_on_Windows
+
+As of 26-Jan-2014, libusb Windows backend supports WinUSB,
+libusb0.sys and libusbk.sys driver. However, libusb's support of
+libusb0.sys and libusbk.sys is considered to be less mature than
+WinUSB. Therefore, WinUSB driver installation using Zadig
 is recommended.
 
 Take note once you replace the original FTDI driver with WinUSB driver,
