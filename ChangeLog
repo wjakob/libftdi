@@ -1,4 +1,4 @@
-New in 1.1 - 2014-01-2X
+New in 1.1 - 2014-02-05
 -----------------------
 * Fix FT232H eeprom suspend pulldown setting (Davide Michelizza)
 * Fix FT232H eeprom user area size (Davide Michelizza)
