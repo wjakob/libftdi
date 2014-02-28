@@ -22,6 +22,9 @@ if ( SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND )
   include_directories ( ${PYTHON_INCLUDE_DIRS} )
   link_directories ( ${CMAKE_CURRENT_BINARY_DIR}/../src )
 
+  if ( DOCUMENTATION AND DOXYGEN_FOUND )
+    set(CMAKE_SWIG_FLAGS -DDOXYGEN=${DOXYGEN_FOUND})
+  endif()
   swig_add_module ( ftdi1 python ftdi1.i )
   swig_link_libraries ( ftdi1 ftdi1 )
 
@@ -46,9 +49,6 @@ if ( SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND )
   install ( TARGETS ${SWIG_MODULE_ftdi1_REAL_NAME} LIBRARY DESTINATION ${PYTHON_MODULE_PATH} )
 
   if ( DOCUMENTATION AND DOXYGEN_FOUND )
-
-      set(CMAKE_SWIG_FLAGS -DDOXYGEN=${DOXYGEN_FOUND})
-
       # Run doxygen to only generate the xml
       add_custom_command ( OUTPUT ${CMAKE_BINARY_DIR}/doc/xml/ftdi_8c.xml
           COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc
