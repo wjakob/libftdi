@@ -3059,7 +3059,8 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
         case TYPE_230X:
             output[0x00] = 0x80; /* Actually, leave the default value */
             output[0x0a] = 0x08; /* Enable USB Serial Number */
-            output[0x0c] = (0x01) | (0x3 << 4); /* DBUS drive 4mA, CBUS drive 16mA */
+            /*FIXME: Make DBUS & CBUS Control configurable*/
+            output[0x0c] = 0;    /* DBUS drive 4mA, CBUS drive 4 mA like factory default */
             for (j = 0; j <= 6; j++)
             {
                 output[0x1a + j] = eeprom->cbus_function[j];
@@ -3121,6 +3122,8 @@ static unsigned char bit2type(unsigned char bits)
 }
 /**
    Decode binary EEPROM image into an ftdi_eeprom structure.
+
+   For FT-X devices use AN_201 FT-X MTP memory Configuration to decode.
 
    \param ftdi pointer to ftdi_context
    \param verbose Decode EEPROM on stdout
