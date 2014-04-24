@@ -3077,9 +3077,18 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             /* FT230X has a user section in the MTP which is not part of the checksum */
             i = 0x40;
         }
-        value = output[i*2];
-        value += output[(i*2)+1] << 8;
-
+        if ((ftdi->type == TYPE_230X) && (i >=  0x40) && (i < 0x50)) {
+            uint16_t data;
+            if (ftdi_read_eeprom_location(ftdi, i, &data)) {
+                fprintf(stderr, "Reading Factory Configuration Data failed\n");
+                i = 0x50;
+            }
+            value = data;
+        }
+        else {
+            value = output[i*2];
+            value += output[(i*2)+1] << 8;
+        }
         checksum = value^checksum;
         checksum = (checksum << 1) | (checksum >> 15);
     }
@@ -4217,7 +4226,7 @@ int ftdi_erase_eeprom(struct ftdi_context *ftdi)
     if (ftdi == NULL || ftdi->usb_dev == NULL)
         ftdi_error_return(-2, "USB device unavailable");
 
-    if (ftdi->type == TYPE_R)
+    if ((ftdi->type == TYPE_R) || (ftdi->type == TYPE_230X))
     {
         ftdi->eeprom->chip = 0;
         return 0;
