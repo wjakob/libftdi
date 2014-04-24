@@ -3433,14 +3433,14 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
                     channel_mode[eeprom->channel_a_type],
                     (eeprom->channel_a_driver)?" VCP":"",
                     (eeprom->high_current_a)?" High Current IO":"");
-        if (ftdi->type >= TYPE_232H)
+        if (ftdi->type == TYPE_232H)
         {
             fprintf(stdout,"FT1284 Mode Clock is idle %s, %s first, %sFlow Control\n",
                     (eeprom->clock_polarity)?"HIGH":"LOW",
                     (eeprom->data_order)?"LSB":"MSB",
                     (eeprom->flow_control)?"":"No ");
         }
-        if ((ftdi->type >= TYPE_2232C) && (ftdi->type != TYPE_R) && (ftdi->type != TYPE_232H))
+        if ((ftdi->type == TYPE_2232H) || (ftdi->type == TYPE_4232H))
             fprintf(stdout,"Channel B has Mode %s%s%s\n",
                     channel_mode[eeprom->channel_b_type],
                     (eeprom->channel_b_driver)?" VCP":"",
@@ -3503,7 +3503,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
                                  "I2C_TXE#", "I2C_RXF#", "VBUS_SENSE", "BB_WR#",
                                  "BBRD#", "TIME_STAMP", "AWAKE#",
                                 };
-            fprintf(stdout,"IOBUS has %d mA drive%s%s\n",
+            fprintf(stdout,"DBUS has %d mA drive%s%s\n",
                     (eeprom->group0_drive+1) *4,
                     (eeprom->group0_schmitt)?" Schmitt Input":"",
                     (eeprom->group0_slew)?" Slow Slew":"");
