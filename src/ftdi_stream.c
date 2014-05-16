@@ -61,7 +61,7 @@ typedef struct
  *
  * state->result is only set when some error happens
  */
-static void
+static void LIBUSB_CALL
 ftdi_readstream_cb(struct libusb_transfer *transfer)
 {
     FTDIStreamState *state = transfer->user_data;
