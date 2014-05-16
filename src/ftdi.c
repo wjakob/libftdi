@@ -413,8 +413,8 @@ int ftdi_usb_get_strings(struct ftdi_context * ftdi, struct libusb_device * dev,
     if ((ftdi==NULL) || (dev==NULL))
         return -1;
 
-    if (libusb_open(dev, &ftdi->usb_dev) < 0)
-        ftdi_error_return(-4, "libusb_open() failed");
+    if (ftdi->usb_dev == NULL && libusb_open(dev, &ftdi->usb_dev) < 0)
+            ftdi_error_return(-4, "libusb_open() failed");
 
     if (libusb_get_device_descriptor(dev, &desc) < 0)
         ftdi_error_return(-11, "libusb_get_device_descriptor() failed");
