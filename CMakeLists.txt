@@ -201,9 +201,42 @@ set ( LIBFTDI_VERSION_MAJOR ${MAJOR_VERSION} )
 set ( LIBFTDI_VERSION_MINOR ${MINOR_VERSION} )
 
 set ( LIBFTDI_USE_FILE ${CMAKE_INSTALL_PREFIX}/${LIBFTDI_CMAKE_CONFIG_DIR}/UseLibFTDI1.cmake )
-configure_file ( cmake/LibFTDI1Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake @ONLY )
-install ( FILES ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake cmake/UseLibFTDI1.cmake
+
+if(CMAKE_VERSION VERSION_LESS 2.8.8) 
+  configure_file ( cmake/LibFTDI1Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake @ONLY )
+  configure_file ( cmake/LibFTDI1ConfigVersion.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1ConfigVersion.cmake @ONLY )
+else ()
+  include(CMakePackageConfigHelpers)    
+  
+  configure_package_config_file (
+    cmake/LibFTDI1Config.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake
+    INSTALL_DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
+    PATH_VARS
+      LIBFTDI_USE_FILE
+      LIBFTDI_ROOT_DIR
+      LIBFTDI_INCLUDE_DIR
+      LIBFTDI_INCLUDE_DIRS
+      LIBFTDI_LIBRARY_DIRS
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+  )
+  write_basic_package_version_file (
+    LibFTDI1ConfigVersion.cmake 
+    VERSION ${LIBFTDI_VERSION_STRING} 
+    COMPATIBILITY AnyNewerVersion
+  ) 
+endif ()        
+
+
+install ( FILES 
+            ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake
+            ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1ConfigVersion.cmake
+            cmake/UseLibFTDI1.cmake
+            
           DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
         )
 
+
+        
+        
 include(CPack)
