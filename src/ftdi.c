@@ -3136,7 +3136,7 @@ static unsigned char bit2type(unsigned char bits)
 */
 int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
 {
-    unsigned char i, j;
+    int i, j;
     unsigned short checksum, eeprom_checksum, value;
     unsigned char manufacturer_size = 0, product_size = 0, serial_size = 0;
     int eeprom_size;
@@ -3356,8 +3356,6 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     }
     else if (ftdi->type == TYPE_232H)
     {
-        int i;
-
         eeprom->channel_a_type   = buf[0x00] & 0xf;
         eeprom->channel_a_driver = (buf[0x00] & DRIVER_VCPH)?DRIVER_VCP:0;
         eeprom->clock_polarity =  buf[0x01]       & FT1284_CLK_IDLE_STATE;
@@ -3474,7 +3472,6 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         }
         else if (ftdi->type == TYPE_232H)
         {
-            int i;
             char *cbush_mux[] = {"TRISTATE","RXLED","TXLED", "TXRXLED","PWREN",
                                  "SLEEP","DRIVE_0","DRIVE_1","IOMODE","TXDEN",
                                  "CLK30","CLK15","CLK7_5"
@@ -3496,7 +3493,6 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         }
         else if (ftdi->type == TYPE_230X)
         {
-            int i;
             char *cbush_mux[] = {"TRISTATE","RXLED","TXLED", "TXRXLED","PWREN",
                                  "SLEEP","DRIVE_0","DRIVE_1","IOMODE","TXDEN",
                                  "CLK24","CLK12","CLK6","BAT_DETECT","BAT_DETECT#",
