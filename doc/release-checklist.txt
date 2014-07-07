@@ -25,4 +25,4 @@
   - Update URLs in download section
   - Generate API documentation and upload it
 
-- Announce on mailinglist & freshmeat
+- Announce on mailinglist
