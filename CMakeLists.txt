@@ -113,6 +113,8 @@ add_custom_target(dist
             | bzip2 > ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.bz2
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+# Tests
+option ( BUILD_TESTS "Build unit tests with Boost Unit Test framework" ON )
 
 # Documentation
 option ( DOCUMENTATION "Generate API documentation with Doxygen" ON )
