@@ -123,6 +123,11 @@ struct ftdi_eeprom
     int data_order;
     int flow_control;
 
+    /* FT-X Device and Peripheral control
+     * Fixme: Decode byte[0xa]
+     */
+    int rs232_inversion;
+
     /** eeprom size in bytes. This doesn't get stored in the eeprom
         but is the only way to pass it to ftdi_eeprom_build. */
     int size;

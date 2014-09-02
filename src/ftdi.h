@@ -332,6 +332,7 @@ enum ftdi_eeprom_value
     CHANNEL_C_RS485    = 53,
     CHANNEL_D_RS485    = 54,
     RELEASE_NUMBER     = 55,
+    RS232_INVERSION    = 56,
 };
 
 /**

@@ -3065,6 +3065,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             {
                 output[0x1a + j] = eeprom->cbus_function[j];
             }
+            output[0x0b] = eeprom->rs232_inversion;
             break;
     }
 
@@ -3389,6 +3390,8 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         eeprom->group1_drive   = (buf[0x0c] >> 4) & 0x03;
         eeprom->group1_schmitt = (buf[0x0c] >> 4) & IS_SCHMITT;
         eeprom->group1_slew    = (buf[0x0c] >> 4) & SLOW_SLEW;
+
+        eeprom->rs232_inversion = buf[0xb];
     }
 
     if (verbose)
@@ -3511,6 +3514,33 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
             {
                 if (eeprom->cbus_function[i]<= CBUSH_AWAKE)
                     fprintf(stdout,"CBUS%d Function: %s\n", i, cbush_mux[eeprom->cbus_function[i]]);
+            }
+            if(eeprom->rs232_inversion ) {
+                struct bitnames {
+                    int mask;
+                    char *name;
+                };
+
+                struct bitnames invbitlist[] = {
+                    {INVERT_TXD, "TXD"},
+                    {INVERT_RXD, "RXD"},
+                    {INVERT_RTS, "RTS"},
+                    {INVERT_CTS, "CTS"},
+                    {INVERT_DTR, "DTR"},
+                    {INVERT_DSR, "DSR"},
+                    {INVERT_DCD, "DCD"},
+                    {INVERT_RI, "RI"},
+                    {0, NULL},
+                };
+                int i, n;
+                printf("Inversion on ");
+                for (i=0, n=0; invbitlist[i].mask;i++) {
+                    if(eeprom->rs232_inversion & invbitlist[i].mask) {
+                        if (n++) printf (",");
+                        printf (" %s", invbitlist[i].name);
+                    }
+                }
+                printf (" Pin%s\n",(n==1)?"":"s");
             }
         }
 
@@ -3734,6 +3764,9 @@ int ftdi_get_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
         case CHIP_SIZE:
             *value = ftdi->eeprom->size;
             break;
+        case RS232_INVERSION:
+            *value = ftdi->eeprom->rs232_inversion;
+            break;
         default:
             ftdi_error_return(-1, "Request for unknown EEPROM value");
     }
@@ -3923,6 +3956,11 @@ int ftdi_set_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
             break;
         case CHIP_SIZE:
             ftdi_error_return(-2, "EEPROM Value can't be changed");
+            break;
+        case RS232_INVERSION:
+            ftdi->eeprom->rs232_inversion = value;
+            break;
+
         default :
             ftdi_error_return(-1, "Request to unknown EEPROM value");
     }
