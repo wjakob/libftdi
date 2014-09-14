@@ -3532,9 +3532,9 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
                     {INVERT_RI, "RI"},
                     {0, NULL},
                 };
-                int i, n;
+                int n = 0;
                 printf("Inversion on ");
-                for (i=0, n=0; invbitlist[i].mask;i++) {
+                for (i=0; invbitlist[i].mask;i++) {
                     if(eeprom->rs232_inversion & invbitlist[i].mask) {
                         if (n++) printf (",");
                         printf (" %s", invbitlist[i].name);
