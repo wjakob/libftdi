@@ -328,9 +328,9 @@ int ftdi_usb_find_all(struct ftdi_context *ftdi, struct ftdi_device_list **devli
         if (libusb_get_device_descriptor(dev, &desc) < 0)
             ftdi_error_return_free_device_list(-6, "libusb_get_device_descriptor() failed", devs);
 
-        if (((vendor != 0 && product != 0) &&
+        if (((vendor || product) &&
                 desc.idVendor == vendor && desc.idProduct == product) ||
-                ((vendor == 0 && product == 0) &&
+                (!(vendor || product) &&
                  (desc.idVendor == 0x403) && (desc.idProduct == 0x6001 || desc.idProduct == 0x6010
                                               || desc.idProduct == 0x6011 || desc.idProduct == 0x6014)))
         {
