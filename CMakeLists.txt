@@ -208,8 +208,8 @@ if(CMAKE_VERSION VERSION_LESS 2.8.8)
   configure_file ( cmake/LibFTDI1Config.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake @ONLY )
   configure_file ( cmake/LibFTDI1ConfigVersion.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1ConfigVersion.cmake @ONLY )
 else ()
-  include(CMakePackageConfigHelpers)    
-  
+  include(CMakePackageConfigHelpers)
+
   configure_package_config_file (
     cmake/LibFTDI1Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake
@@ -226,19 +226,19 @@ else ()
     LibFTDI1ConfigVersion.cmake 
     VERSION ${LIBFTDI_VERSION_STRING} 
     COMPATIBILITY AnyNewerVersion
-  ) 
-endif ()        
+  )
+endif ()
 
 
 install ( FILES 
             ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake
             ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1ConfigVersion.cmake
             cmake/UseLibFTDI1.cmake
-            
+
           DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
         )
 
 
-        
-        
+
+
 include(CPack)
