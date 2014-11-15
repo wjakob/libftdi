@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
-libftdi version 1.1
+libftdi version 1.2
 --------------------------------------------------------------------
 
 libftdi - A library (using libusb) to talk to FTDI's UART/FIFO chips
@@ -19,18 +19,13 @@ that made libftdi possible what it is today.
 
 Changes
 -------
-* Fix FT232H eeprom suspend pulldown setting (Davide Michelizza)
-* Fix FT232H eeprom user area size (Davide Michelizza)
-* Improved mingw build (Paul Fertser and Michel Zou)
-* C++ wrapper: Get/set functions for USB timeouts (Jochen Sprickerhof)
-* Partial support for FT230X (Nathael Pajani)
-* New API function: ftdi_eeprom_set_strings() (Nathael Pajani)
-* Prevent possible segfault in ftdi_eeprom_decode() (Nathael Pajani)
-* Save device release number in eeprom (Jarkko Sonninen)
-* Fix "self powered" eeprom flag (Jarkko Sonninen)
-* Improved python wrapper (Michel Zou)
-* Many buildsystem improvements (Michel Zou and Mike Frysinger)
-* See the git history for more changes and fixes
+* Support for FT230X devices (Uwe Bonnes)
+* ftdi_usb_get_strings(): Don't try to open an already open device (Denis Sirotkin)
+* Support for finding devices bricked by the Windows driver (Forest Crossman)
+* cmake build system: New LibFTDI1ConfigVersion.cmake file (xantares09)
+* Fix a typo in the MPSSE command CLK_BYTES_OR_LOW (Benjamin Vanheuverzwijn)
+* Minor fixes for MSVC++ (Andrei Errapart)
+* Various small code improvements (Florian Preinstorfer, Jochen Sprickerhof, xantares09)
 
 You'll find the newest version of libftdi at:
 http://www.intra2net.com/en/developer/libftdi
