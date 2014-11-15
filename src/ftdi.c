@@ -295,7 +295,7 @@ struct ftdi_version_info ftdi_get_library_version(void)
     Finds all ftdi devices with given VID:PID on the usb bus. Creates a new
     ftdi_device_list which needs to be deallocated by ftdi_list_free() after
     use.  With VID:PID 0:0, search for the default devices
-    (0x403:0x6001, 0x403:0x6010, 0x403:0x6011, 0x403:0x6014)
+    (0x403:0x6001, 0x403:0x6010, 0x403:0x6011, 0x403:0x6014, 0x403:0x6015)
 
     \param ftdi pointer to ftdi_context
     \param devlist Pointer where to store list of found devices
@@ -332,7 +332,8 @@ int ftdi_usb_find_all(struct ftdi_context *ftdi, struct ftdi_device_list **devli
                 desc.idVendor == vendor && desc.idProduct == product) ||
                 (!(vendor || product) &&
                  (desc.idVendor == 0x403) && (desc.idProduct == 0x6001 || desc.idProduct == 0x6010
-                                              || desc.idProduct == 0x6011 || desc.idProduct == 0x6014)))
+                                              || desc.idProduct == 0x6011 || desc.idProduct == 0x6014
+                                              || desc.idProduct == 0x6015)))
         {
             *curdev = (struct ftdi_device_list*)malloc(sizeof(struct ftdi_device_list));
             if (!*curdev)
