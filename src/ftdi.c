@@ -3121,6 +3121,21 @@ static unsigned char bit2type(unsigned char bits)
     }
     return 0;
 }
+/* Decode 230X / 232R type chips invert bits
+ * Prints directly to stdout.
+*/
+static void print_inverted_bits(int invert)
+{
+    char *r_bits[] = {"TXD","RXD","RTS","CTS","DTR","DSR","DCD","RI"};
+    int i;
+
+    fprintf(stdout,"Inverted bits:");
+    for (i=0; i<8; i++)
+        if ((invert & (1<<i)) == (1<<i))
+            fprintf(stdout," %s",r_bits[i]);
+
+    fprintf(stdout,"\n");
+}
 /**
    Decode binary EEPROM image into an ftdi_eeprom structure.
 
@@ -3515,8 +3530,9 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
                 if (eeprom->cbus_function[i]<= CBUSH_AWAKE)
                     fprintf(stdout,"CBUS%d Function: %s\n", i, cbush_mux[eeprom->cbus_function[i]]);
             }
-            if(eeprom->invert )
-              print_inverted_bits(eeprom->invert);
+
+            if (eeprom->invert)
+                print_inverted_bits(eeprom->invert);
         }
 
         if (ftdi->type == TYPE_R)
@@ -3528,7 +3544,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
             char *cbus_BB[] = {"RXF","TXE","RD", "WR"};
 
             if (eeprom->invert)
-              print_inverted_bits(eeprom->invert);
+                print_inverted_bits(eeprom->invert);
 
             for (i=0; i<5; i++)
             {
@@ -4288,17 +4304,6 @@ char *ftdi_get_error_string (struct ftdi_context *ftdi)
         return "";
 
     return ftdi->error_str;
-}
-
-void print_inverted_bits(int invert)
-{
-    int i;
-    char *r_bits[] = {"TXD","RXD","RTS","CTS","DTR","DSR","DCD","RI"};
-    fprintf(stdout,"Inverted bits:");
-    for (i=0; i<8; i++)
-        if ((invert & (1<<i)) == (1<<i))
-            fprintf(stdout," %s",r_bits[i]);
-    fprintf(stdout,"\n");
 }
 
 /* @} end of doxygen libftdi group */

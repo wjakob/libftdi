@@ -554,8 +554,6 @@ extern "C"
 
     char *ftdi_get_error_string(struct ftdi_context *ftdi);
 
-    void print_inverted_bits(int inverted);
-
 #ifdef __cplusplus
 }
 #endif
