@@ -15,7 +15,7 @@
 - Sign tarball, build .src.rpm and sign it, too
 
 - Create git tag:
-  - git tag -s -u 24F006F5 v0.XX
+  - git tag -s -u 24F006F5 v1.XX
   - git tag -d latest_release ; git tag latest_release
   - git push --tags
 
