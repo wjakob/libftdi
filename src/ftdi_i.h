@@ -98,6 +98,8 @@ struct ftdi_eeprom
     int high_current_b;
     /** Select inversion of data lines (bitmask). */
     int invert;
+    /** Enable external oscillator. */
+    int external_oscillator;
 
     /*2232H/4432H Group specific values */
     /* Group0 is AL on 2322H and A on 4232H

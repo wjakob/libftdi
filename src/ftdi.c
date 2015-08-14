@@ -2833,6 +2833,8 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
         case TYPE_R:
             if (eeprom->high_current == HIGH_CURRENT_DRIVE_R)
                 output[0x00] |= HIGH_CURRENT_DRIVE_R;
+            if (eeprom->external_oscillator)
+                output[0x00] |= 0x02;
             output[0x01] = 0x40; /* Hard coded Endpoint Size*/
 
             if (eeprom->suspend_pull_downs)
@@ -3318,6 +3320,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         /* TYPE_R flags D2XX, not VCP as all others*/
         eeprom->channel_a_driver = ~buf[0x00] & DRIVER_VCP;
         eeprom->high_current     = buf[0x00] & HIGH_CURRENT_DRIVE_R;
+        eeprom->external_oscillator = buf[0x00] & 0x02;
         if ( (buf[0x01]&0x40) != 0x40)
             fprintf(stderr,
                     "TYPE_R EEPROM byte[0x01] Bit 6 unexpected Endpoint size."
@@ -3431,8 +3434,10 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         if (eeprom->serial)
             fprintf(stdout, "Serial:       %s\n",eeprom->serial);
         fprintf(stdout,     "Checksum      : %04x\n", checksum);
-        if (ftdi->type == TYPE_R)
+        if (ftdi->type == TYPE_R) {
             fprintf(stdout,     "Internal EEPROM\n");
+            fprintf(stdout,"Oscillator: %s\n", eeprom->external_oscillator?"External":"Internal");
+        }
         else if (eeprom->chip >= 0x46)
             fprintf(stdout,     "Attached EEPROM: 93x%02x\n", eeprom->chip);
         if (eeprom->suspend_dbus7)
@@ -3752,6 +3757,9 @@ int ftdi_get_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
         case CHIP_SIZE:
             *value = ftdi->eeprom->size;
             break;
+        case EXTERNAL_OSCILLATOR:
+            *value = ftdi->eeprom->external_oscillator;
+            break;
         default:
             ftdi_error_return(-1, "Request for unknown EEPROM value");
     }
@@ -3941,6 +3949,9 @@ int ftdi_set_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
             break;
         case CHIP_SIZE:
             ftdi_error_return(-2, "EEPROM Value can't be changed");
+            break;
+        case EXTERNAL_OSCILLATOR:
+            ftdi->eeprom->external_oscillator = value;
             break;
 
         default :
