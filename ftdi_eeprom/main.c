@@ -252,6 +252,7 @@ int main(int argc, char *argv[])
         CFG_BOOL("chb_rs485", cfg_false, 0),
         CFG_BOOL("chc_rs485", cfg_false, 0),
         CFG_BOOL("chd_rs485", cfg_false, 0),
+        CFG_FUNC("include", &cfg_include),
         CFG_END()
     };
     cfg_t *cfg;
