@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include <confuse.h>
 #include <libusb.h>
@@ -395,10 +396,15 @@ int main(int argc, char *argv[])
         }
         if (filename != NULL && strlen(filename) > 0)
         {
-
             FILE *fp = fopen (filename, "wb");
-            fwrite (eeprom_buf, 1, my_eeprom_size, fp);
-            fclose (fp);
+            
+            if(fp)
+            {
+                fwrite(eeprom_buf, 1, my_eeprom_size, fp);
+                fclose(fp);
+            }
+            else
+                fprintf(stderr, "Could not open output file %s: %s\n", filename, strerror(errno));
         }
         else
         {
