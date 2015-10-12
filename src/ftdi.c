@@ -2779,7 +2779,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
         case TYPE_BM:
             output[0x0C] = eeprom->usb_version & 0xff;
             output[0x0D] = (eeprom->usb_version>>8) & 0xff;
-            if (eeprom->use_usb_version == USE_USB_VERSION_BIT)
+            if (eeprom->use_usb_version)
                 output[0x0A] |= USE_USB_VERSION_BIT;
             else
                 output[0x0A] &= ~USE_USB_VERSION_BIT;
@@ -2821,7 +2821,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
                 output[0x0A] |= 0x4;
             else
                 output[0x0A] &= ~0x4;
-            if (eeprom->use_usb_version == USE_USB_VERSION_BIT)
+            if (eeprom->use_usb_version)
                 output[0x0A] |= USE_USB_VERSION_BIT;
             else
                 output[0x0A] &= ~USE_USB_VERSION_BIT;
@@ -3205,8 +3205,8 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     eeprom->in_is_isochronous  = buf[0x0A]&0x01;
     eeprom->out_is_isochronous = buf[0x0A]&0x02;
     eeprom->suspend_pull_downs = buf[0x0A]&0x04;
-    eeprom->use_serial         = (buf[0x0A] & USE_SERIAL_NUM)?1:0;
-    eeprom->use_usb_version    = buf[0x0A] & USE_USB_VERSION_BIT;
+    eeprom->use_serial         = !!(buf[0x0A] & USE_SERIAL_NUM);
+    eeprom->use_usb_version    = !!(buf[0x0A] & USE_USB_VERSION_BIT);
 
     // Addr 0C: USB version low byte when 0x0A
     // Addr 0D: USB version high byte when 0x0A
@@ -3470,7 +3470,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
                     (eeprom->channel_b_driver)?" VCP":"",
                     (eeprom->high_current_b)?" High Current IO":"");
         if (((ftdi->type == TYPE_BM) || (ftdi->type == TYPE_2232C)) &&
-                eeprom->use_usb_version == USE_USB_VERSION_BIT)
+                eeprom->use_usb_version)
             fprintf(stdout,"Use explicit USB Version %04x\n",eeprom->usb_version);
 
         if ((ftdi->type == TYPE_2232H) || (ftdi->type == TYPE_4232H))
