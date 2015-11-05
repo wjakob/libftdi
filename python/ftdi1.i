@@ -10,13 +10,24 @@
 %{
 #include "Python.h"
 
-PyObject* convertString( const char *v, Py_ssize_t len )
+inline PyObject* charp2str(const char *v_, long len)
 {
 #if PY_MAJOR_VERSION >= 3
-  return PyBytes_FromStringAndSize(v, len);
+  return PyBytes_FromStringAndSize(v_, len);
 #else
-  return PyString_FromStringAndSize(v, len);
+  return PyString_FromStringAndSize(v_, len);
 #endif
+}
+
+inline char * str2charp_size(PyObject* pyObj, int * size)
+{
+  char * v_ = 0;
+#if PY_MAJOR_VERSION >= 3
+  PyBytes_AsStringAndSize(pyObj, &v_, (Py_ssize_t*)size);
+#else
+  PyString_AsStringAndSize(pyObj, &v_, (Py_ssize_t*)size);
+#endif
+  return v_;
 }
 %}
 
@@ -66,9 +77,17 @@ PyObject* convertString( const char *v, Py_ssize_t len )
 %enddef
 %feature("autodoc", ftdi_read_data_docstring) ftdi_read_data;
 %typemap(in,numinputs=1) (unsigned char *buf, int size) %{ $2 = PyInt_AsLong($input);$1 = (unsigned char*)malloc($2*sizeof(char)); %}
-%typemap(argout) (unsigned char *buf, int size) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, convertString((char*)$1, $2)); free($1); %}
+%typemap(argout) (unsigned char *buf, int size) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, charp2str((char*)$1, $2)); free($1); %}
     int ftdi_read_data(struct ftdi_context *ftdi, unsigned char *buf, int size);
 %clear (unsigned char *buf, int size);
+
+%define ftdi_write_data_docstring
+"write_data(context, data) -> return_code"
+%enddef
+%feature("autodoc", ftdi_write_data_docstring) ftdi_write_data;
+%typemap(in,numinputs=1) (const unsigned char *buf, int size) %{ $1 = (unsigned char*)str2charp_size($input, &$2); %}
+    int ftdi_write_data(struct ftdi_context *ftdi, const unsigned char *buf, int size);
+%clear (const unsigned char *buf, int size);
 
 %apply int *OUTPUT { unsigned int *chunksize };
     int ftdi_read_data_get_chunksize(struct ftdi_context *ftdi, unsigned int *chunksize);
@@ -80,12 +99,12 @@ PyObject* convertString( const char *v, Py_ssize_t len )
 %enddef
 %feature("autodoc", ftdi_read_pins_docstring) ftdi_read_pins;
 %typemap(in,numinputs=0) unsigned char *pins ($*ltype temp) %{ $1 = &temp; %}
-%typemap(argout) (unsigned char *pins) %{ $result = SWIG_Python_AppendOutput($result, convertString((char*)$1, 1)); %}
+%typemap(argout) (unsigned char *pins) %{ $result = SWIG_Python_AppendOutput($result, charp2str((char*)$1, 1)); %}
     int ftdi_read_pins(struct ftdi_context *ftdi, unsigned char *pins);
 %clear unsigned char *pins;
 
 %typemap(in,numinputs=0) unsigned char *latency ($*ltype temp) %{ $1 = &temp; %}
-%typemap(argout) (unsigned char *latency) %{ $result = SWIG_Python_AppendOutput($result, convertString((char*)$1, 1)); %}
+%typemap(argout) (unsigned char *latency) %{ $result = SWIG_Python_AppendOutput($result, charp2str((char*)$1, 1)); %}
     int ftdi_get_latency_timer(struct ftdi_context *ftdi, unsigned char *latency);
 %clear unsigned char *latency;
 
@@ -98,7 +117,7 @@ PyObject* convertString( const char *v, Py_ssize_t len )
 %clear int* value;
 
 %typemap(in,numinputs=1) (unsigned char *buf, int size) %{ $2 = PyInt_AsLong($input);$1 = (unsigned char*)malloc($2*sizeof(char)); %}
-%typemap(argout) (unsigned char *buf, int size) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, convertString((char*)$1, $2)); free($1); %}
+%typemap(argout) (unsigned char *buf, int size) %{ if(result<0) $2=0; $result = SWIG_Python_AppendOutput($result, charp2str((char*)$1, $2)); free($1); %}
     int ftdi_get_eeprom_buf(struct ftdi_context *ftdi, unsigned char * buf, int size);
 %clear (unsigned char *buf, int size);
 
