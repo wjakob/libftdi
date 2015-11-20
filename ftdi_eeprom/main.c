@@ -36,6 +36,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <sys/stat.h>
 
 #include <confuse.h>
 #include <libusb.h>
@@ -254,6 +255,8 @@ int main(int argc, char *argv[])
         CFG_BOOL("chc_rs485", cfg_false, 0),
         CFG_BOOL("chd_rs485", cfg_false, 0),
         CFG_FUNC("include", &cfg_include),
+        CFG_INT("user_data_addr", 0x18, 0),
+        CFG_STR("user_data_file", "", 0),
         CFG_END()
     };
     cfg_t *cfg;
@@ -269,6 +272,8 @@ int main(int argc, char *argv[])
     } command = 0;
     const char *cfg_filename = NULL;
     const char *device_description = NULL;
+    const char *user_data_file = NULL;
+    char *user_data_buffer = NULL;
 
     const int max_eeprom_size = 256;
     int my_eeprom_size = 0;
@@ -517,6 +522,51 @@ int main(int argc, char *argv[])
     eeprom_set_value(ftdi, CHANNEL_C_RS485, cfg_getbool(cfg, "chc_rs485"));
     eeprom_set_value(ftdi, CHANNEL_D_RS485, cfg_getbool(cfg, "chd_rs485"));
 
+    /* Arbitrary user data */
+    eeprom_set_value(ftdi, USER_DATA_ADDR, cfg_getint(cfg, "user_data_addr"));
+    user_data_file = cfg_getstr(cfg, "user_data_file");
+    if (user_data_file && strlen(user_data_file) > 0)
+    {
+        int data_size;
+        struct stat st;
+
+        printf("User data file: %s\n", user_data_file);
+        /* Allocate a buffer for the user data */
+        user_data_buffer = (char *)malloc(max_eeprom_size);
+        if (user_data_buffer == NULL)
+        {
+            fprintf(stderr, "Malloc failed, aborting\n");
+            goto cleanup;
+        }
+
+        if (stat(user_data_file, &st))
+        {
+            printf ("Can't stat user data file %s.\n", user_data_file);
+            exit (-1);
+        }
+        if (st.st_size > max_eeprom_size)
+            printf("Warning: %s is too big, only reading %d bytes\n",
+                   user_data_file, max_eeprom_size);
+        /* Read the user data file, no more than max_eeprom_size bytes */
+        FILE *fp = fopen(user_data_file, "rb");
+        if (fp == NULL)
+        {
+            printf ("Can't open user data file %s.\n", user_data_file);
+            exit (-1);
+        }
+        data_size = fread(user_data_buffer, 1, max_eeprom_size, fp);
+        fclose(fp);
+        if (data_size < 1)
+        {
+            printf ("Can't read user data file %s.\n", user_data_file);
+            exit (-1);
+        }
+        printf("User data size: %d\n", data_size);
+
+        ftdi_set_eeprom_user_data(ftdi, user_data_buffer, data_size);
+    }
+
+
     if (command == COMMAND_ERASE)
     {
         printf("FTDI erase eeprom: %d\n", ftdi_erase_eeprom(ftdi));
@@ -527,7 +577,7 @@ int main(int argc, char *argv[])
 
     if (size_check == -1)
     {
-        printf ("Sorry, the eeprom can only contain 128 bytes.\n");
+        printf ("Sorry, the eeprom can only contain %d bytes.\n", my_eeprom_size);
         goto cleanup;
     }
     else if (size_check < 0)
@@ -591,6 +641,8 @@ int main(int argc, char *argv[])
 cleanup:
     if (eeprom_buf)
         free(eeprom_buf);
+    if (user_data_buffer)
+        free(user_data_buffer);
     if (command > 0)
     {
         printf("FTDI close: %d\n", ftdi_usb_close(ftdi));

@@ -333,6 +333,7 @@ enum ftdi_eeprom_value
     CHANNEL_D_RS485    = 54,
     RELEASE_NUMBER     = 55,
     EXTERNAL_OSCILLATOR= 56,
+    USER_DATA_ADDR     = 57,
 };
 
 /**
@@ -551,6 +552,8 @@ extern "C"
 
     int ftdi_get_eeprom_buf(struct ftdi_context *ftdi, unsigned char * buf, int size);
     int ftdi_set_eeprom_buf(struct ftdi_context *ftdi, const unsigned char * buf, int size);
+
+    int ftdi_set_eeprom_user_data(struct ftdi_context *ftdi, const char * buf, int size);
 
     int ftdi_read_eeprom(struct ftdi_context *ftdi);
     int ftdi_read_chipid(struct ftdi_context *ftdi, unsigned int *chipid);

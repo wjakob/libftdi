@@ -2563,7 +2563,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     unsigned char i, j, eeprom_size_mask;
     unsigned short checksum, value;
     unsigned char manufacturer_size = 0, product_size = 0, serial_size = 0;
-    int user_area_size;
+    int user_area_size, free_start, free_end;
     struct ftdi_eeprom *eeprom;
     unsigned char * output;
 
@@ -2598,13 +2598,11 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     {
         case TYPE_AM:
         case TYPE_BM:
+        case TYPE_R:
             user_area_size = 96;    // base size for strings (total of 48 characters)
             break;
         case TYPE_2232C:
             user_area_size = 90;     // two extra config bytes and 4 bytes PnP stuff
-            break;
-        case TYPE_R:
-            user_area_size = 96;
             break;
         case TYPE_230X:
             user_area_size = 88;     // four extra config bytes + 4 bytes PnP stuff
@@ -2712,6 +2710,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
     }
     /* Wrap around 0x80 for 128 byte EEPROMS (Internale and 93x46) */
     eeprom_size_mask = eeprom->size -1;
+    free_end = i & eeprom_size_mask;
 
     // Addr 0E: Offset of the manufacturer string + 0x80, calculated later
     // Addr 0F: Length of manufacturer string
@@ -3072,6 +3071,38 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             }
             output[0x0b] = eeprom->invert;
             break;
+    }
+
+    /* First address without use */
+    free_start = 0;
+    switch (ftdi->type)
+    {
+        case TYPE_230X:
+            free_start += 2;
+        case TYPE_232H:
+            free_start += 6;
+        case TYPE_2232H:
+        case TYPE_4232H:
+            free_start += 2;
+        case TYPE_R:
+            free_start += 2;
+        case TYPE_2232C:
+            free_start++;
+        case TYPE_AM:
+        case TYPE_BM:
+            free_start += 0x14;
+    }
+
+    /* Arbitrary user data */
+    if (eeprom->user_data && eeprom->user_data_size >= 0)
+    {
+        if (eeprom->user_data_addr < free_start)
+            fprintf(stderr,"Warning, user data starts inside the generated data!\n");
+        if (eeprom->user_data_addr + eeprom->user_data_size >= free_end)
+            fprintf(stderr,"Warning, user data overlaps the strings area!\n");
+        if (eeprom->user_data_addr + eeprom->user_data_size > eeprom->size)
+            ftdi_error_return(-1,"eeprom size exceeded");
+        memcpy(output + eeprom->user_data_addr, eeprom->user_data, eeprom->user_data_size);
     }
 
     // calculate checksum
@@ -3953,6 +3984,9 @@ int ftdi_set_eeprom_value(struct ftdi_context *ftdi, enum ftdi_eeprom_value valu
         case EXTERNAL_OSCILLATOR:
             ftdi->eeprom->external_oscillator = value;
             break;
+        case USER_DATA_ADDR:
+            ftdi->eeprom->user_data_addr = value;
+            break;
 
         default :
             ftdi_error_return(-1, "Request to unknown EEPROM value");
@@ -3995,7 +4029,7 @@ int ftdi_get_eeprom_buf(struct ftdi_context *ftdi, unsigned char * buf, int size
     \param size Size of buffer
 
     \retval 0: All fine
-    \retval -1: struct ftdi_contxt or ftdi_eeprom of buf missing
+    \retval -1: struct ftdi_context or ftdi_eeprom or buf missing
 */
 int ftdi_set_eeprom_buf(struct ftdi_context *ftdi, const unsigned char * buf, int size)
 {
@@ -4008,6 +4042,25 @@ int ftdi_set_eeprom_buf(struct ftdi_context *ftdi, const unsigned char * buf, in
 
     memcpy(ftdi->eeprom->buf, buf, size);
 
+    return 0;
+}
+
+/** Set the EEPROM user data content from the user-supplied prefilled buffer
+
+    \param ftdi pointer to ftdi_context
+    \param buf buffer to read EEPROM user data content
+    \param size Size of buffer
+
+    \retval 0: All fine
+    \retval -1: struct ftdi_context or ftdi_eeprom or buf missing
+*/
+int ftdi_set_eeprom_user_data(struct ftdi_context *ftdi, const char * buf, int size)
+{
+    if (!ftdi || !(ftdi->eeprom) || !buf)
+        ftdi_error_return(-1, "No appropriate structure");
+
+    ftdi->eeprom->user_data_size = size;
+    ftdi->eeprom->user_data = buf;
     return 0;
 }
 

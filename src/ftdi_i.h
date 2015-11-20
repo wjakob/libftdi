@@ -125,6 +125,11 @@ struct ftdi_eeprom
     int data_order;
     int flow_control;
 
+    /** user data **/
+    int user_data_addr;
+    int user_data_size;
+    const char *user_data;
+
     /** eeprom size in bytes. This doesn't get stored in the eeprom
         but is the only way to pass it to ftdi_eeprom_build. */
     int size;
