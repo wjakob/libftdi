@@ -185,6 +185,7 @@ static void usage(const char *program)
     fprintf(stderr, "         i:<vendor>:<product>:<index>\n");
     fprintf(stderr, "         s:<vendor>:<product>:<serial>\n");
     fprintf(stderr, "--read-eeprom           Read eeprom and write to -filename- from config-file\n");
+    fprintf(stderr, "--build-eeprom          Build eeprom image\n");
     fprintf(stderr, "--erase-eeprom          Erase eeprom\n");
     fprintf(stderr, "--flash-eeprom          Flash eeprom\n");
 }
@@ -263,7 +264,8 @@ int main(int argc, char *argv[])
     enum {
         COMMAND_READ = 1,
         COMMAND_ERASE,
-        COMMAND_FLASH
+        COMMAND_FLASH,
+        COMMAND_BUILD
     } command = 0;
     const char *cfg_filename = NULL;
     const char *device_description = NULL;
@@ -306,6 +308,10 @@ int main(int argc, char *argv[])
         else if (!strcmp(argv[i], "--flash-eeprom"))
         {
             command = COMMAND_FLASH;
+        }
+        else if (!strcmp(argv[i], "--build-eeprom"))
+        {
+            command = COMMAND_BUILD;
         }
         else
         {
