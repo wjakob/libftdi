@@ -1470,9 +1470,15 @@ static void LIBUSB_CALL ftdi_read_data_cb(struct libusb_transfer *transfer)
             }
         }
     }
-    ret = libusb_submit_transfer (transfer);
-    if (ret < 0)
-        tc->completed = 1;
+
+    if (transfer->status == LIBUSB_TRANSFER_CANCELLED)
+        tc->completed = LIBUSB_TRANSFER_CANCELLED;
+    else
+    {
+        ret = libusb_submit_transfer (transfer);
+        if (ret < 0)
+            tc->completed = 1;
+    }
 }
 
 
@@ -1497,9 +1503,15 @@ static void LIBUSB_CALL ftdi_write_data_cb(struct libusb_transfer *transfer)
 
         transfer->length = write_size;
         transfer->buffer = tc->buf + tc->offset;
-        ret = libusb_submit_transfer (transfer);
-        if (ret < 0)
-            tc->completed = 1;
+
+        if (transfer->status == LIBUSB_TRANSFER_CANCELLED)
+            tc->completed = LIBUSB_TRANSFER_CANCELLED;
+        else
+        {
+            ret = libusb_submit_transfer (transfer);
+            if (ret < 0)
+                tc->completed = 1;
+        }
     }
 }
 
@@ -1662,17 +1674,19 @@ struct ftdi_transfer_control *ftdi_read_data_submit(struct ftdi_context *ftdi, u
 int ftdi_transfer_data_done(struct ftdi_transfer_control *tc)
 {
     int ret;
-
+    struct timeval to = { 0, 0 };
     while (!tc->completed)
     {
-        ret = libusb_handle_events(tc->ftdi->usb_ctx);
+        ret = libusb_handle_events_timeout_completed(tc->ftdi->usb_ctx,
+                &to, &tc->completed);
         if (ret < 0)
         {
             if (ret == LIBUSB_ERROR_INTERRUPTED)
                 continue;
             libusb_cancel_transfer(tc->transfer);
             while (!tc->completed)
-                if (libusb_handle_events(tc->ftdi->usb_ctx) < 0)
+                if (libusb_handle_events_timeout_completed(tc->ftdi->usb_ctx,
+                        &to, &tc->completed) < 0)
                     break;
             libusb_free_transfer(tc->transfer);
             free (tc);
@@ -1693,6 +1707,39 @@ int ftdi_transfer_data_done(struct ftdi_transfer_control *tc)
     }
     free(tc);
     return ret;
+}
+
+/**
+    Cancel transfer and wait for completion.
+
+    Use libusb 1.0 asynchronous API.
+
+    \param tc pointer to ftdi_transfer_control
+    \param to pointer to timeout value or NULL for infinite
+*/
+
+void ftdi_transfer_data_cancel(struct ftdi_transfer_control *tc,
+                               struct timeval * to)
+{
+    struct timeval tv = { 0, 0 };
+
+    if (!tc->completed && tc->transfer != NULL)
+    {
+        if (to == NULL)
+            to = &tv;
+
+        libusb_cancel_transfer(tc->transfer);
+        while (!tc->completed)
+        {
+            if (libusb_handle_events_timeout_completed(tc->ftdi->usb_ctx, to, &tc->completed) < 0)
+                break;
+        }
+    }
+
+    if (tc->transfer)
+        libusb_free_transfer(tc->transfer);
+
+    free (tc);
 }
 
 /**
