@@ -237,7 +237,7 @@ ftdi_readstream(struct ftdi_context *ftdi,
     {
         FTDIProgressInfo  *progress = &state.progress;
         const double progressInterval = 1.0;
-        struct timeval timeout = { 0, ftdi->usb_read_timeout };
+        struct timeval timeout = { 0, ftdi->usb_read_timeout * 1000};
         struct timeval now;
 
         int err = libusb_handle_events_timeout(ftdi->usb_ctx, &timeout);
