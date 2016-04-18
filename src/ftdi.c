@@ -406,16 +406,76 @@ void ftdi_list_free2(struct ftdi_device_list *devlist)
     \retval  -9: get serial number failed
     \retval -11: libusb_get_device_descriptor() failed
 */
-int ftdi_usb_get_strings(struct ftdi_context * ftdi, struct libusb_device * dev,
-                         char * manufacturer, int mnf_len, char * description, int desc_len, char * serial, int serial_len)
+int ftdi_usb_get_strings(struct ftdi_context *ftdi,
+                         struct libusb_device *dev,
+                         char *manufacturer, int mnf_len,
+                         char *description, int desc_len,
+                         char *serial, int serial_len)
+{
+    int ret;
+
+    if ((ftdi==NULL) || (dev==NULL))
+        return -1;
+
+    if (ftdi->usb_dev == NULL && libusb_open(dev, &ftdi->usb_dev) < 0)
+        ftdi_error_return(-4, "libusb_open() failed");
+
+    // ftdi->usb_dev will not be NULL when entering ftdi_usb_get_strings2(), so
+    // it won't be closed either. This allows us to close it whether we actually
+    // called libusb_open() up above or not. This matches the expected behavior
+    // (and note) for ftdi_usb_get_strings().
+    ret = ftdi_usb_get_strings2(ftdi, dev,
+                                manufacturer, mnf_len,
+                                description, desc_len,
+                                serial, serial_len);
+
+    // only close it if it was successful, as all other return codes close
+    // before returning already.
+    if (ret == 0)
+        ftdi_usb_close_internal(ftdi);
+
+    return ret;
+}
+
+/**
+    Return device ID strings from the usb device.
+
+    The parameters manufacturer, description and serial may be NULL
+    or pointer to buffers to store the fetched strings.
+
+    \note The old function ftdi_usb_get_strings() always closes the device.
+          This version only closes the device if it was opened by it.
+
+    \param ftdi pointer to ftdi_context
+    \param dev libusb usb_dev to use
+    \param manufacturer Store manufacturer string here if not NULL
+    \param mnf_len Buffer size of manufacturer string
+    \param description Store product description string here if not NULL
+    \param desc_len Buffer size of product description string
+    \param serial Store serial string here if not NULL
+    \param serial_len Buffer size of serial string
+
+    \retval   0: all fine
+    \retval  -1: wrong arguments
+    \retval  -4: unable to open device
+    \retval  -7: get product manufacturer failed
+    \retval  -8: get product description failed
+    \retval  -9: get serial number failed
+    \retval -11: libusb_get_device_descriptor() failed
+*/
+int ftdi_usb_get_strings2(struct ftdi_context *ftdi, struct libusb_device *dev,
+                          char *manufacturer, int mnf_len,
+                          char *description, int desc_len,
+                          char *serial, int serial_len)
 {
     struct libusb_device_descriptor desc;
 
     if ((ftdi==NULL) || (dev==NULL))
         return -1;
 
-    if (ftdi->usb_dev == NULL && libusb_open(dev, &ftdi->usb_dev) < 0)
-            ftdi_error_return(-4, "libusb_open() failed");
+    char need_open = (ftdi->usb_dev == NULL);
+    if (need_open && libusb_open(dev, &ftdi->usb_dev) < 0)
+        ftdi_error_return(-4, "libusb_open() failed");
 
     if (libusb_get_device_descriptor(dev, &desc) < 0)
         ftdi_error_return(-11, "libusb_get_device_descriptor() failed");
@@ -447,7 +507,8 @@ int ftdi_usb_get_strings(struct ftdi_context * ftdi, struct libusb_device * dev,
         }
     }
 
-    ftdi_usb_close_internal (ftdi);
+    if (need_open)
+        ftdi_usb_close_internal (ftdi);
 
     return 0;
 }
