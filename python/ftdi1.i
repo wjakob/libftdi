@@ -60,6 +60,7 @@ inline char * str2charp_size(PyObject* pyObj, int * size)
 "usb_get_strings(context, device) -> (return_code, manufacturer, description, serial)"
 %enddef
 %feature("autodoc", ftdi_usb_get_strings_docstring) ftdi_usb_get_strings;
+%feature("autodoc", ftdi_usb_get_strings_docstring) ftdi_usb_get_strings2;
 %apply char *OUTPUT { char * manufacturer, char * description, char * serial };
 %cstring_bounded_output( char * manufacturer, 256 );
 %cstring_bounded_output( char * description, 256 );
@@ -69,6 +70,10 @@ inline char * str2charp_size(PyObject* pyObj, int * size)
                              char * manufacturer, int mnf_len,
                              char * description, int desc_len,
                              char * serial, int serial_len);
+    int ftdi_usb_get_strings2(struct ftdi_context *ftdi, struct libusb_device *dev,
+                              char * manufacturer, int mnf_len,
+                              char * description, int desc_len,
+                              char * serial, int serial_len);
 %clear char * manufacturer, char * description, char * serial;
 %clear int mnf_len, int desc_len, int serial_len;
 
