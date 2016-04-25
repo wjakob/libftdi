@@ -67,6 +67,11 @@ rm -f $RPM_BUILD_ROOT/usr/bin/baud_test
 # Clean python compiled files in examples dir
 find $RPM_BUILD_ROOT%{prefix}/share/libftdi/examples -name "*.pyc" -or -name "*.pyo" -exec rm -f \{\} \;
 
+# move documentation to version specific directory
+# Is there an easy way in cmake to set the DOCDIR?
+mkdir -p $RPM_BUILD_ROOT%{prefix}/share/doc/%{name}-%{version}
+mv $RPM_BUILD_ROOT%{prefix}/share/doc/%{name}/* $RPM_BUILD_ROOT%{prefix}/share/doc/%{name}-%{version}
+
 %clean
 rm -fr $RPM_BUILD_ROOT
 
