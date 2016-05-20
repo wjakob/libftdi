@@ -611,7 +611,15 @@ int main(int argc, char *argv[])
                     exit (-1);
                 }
 
+                printf("Flashing raw eeprom from file %s (%d bytes)\n",
+                       filename, my_eeprom_size);
+
                 ftdi_set_eeprom_buf(ftdi, eeprom_buf, my_eeprom_size);
+            } else
+            {
+                printf ("ERROR: flash_raw mode enabled, but no eeprom filename "
+                        "given in config file.\n");
+                exit (-1);
             }
         }
         printf ("FTDI write eeprom: %d\n", ftdi_write_eeprom(ftdi));
