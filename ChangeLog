@@ -1,4 +1,4 @@
-New in 1.3 - 2016-05-xx
+New in 1.3 - 2016-05-20
 -----------------------
 * Added ftdi_usb_get_strings2() to prevent automatic device close (Fahrzin Hemmati)
 * Added ftdi_transfer_data_cancel() for cancellation of a submitted transfer,
