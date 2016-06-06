@@ -2646,6 +2646,15 @@ static unsigned char type2bit(unsigned char type, enum ftdi_chip_type chip)
                 default: return 0;
             }
         }
+        case TYPE_R:
+        {
+            switch (type)
+            {
+                case CHANNEL_IS_UART   : return 0;
+                case CHANNEL_IS_FIFO   : return 0x01;
+                default: return 0;
+            }
+        }
         case TYPE_230X: /* FT230X is only UART */
         default: return 0;
     }
@@ -2938,6 +2947,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             output[0x14] = eeprom->chip;
             break;
         case TYPE_R:
+            output[0x00] = type2bit(eeprom->channel_a_type, TYPE_R);
             if (eeprom->high_current == HIGH_CURRENT_DRIVE_R)
                 output[0x00] |= HIGH_CURRENT_DRIVE_R;
             if (eeprom->external_oscillator)
