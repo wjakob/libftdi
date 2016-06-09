@@ -21,51 +21,51 @@ class ErrorMsg(Exception):
   def __str__(self):
     return self.message;
 
-# Function to convert CBUSH values to human-readable strings
+# Function to convert CBUSX values to human-readable strings
 def cbush_string(value):
-  if value == ftdi.CBUSH_AWAKE:
+  if value == ftdi.CBUSX_AWAKE:
     return 'AWAKE'
-  if value == ftdi.CBUSH_BAT_DETECT:
+  if value == ftdi.CBUSX_BAT_DETECT:
     return 'BAT_DETECT'
-  if value == ftdi.CBUSH_BAT_DETECT_NEG:
+  if value == ftdi.CBUSX_BAT_DETECT_NEG:
     return 'BAT_DETECT_NEG'
-  if value == ftdi.CBUSH_BB_RD:
+  if value == ftdi.CBUSX_BB_RD:
     return 'BB_RD'
-  if value == ftdi.CBUSH_BB_WR:
+  if value == ftdi.CBUSX_BB_WR:
     return 'BB_WR'
-  if value == ftdi.CBUSH_CLK15:
-    return 'CLK15'
-  if value == ftdi.CBUSH_CLK30:
-    return 'CLK30'
-  if value == ftdi.CBUSH_CLK7_5:
-    return 'CLK7_5'
-  if value == ftdi.CBUSH_DRIVE_0:
+  if value == ftdi.CBUSX_CLK24:
+    return 'CLK24'
+  if value == ftdi.CBUSX_CLK12:
+    return 'CLK12'
+  if value == ftdi.CBUSX_CLK6:
+    return 'CLK6'
+  if value == ftdi.CBUSX_DRIVE_0:
     return 'DRIVE_0'
-  if value == ftdi.CBUSH_DRIVE1:
+  if value == ftdi.CBUSX_DRIVE1:
     return 'DRIVE_1'
-  if value == ftdi.CBUSH_I2C_RXF:
+  if value == ftdi.CBUSX_I2C_RXF:
     return 'I2C_RXF'
-  if value == ftdi.CBUSH_I2C_TXE:
+  if value == ftdi.CBUSX_I2C_TXE:
     return 'I2C_TXE'
-  if value == ftdi.CBUSH_IOMODE:
+  if value == ftdi.CBUSX_IOMODE:
     return 'IOMODE'
-  if value == ftdi.CBUSH_PWREN:
+  if value == ftdi.CBUSX_PWREN:
     return 'PWREN'
-  if value == ftdi.CBUSH_RXLED:
+  if value == ftdi.CBUSX_RXLED:
     return 'RXLED'
-  if value == ftdi.CBUSH_SLEEP:
+  if value == ftdi.CBUSX_SLEEP:
     return 'SLEEP'
-  if value == ftdi.CBUSH_TIME_STAMP:
+  if value == ftdi.CBUSX_TIME_STAMP:
     return 'TIME_STAMP'
-  if value == ftdi.CBUSH_TRISTATE:
+  if value == ftdi.CBUSX_TRISTATE:
     return 'TRISTATE'
-  if value == ftdi.CBUSH_TXDEN:
+  if value == ftdi.CBUSX_TXDEN:
     return 'TXDEN'
-  if value == ftdi.CBUSH_TXLED:
+  if value == ftdi.CBUSX_TXLED:
     return 'TXLED'
-  if value == ftdi.CBUSH_TXRXLED:
+  if value == ftdi.CBUSX_TXRXLED:
     return 'TXRXLED'
-  if value == ftdi.CBUSH_VBUS_SENSE:
+  if value == ftdi.CBUSX_VBUS_SENSE:
     return 'VBUS_SENSE'
   return 'UNKNOWN'
 
@@ -143,7 +143,7 @@ try:
   if ret < 0:
     raise ErrorMsg('ftdi.get_eeprom_value error = %s' % ftdi.get_error_string(ftdic))
   print 'initial CBUS3 = %d (%s)' % (value,cbush_string(value),)
-  ret = ftdi.set_eeprom_value(ftdic,ftdi.CBUS_FUNCTION_3,ftdi.CBUSH_DRIVE1)
+  ret = ftdi.set_eeprom_value(ftdic,ftdi.CBUS_FUNCTION_3,ftdi.CBUSX_DRIVE1)
   if ret < 0:
     raise ErrorMsg('ftdi.set_eeprom_value error = %s' % ftdi.get_error_string(ftdic))
   ret, value = ftdi.get_eeprom_value(ftdic,ftdi.CBUS_FUNCTION_3)
