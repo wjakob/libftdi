@@ -4195,11 +4195,15 @@ int ftdi_set_eeprom_user_data(struct ftdi_context *ftdi, const char * buf, int s
 */
 int ftdi_read_eeprom_location (struct ftdi_context *ftdi, int eeprom_addr, unsigned short *eeprom_val)
 {
+    unsigned char buf[2];
+
     if (ftdi == NULL || ftdi->usb_dev == NULL)
         ftdi_error_return(-2, "USB device unavailable");
 
-    if (libusb_control_transfer(ftdi->usb_dev, FTDI_DEVICE_IN_REQTYPE, SIO_READ_EEPROM_REQUEST, 0, eeprom_addr, (unsigned char *)eeprom_val, 2, ftdi->usb_read_timeout) != 2)
+    if (libusb_control_transfer(ftdi->usb_dev, FTDI_DEVICE_IN_REQTYPE, SIO_READ_EEPROM_REQUEST, 0, eeprom_addr, buf, 2, ftdi->usb_read_timeout) != 2)
         ftdi_error_return(-1, "reading eeprom failed");
+
+    *eeprom_val = (0xff & buf[0]) | (buf[1] << 8);
 
     return 0;
 }
