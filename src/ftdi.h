@@ -18,7 +18,9 @@
 #define __libftdi_h__
 
 #include <stdint.h>
+#ifndef _WIN32
 #include <sys/time.h>
+#endif
 
 /* 'interface' might be defined as a macro on Windows, so we need to
  * undefine it so as not to break the current libftdi API, because
