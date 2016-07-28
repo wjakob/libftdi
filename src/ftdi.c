@@ -469,11 +469,12 @@ int ftdi_usb_get_strings2(struct ftdi_context *ftdi, struct libusb_device *dev,
                           char *serial, int serial_len)
 {
     struct libusb_device_descriptor desc;
+    char need_open;
 
     if ((ftdi==NULL) || (dev==NULL))
         return -1;
 
-    char need_open = (ftdi->usb_dev == NULL);
+    need_open = (ftdi->usb_dev == NULL);
     if (need_open && libusb_open(dev, &ftdi->usb_dev) < 0)
         ftdi_error_return(-4, "libusb_open() failed");
 
@@ -2441,7 +2442,7 @@ int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi, char * manufacturer,
     eeprom->manufacturer = NULL;
     if (manufacturer)
     {
-        eeprom->manufacturer = malloc(strlen(manufacturer)+1);
+        eeprom->manufacturer = (char *)malloc(strlen(manufacturer)+1);
         if (eeprom->manufacturer)
             strcpy(eeprom->manufacturer, manufacturer);
     }
@@ -2451,7 +2452,7 @@ int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi, char * manufacturer,
     eeprom->product = NULL;
     if(product)
     {
-        eeprom->product = malloc(strlen(product)+1);
+        eeprom->product = (char *)malloc(strlen(product)+1);
         if (eeprom->product)
             strcpy(eeprom->product, product);
     }
@@ -2471,7 +2472,7 @@ int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi, char * manufacturer,
             default:
                 ftdi_error_return(-3, "Unknown chip type");
         }
-        eeprom->product = malloc(strlen(default_product) +1);
+        eeprom->product = (char *)malloc(strlen(default_product) +1);
         if (eeprom->product)
             strcpy(eeprom->product, default_product);
     }
@@ -2481,7 +2482,7 @@ int ftdi_eeprom_initdefaults(struct ftdi_context *ftdi, char * manufacturer,
     eeprom->serial = NULL;
     if (serial)
     {
-        eeprom->serial = malloc(strlen(serial)+1);
+        eeprom->serial = (char *)malloc(strlen(serial)+1);
         if (eeprom->serial)
             strcpy(eeprom->serial, serial);
     }
@@ -2567,7 +2568,7 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
     {
         if (eeprom->manufacturer)
             free (eeprom->manufacturer);
-        eeprom->manufacturer = malloc(strlen(manufacturer)+1);
+        eeprom->manufacturer = (char *)malloc(strlen(manufacturer)+1);
         if (eeprom->manufacturer)
             strcpy(eeprom->manufacturer, manufacturer);
     }
@@ -2576,7 +2577,7 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
     {
         if (eeprom->product)
             free (eeprom->product);
-        eeprom->product = malloc(strlen(product)+1);
+        eeprom->product = (char *)malloc(strlen(product)+1);
         if (eeprom->product)
             strcpy(eeprom->product, product);
     }
@@ -2585,7 +2586,7 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
     {
         if (eeprom->serial)
             free (eeprom->serial);
-        eeprom->serial = malloc(strlen(serial)+1);
+        eeprom->serial = (char *)malloc(strlen(serial)+1);
         if (eeprom->serial)
         {
             strcpy(eeprom->serial, serial);
@@ -3280,7 +3281,7 @@ static unsigned char bit2type(unsigned char bits)
 */
 static void print_inverted_bits(int invert)
 {
-    char *r_bits[] = {"TXD","RXD","RTS","CTS","DTR","DSR","DCD","RI"};
+    const char *r_bits[] = {"TXD","RXD","RTS","CTS","DTR","DSR","DCD","RI"};
     int i;
 
     fprintf(stdout,"Inverted bits:");
@@ -3368,7 +3369,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         free(eeprom->manufacturer);
     if (manufacturer_size > 0)
     {
-        eeprom->manufacturer = malloc(manufacturer_size);
+        eeprom->manufacturer = (char *)malloc(manufacturer_size);
         if (eeprom->manufacturer)
         {
             // Decode manufacturer
@@ -3389,7 +3390,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     product_size = buf[0x11]/2;
     if (product_size > 0)
     {
-        eeprom->product = malloc(product_size);
+        eeprom->product = (char *)malloc(product_size);
         if (eeprom->product)
         {
             // Decode product name
@@ -3410,7 +3411,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
     serial_size = buf[0x13]/2;
     if (serial_size > 0)
     {
-        eeprom->serial = malloc(serial_size);
+        eeprom->serial = (char *)malloc(serial_size);
         if (eeprom->serial)
         {
             // Decode serial
@@ -3566,7 +3567,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
 
     if (verbose)
     {
-        char *channel_mode[] = {"UART", "FIFO", "CPU", "OPTO", "FT1284"};
+        const char *channel_mode[] = {"UART", "FIFO", "CPU", "OPTO", "FT1284"};
         fprintf(stdout, "VID:     0x%04x\n",eeprom->vendor_id);
         fprintf(stdout, "PID:     0x%04x\n",eeprom->product_id);
         fprintf(stdout, "Release: 0x%04x\n",eeprom->release_number);
@@ -3647,7 +3648,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         }
         else if (ftdi->type == TYPE_232H)
         {
-            char *cbush_mux[] = {"TRISTATE","TXLED","RXLED", "TXRXLED","PWREN",
+            const char *cbush_mux[] = {"TRISTATE","TXLED","RXLED", "TXRXLED","PWREN",
                                  "SLEEP","DRIVE_0","DRIVE_1","IOMODE","TXDEN",
                                  "CLK30","CLK15","CLK7_5"
                                 };
@@ -3668,7 +3669,7 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
         }
         else if (ftdi->type == TYPE_230X)
         {
-            char *cbusx_mux[] = {"TRISTATE","TXLED","RXLED", "TXRXLED","PWREN",
+            const char *cbusx_mux[] = {"TRISTATE","TXLED","RXLED", "TXRXLED","PWREN",
                                  "SLEEP","DRIVE_0","DRIVE_1","IOMODE","TXDEN",
                                  "CLK24","CLK12","CLK6","BAT_DETECT","BAT_DETECT#",
                                  "I2C_TXE#", "I2C_RXF#", "VBUS_SENSE", "BB_WR#",
@@ -3694,11 +3695,11 @@ int ftdi_eeprom_decode(struct ftdi_context *ftdi, int verbose)
 
         if (ftdi->type == TYPE_R)
         {
-            char *cbus_mux[] = {"TXDEN","PWREN","RXLED", "TXLED","TX+RXLED",
+            const char *cbus_mux[] = {"TXDEN","PWREN","RXLED", "TXLED","TX+RXLED",
                                 "SLEEP","CLK48","CLK24","CLK12","CLK6",
                                 "IOMODE","BB_WR","BB_RD"
                                };
-            char *cbus_BB[] = {"RXF","TXE","RD", "WR"};
+            const char *cbus_BB[] = {"RXF","TXE","RD", "WR"};
 
             if (eeprom->invert)
                 print_inverted_bits(eeprom->invert);
@@ -4487,7 +4488,7 @@ int ftdi_erase_eeprom(struct ftdi_context *ftdi)
 
     \retval Pointer to error string
 */
-char *ftdi_get_error_string (struct ftdi_context *ftdi)
+const char *ftdi_get_error_string (struct ftdi_context *ftdi)
 {
     if (ftdi == NULL)
         return "";

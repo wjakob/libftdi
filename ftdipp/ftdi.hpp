@@ -131,7 +131,7 @@ public:
     int read_pins(unsigned char *pins);
 
     /* Misc */
-    char* error_string();
+    const char* error_string();
 
 protected:
     int get_strings();

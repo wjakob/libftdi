@@ -314,7 +314,7 @@ int Context::read_pins(unsigned char *pins)
     return ftdi_read_pins(d->ftdi, pins);
 }
 
-char* Context::error_string()
+const char* Context::error_string()
 {
     return ftdi_get_error_string(d->ftdi);
 }

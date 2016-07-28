@@ -267,7 +267,7 @@ struct ftdi_context
     struct ftdi_eeprom *eeprom;
 
     /** String representation of last error */
-    char *error_str;
+    const char *error_str;
 
     /** Defines behavior in case a kernel module is already attached to the device */
     enum ftdi_module_detach_mode module_detach_mode;
@@ -570,7 +570,7 @@ extern "C"
     int ftdi_read_eeprom_location (struct ftdi_context *ftdi, int eeprom_addr, unsigned short *eeprom_val);
     int ftdi_write_eeprom_location(struct ftdi_context *ftdi, int eeprom_addr, unsigned short eeprom_val);
 
-    char *ftdi_get_error_string(struct ftdi_context *ftdi);
+    const char *ftdi_get_error_string(struct ftdi_context *ftdi);
 
 #ifdef __cplusplus
 }
