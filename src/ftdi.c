@@ -1253,7 +1253,7 @@ static int ftdi_convert_baudrate(int baudrate, struct ftdi_context *ftdi,
         else
             best_baud = ftdi_to_clkbits(baudrate, C_CLK, 16, &encoded_divisor);
     }
-    else if ((ftdi->type == TYPE_BM) || (ftdi->type == TYPE_2232C) || (ftdi->type == TYPE_R ))
+    else if ((ftdi->type == TYPE_BM) || (ftdi->type == TYPE_2232C) || (ftdi->type == TYPE_R) || (ftdi->type == TYPE_230X))
     {
         best_baud = ftdi_to_clkbits(baudrate, C_CLK, 16, &encoded_divisor);
     }
