@@ -102,6 +102,7 @@ static void test_baudrates(ftdi_context *ftdi, const map<int, calc_result> &baud
         case TYPE_R:
         case TYPE_2232C:
         case TYPE_BM:
+        case TYPE_230X:
             fractional_bits |= (calc_index & 0x001) ? 4 : 0;
             break;
         default:;
@@ -159,6 +160,7 @@ BOOST_AUTO_TEST_CASE(TypeBMFixedBaudrates)
     test_types.push_back(TYPE_BM);
     test_types.push_back(TYPE_2232C);
     test_types.push_back(TYPE_R);
+    test_types.push_back(TYPE_230X);
 
     map<int, calc_result> baudrates;
     baudrates[183] = calc_result(183, 16383, 7, 48);
