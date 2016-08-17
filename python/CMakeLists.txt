@@ -30,6 +30,8 @@ if ( SWIG_FOUND AND PYTHONLIBS_FOUND AND PYTHONINTERP_FOUND )
 
   if ( LINK_PYTHON_LIBRARY )
     swig_link_libraries ( ftdi1 ${PYTHON_LIBRARIES} )
+  elseif( APPLE )
+    set_target_properties ( ${SWIG_MODULE_ftdi1_REAL_NAME} PROPERTIES LINK_FLAGS "-undefined dynamic_lookup" )
   endif ()
 
   set_target_properties ( ${SWIG_MODULE_ftdi1_REAL_NAME} PROPERTIES NO_SONAME ON )
