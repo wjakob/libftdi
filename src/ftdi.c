@@ -3181,7 +3181,6 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             break;
         case TYPE_230X:
             output[0x00] = 0x80; /* Actually, leave the default value */
-            output[0x0a] = 0x08; /* Enable USB Serial Number */
             /*FIXME: Make DBUS & CBUS Control configurable*/
             output[0x0c] = 0;    /* DBUS drive 4mA, CBUS drive 4 mA like factory default */
             for (j = 0; j <= 6; j++)
