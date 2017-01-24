@@ -17,9 +17,9 @@ import ftdi1 as ftdi
 # Define class for displaying errors.
 class ErrorMsg(Exception):
   def __init__(self,message):
-    self.message = message;
+    self.message = message
   def __str__(self):
-    return self.message;
+    return self.message
 
 # Function to convert CBUSX values to human-readable strings
 def cbush_string(value):
@@ -80,11 +80,11 @@ try:
   # List all the FT230X devices.
   nDevices, devlist = ftdi.usb_find_all(ftdic, 0x0403, 0x6015)
   if nDevices < 0:
-    raise ErrorMsg('ftdi.usb_find_all error = %s' % ftdi.get_error_string(ftdic));
+    raise ErrorMsg('ftdi.usb_find_all error = %s' % ftdi.get_error_string(ftdic))
   elif nDevices == 0:
-    raise ErrorMsg('No FT230X devices found');
+    raise ErrorMsg('No FT230X devices found')
   elif nDevices != 1:
-    raise ErrorMsg('More than one FT230X device found');
+    raise ErrorMsg('More than one FT230X device found')
 
   # Display the identified single FT230X device.
   ret, manufacturer, description, serial = ftdi.usb_get_strings(ftdic, devlist.dev)
@@ -93,7 +93,7 @@ try:
   print 'manufacturer="%s" description="%s" serial="%s"' % (manufacturer, description, serial)
 
   # Open the identified single FT230X device.
-  ret = ftdi.usb_open_desc(ftdic, 0x0403, 0x6015, description, serial);
+  ret = ftdi.usb_open_desc(ftdic, 0x0403, 0x6015, description, serial)
   if ret < 0:
     raise ErrorMsg('ftdi.usb_open_desc error = %s' % ftdi.get_error_string(ftdic))
 
@@ -104,7 +104,7 @@ try:
   print 'chip id=0x%08X' % (chipid % 2**32)
 
   # Read the EEPROM
-  ret = ftdi.read_eeprom(ftdic);
+  ret = ftdi.read_eeprom(ftdic)
   if ret < 0:
     raise ErrorMsg('ftdi.read_eeprom error = %s' % ftdi.get_error_string(ftdic))
 
@@ -126,10 +126,10 @@ try:
           sys.stdout.write(x)
         else:
           sys.stdout.write('.')
-      sys.stdout.write('\n');
+      sys.stdout.write('\n')
 
   # Read and display the EEPROM (in human readable format)
-  ret = ftdi.eeprom_decode(ftdic, 1);
+  ret = ftdi.eeprom_decode(ftdic, 1)
   if ret < 0:
     raise ErrorMsg('ftdi.eeprom_decode error = %s' % ftdi.get_error_string(ftdic))
 
@@ -164,10 +164,10 @@ try:
     print 'EEPROM write not attempted'
 
   # Close the ftdi context.
-  ret = ftdi.usb_close(ftdic);
+  ret = ftdi.usb_close(ftdic)
   if ret < 0:
-    raise ErrorMsg('ftdi.usb_close error = %s' % ftdi.get_error_string(ftdic));
+    raise ErrorMsg('ftdi.usb_close error = %s' % ftdi.get_error_string(ftdic))
 
 except ErrorMsg, msg:
-  print >> sys.stderr, 'FATAL ERROR:  ' + str(msg);
-  exit(1);
+  print >> sys.stderr, 'FATAL ERROR:  ' + str(msg)
+  exit(1)
