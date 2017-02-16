@@ -489,6 +489,11 @@ extern "C"
                               char *manufacturer, int mnf_len,
                               char *description, int desc_len,
                               char *serial, int serial_len);
+
+    int ftdi_eeprom_get_strings(struct ftdi_context *ftdi,
+                                char *manufacturer, int mnf_len,
+                                char *product, int prod_len,
+                                char *serial, int serial_len);
     int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
                                 char * product, char * serial);
 

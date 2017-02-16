@@ -2596,6 +2596,47 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
     return 0;
 }
 
+int ftdi_eeprom_get_strings(struct ftdi_context *ftdi,
+                            char *manufacturer, int mnf_len,
+                            char *product, int prod_len,
+                            char *serial, int serial_len)
+{
+    struct ftdi_eeprom *eeprom;
+
+    if (ftdi == NULL)
+        ftdi_error_return(-1, "No struct ftdi_context");
+
+    if (ftdi->eeprom == NULL)
+        ftdi_error_return(-2,"No struct ftdi_eeprom");
+
+    eeprom = ftdi->eeprom;
+
+    if (ftdi->usb_dev == NULL)
+        ftdi_error_return(-3, "No connected device or device not yet opened");
+
+    if (manufacturer)
+    {
+        strncpy(manufacturer, eeprom->manufacturer, mnf_len);
+        if (mnf_len > 0)
+            manufacturer[mnf_len - 1] = '\0';
+    }
+
+    if (product)
+    {
+        strncpy(product, eeprom->product, prod_len);
+        if (prod_len > 0)
+            product[prod_len - 1] = '\0';
+    }
+
+    if (serial)
+    {
+        strncpy(serial, eeprom->serial, serial_len);
+        if (serial_len > 0)
+            serial[serial_len - 1] = '\0';
+    }
+
+    return 0;
+}
 
 /*FTD2XX doesn't check for values not fitting in the ACBUS Signal options*/
 void set_ft232h_cbus(struct ftdi_eeprom *eeprom, unsigned char * output)
