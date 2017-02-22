@@ -2613,7 +2613,6 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
     \retval   0: all fine
     \retval  -1: ftdi context invalid
     \retval  -2: ftdi eeprom buffer invalid
-    \retval  -3: no USB device connected
 */
 int ftdi_eeprom_get_strings(struct ftdi_context *ftdi,
                             char *manufacturer, int mnf_len,
@@ -2624,14 +2623,10 @@ int ftdi_eeprom_get_strings(struct ftdi_context *ftdi,
 
     if (ftdi == NULL)
         ftdi_error_return(-1, "No struct ftdi_context");
-
     if (ftdi->eeprom == NULL)
-        ftdi_error_return(-2,"No struct ftdi_eeprom");
+        ftdi_error_return(-2, "No struct ftdi_eeprom");
 
     eeprom = ftdi->eeprom;
-
-    if (ftdi->usb_dev == NULL)
-        ftdi_error_return(-3, "No connected device or device not yet opened");
 
     if (manufacturer)
     {
