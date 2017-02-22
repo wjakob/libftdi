@@ -2596,6 +2596,25 @@ int ftdi_eeprom_set_strings(struct ftdi_context *ftdi, char * manufacturer,
     return 0;
 }
 
+/**
+    Return device ID strings from the eeprom. Device needs to be connected.
+
+    The parameters manufacturer, description and serial may be NULL
+    or pointer to buffers to store the fetched strings.
+
+    \param ftdi pointer to ftdi_context
+    \param manufacturer Store manufacturer string here if not NULL
+    \param mnf_len Buffer size of manufacturer string
+    \param product Store product description string here if not NULL
+    \param prod_len Buffer size of product description string
+    \param serial Store serial string here if not NULL
+    \param serial_len Buffer size of serial string
+
+    \retval   0: all fine
+    \retval  -1: ftdi context invalid
+    \retval  -2: ftdi eeprom buffer invalid
+    \retval  -3: no USB device connected
+*/
 int ftdi_eeprom_get_strings(struct ftdi_context *ftdi,
                             char *manufacturer, int mnf_len,
                             char *product, int prod_len,
