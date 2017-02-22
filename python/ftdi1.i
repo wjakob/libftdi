@@ -61,11 +61,13 @@ inline char * str2charp_size(PyObject* pyObj, int * size)
 %enddef
 %feature("autodoc", ftdi_usb_get_strings_docstring) ftdi_usb_get_strings;
 %feature("autodoc", ftdi_usb_get_strings_docstring) ftdi_usb_get_strings2;
+%feature("autodoc", ftdi_usb_get_strings_docstring) ftdi_eeprom_get_strings;
 %apply char *OUTPUT { char * manufacturer, char * description, char * serial };
 %cstring_bounded_output( char * manufacturer, 256 );
 %cstring_bounded_output( char * description, 256 );
+%cstring_bounded_output( char * product, 256 );
 %cstring_bounded_output( char * serial, 256 );
-%typemap(default,noblock=1) int mnf_len, int desc_len, int serial_len { $1 = 256; }
+%typemap(default,noblock=1) int mnf_len, int desc_len, int product_len, int serial_len { $1 = 256; }
     int ftdi_usb_get_strings(struct ftdi_context *ftdi, struct libusb_device *dev,
                              char * manufacturer, int mnf_len,
                              char * description, int desc_len,
@@ -74,8 +76,14 @@ inline char * str2charp_size(PyObject* pyObj, int * size)
                               char * manufacturer, int mnf_len,
                               char * description, int desc_len,
                               char * serial, int serial_len);
+    int ftdi_eeprom_get_strings(struct ftdi_context *ftdi,
+                                char *manufacturer, int mnf_len,
+                                char *product, int product_len,
+                                char *serial, int serial_len);
+
 %clear char * manufacturer, char * description, char * serial;
-%clear int mnf_len, int desc_len, int serial_len;
+%clear char * product;
+%clear int mnf_len, int desc_len, int product_len, int serial_len;
 
 %define ftdi_read_data_docstring
 "read_data(context) -> (return_code, buf)"
