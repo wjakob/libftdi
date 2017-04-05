@@ -1,5 +1,6 @@
 *** Checklist for a new libftdi release ***
 - Update ChangeLog and AUTHORS via git history
+  (git log --oneline latest_release..HEAD)
 
 - Update version number in the following files:
   - CMakeLists.txt
