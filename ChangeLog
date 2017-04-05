@@ -1,6 +1,13 @@
 New in 1.4rc1 - 2017-04-XX
 -----------------------
-* TODO
+* Use BM/R series baud rate computation for FT230X
+* ftdi_get_error_string() now returns const char*
+* small build fixes and improvements in the python examples
+* ftdi_eeprom / eeprom handling:
+  * New API function: ftdi_eeprom_get_strings()
+  * Fix USE_SERIAL handling for 230X type chips
+  * Make ftdi_read_eeprom_location() endianness independent
+  * Fix flashing of FT245R
 
 New in 1.3 - 2016-05-20
 -----------------------
