@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
-libftdi version 1.3
+libftdi version 1.4rc1
 --------------------------------------------------------------------
 
 libftdi - A library (using libusb) to talk to FTDI's UART/FIFO chips
@@ -20,26 +20,7 @@ that made libftdi possible what it is today.
 
 Changes
 -------
-* Added ftdi_usb_get_strings2() to prevent automatic device close (Fahrzin Hemmati)
-* Added ftdi_transfer_data_cancel() for cancellation of a submitted transfer,
-  avoided resubmittion of a canceled transfer in the callbacks,
-  replaced calls to libusb_handle_events with
-  libusb_handle_events_timeout_completed (Eugene Hutorny)
-* ftdi_eeprom / eeprom handling:
-  * Add support for arbitrary user data (Salvador Eduardo Tropea)
-  * Add --build-eeprom support (Salvador Eduardo Tropea)
-  * Fix use_usb_version config file option (Thilo Schulz)
-  * Ability to include other config files in EEPROM config file (Thilo Schulz)
-  * Add external oscillator enable bit (Raphael Assenat)
-  * Support channel configuration (Stephan Linz)
-  * Added --device option to ftdi_eeprom to specify FTDI device (Robin Haberkorn)
-  * Fixed EEPROM user-area space checks for FT232R and FT245R chips (Robin Haberkorn)
-* Various improvements to CBUS handling, including the EEPROM (Robin Haberkorn)
-* swig wrapper: Fix handling of binary strings in ftdi_write_data()
-  for python 3 (xantares09)
-* cbus python example code (Rodney Sinclair)
-* ftdi_stream: fix timeout setting (Ларионов Даниил)
-* Fixed typo in CBUS defines: CBUSG_DRIVE1 -> CBUSH_DRIVE1
+* TODO
 
 You'll find the newest version of libftdi at:
 http://www.intra2net.com/en/developer/libftdi
@@ -57,5 +38,5 @@ make install
 More verbose build instructions are in "README.build"
 
 --------------------------------------------------------------------
-www.intra2net.com                             2003-2014 Intra2net AG
+www.intra2net.com                             2003-2017 Intra2net AG
 --------------------------------------------------------------------
