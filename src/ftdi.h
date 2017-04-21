@@ -502,6 +502,7 @@ extern "C"
                            const char* description, const char* serial);
     int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
                                  const char* description, const char* serial, unsigned int index);
+    int ftdi_usb_open_bus_port(struct ftdi_context *ftdi, uint8_t bus, uint8_t port);
     int ftdi_usb_open_dev(struct ftdi_context *ftdi, struct libusb_device *dev);
     int ftdi_usb_open_string(struct ftdi_context *ftdi, const char* description);
 

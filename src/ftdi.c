@@ -824,6 +824,53 @@ int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
 }
 
 /**
+    Opens the device at a given USB bus and port.
+
+    \param ftdi pointer to ftdi_context
+    \param bus Bus number
+    \param port Port number
+
+    \retval  0: all fine
+    \retval -1: usb_find_busses() failed
+    \retval -2: usb_find_devices() failed
+    \retval -3: usb device not found
+    \retval -4: unable to open device
+    \retval -5: unable to claim device
+    \retval -6: reset failed
+    \retval -7: set baudrate failed
+    \retval -8: get product description failed
+    \retval -9: get serial number failed
+    \retval -10: unable to close device
+    \retval -11: ftdi context invalid
+*/
+int ftdi_usb_open_bus_port(struct ftdi_context *ftdi, uint8_t bus, uint8_t port)
+{
+    libusb_device *dev;
+    libusb_device **devs;
+    int i = 0;
+
+    if (ftdi == NULL)
+        ftdi_error_return(-11, "ftdi context invalid");
+
+    if (libusb_get_device_list(ftdi->usb_ctx, &devs) < 0)
+        ftdi_error_return(-12, "libusb_get_device_list() failed");
+
+    while ((dev = devs[i++]) != NULL)
+    {
+        if (libusb_get_bus_number(dev) == bus && libusb_get_port_number(dev) == port)
+        {
+            int res;
+            res = ftdi_usb_open_dev(ftdi, dev);
+            libusb_free_device_list(devs,1);
+            return res;
+        }
+    }
+
+    // device not found
+    ftdi_error_return_free_device_list(-3, "device not found", devs);
+}
+
+/**
     Opens the ftdi-device described by a description-string.
     Intended to be used for parsing a device-description given as commandline argument.
 
