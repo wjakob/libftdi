@@ -1,5 +1,6 @@
-New in 1.4rc1 - 2017-04-XX
+New in 1.4rcX - 2017-04-XX
 -----------------------
+* New ftdi_usb_open_bus_port() open function
 * Use BM/R series baud rate computation for FT230X
 * ftdi_get_error_string() now returns const char*
 * small build fixes and improvements in the python examples

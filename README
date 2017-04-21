@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
-libftdi version 1.4rc1
+libftdi version 1.4rcX
 --------------------------------------------------------------------
 
 libftdi - A library (using libusb) to talk to FTDI's UART/FIFO chips
@@ -20,6 +20,7 @@ that made libftdi possible what it is today.
 
 Changes
 -------
+* New ftdi_usb_open_bus_port() open function
 * Use BM/R series baud rate computation for FT230X
 * ftdi_get_error_string() now returns const char*
 * small build fixes and improvements in the python examples
