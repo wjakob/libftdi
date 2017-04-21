@@ -750,6 +750,7 @@ int ftdi_usb_open_desc(struct ftdi_context *ftdi, int vendor, int product,
     \retval -9: get serial number failed
     \retval -10: unable to close device
     \retval -11: ftdi context invalid
+    \retval -12: libusb_get_device_list() failed
 */
 int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
                              const char* description, const char* serial, unsigned int index)
@@ -842,6 +843,7 @@ int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
     \retval -9: get serial number failed
     \retval -10: unable to close device
     \retval -11: ftdi context invalid
+    \retval -12: libusb_get_device_list() failed
 */
 int ftdi_usb_open_bus_port(struct ftdi_context *ftdi, uint8_t bus, uint8_t port)
 {
