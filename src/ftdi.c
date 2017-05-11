@@ -825,11 +825,11 @@ int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
 }
 
 /**
-    Opens the device at a given USB bus and port.
+    Opens the device at a given USB bus and device address.
 
     \param ftdi pointer to ftdi_context
     \param bus Bus number
-    \param port Port number
+    \param addr Device address
 
     \retval  0: all fine
     \retval -1: usb_find_busses() failed
@@ -845,7 +845,7 @@ int ftdi_usb_open_desc_index(struct ftdi_context *ftdi, int vendor, int product,
     \retval -11: ftdi context invalid
     \retval -12: libusb_get_device_list() failed
 */
-int ftdi_usb_open_bus_port(struct ftdi_context *ftdi, uint8_t bus, uint8_t port)
+int ftdi_usb_open_bus_addr(struct ftdi_context *ftdi, uint8_t bus, uint8_t addr)
 {
     libusb_device *dev;
     libusb_device **devs;
@@ -859,7 +859,7 @@ int ftdi_usb_open_bus_port(struct ftdi_context *ftdi, uint8_t bus, uint8_t port)
 
     while ((dev = devs[i++]) != NULL)
     {
-        if (libusb_get_bus_number(dev) == bus && libusb_get_port_number(dev) == port)
+        if (libusb_get_bus_number(dev) == bus && libusb_get_device_address(dev) == addr)
         {
             int res;
             res = ftdi_usb_open_dev(ftdi, dev);
