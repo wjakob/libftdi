@@ -134,8 +134,8 @@ public:
     const char* error_string();
 
 protected:
-    int get_strings();
-    int get_strings_and_reopen();
+    int get_strings(bool vendor=true, bool description=true, bool serial=true);
+    int get_strings_and_reopen(bool vendor=true, bool description=true, bool serial=true);
 
     /* Properties */
     struct ftdi_context* context();

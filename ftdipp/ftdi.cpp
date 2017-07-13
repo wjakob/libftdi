@@ -87,7 +87,7 @@ int Context::open(int vendor, int product)
     if (ret < 0)
        return ret;
 
-    return get_strings_and_reopen();
+    return get_strings_and_reopen(false,false,false);
 }
 
 int Context::open(int vendor, int product, const std::string& description, const std::string& serial, unsigned int index)
@@ -106,7 +106,7 @@ int Context::open(int vendor, int product, const std::string& description, const
     if (ret < 0)
        return ret;
 
-    return get_strings_and_reopen();
+    return get_strings_and_reopen(false,description.empty(),serial.empty());
 }
 
 int Context::open(const std::string& description)
@@ -116,7 +116,7 @@ int Context::open(const std::string& description)
     if (ret < 0)
        return ret;
 
-    return get_strings_and_reopen();
+    return get_strings_and_reopen(false,true,false);
 }
 
 int Context::open(struct libusb_device *dev)
@@ -319,41 +319,46 @@ const char* Context::error_string()
     return ftdi_get_error_string(d->ftdi);
 }
 
-int Context::get_strings()
+int Context::get_strings(bool vendor, bool description, bool serial)
 {
     // Prepare buffers
-    char vendor[512], desc[512], serial[512];
+    char ivendor[512], idesc[512], iserial[512];
 
-    int ret = ftdi_usb_get_strings(d->ftdi, d->dev, vendor, 512, desc, 512, serial, 512);
+    int ret = ftdi_usb_get_strings(d->ftdi, d->dev, vendor?ivendor:NULL, 512, description?idesc:NULL, 512, serial?iserial:NULL, 512);
 
     if (ret < 0)
         return -1;
 
-    d->vendor = vendor;
-    d->description = desc;
-    d->serial = serial;
+    d->vendor = ivendor;
+    d->description = idesc;
+    d->serial = iserial;
 
     return 1;
 }
 
-int Context::get_strings_and_reopen()
+int Context::get_strings_and_reopen(bool vendor, bool description, bool serial)
 {
-    if ( d->dev == 0 )
-    {
-        d->dev = libusb_get_device(d->ftdi->usb_dev);
-    }
+    int ret = 0;
 
-    // Get device strings (closes device)
-    int ret=get_strings();
-    if (ret < 0)
+    if(vendor || description || serial)
     {
-        d->open = 0;
-        return ret;
-    }
+        if (d->dev == 0)
+        {
+            d->dev = libusb_get_device(d->ftdi->usb_dev);
+        }
 
-    // Reattach device
-    ret = ftdi_usb_open_dev(d->ftdi, d->dev);
-    d->open = (ret >= 0);
+        // Get device strings (closes device)
+        ret=get_strings(vendor, description, serial);
+        if (ret < 0)
+        {
+            d->open = 0;
+            return ret;
+        }
+
+        // Reattach device
+        ret = ftdi_usb_open_dev(d->ftdi, d->dev);
+        d->open = (ret >= 0);
+    }
 
     return ret;
 }
@@ -362,6 +367,8 @@ int Context::get_strings_and_reopen()
  */
 const std::string& Context::vendor()
 {
+    if(d->vendor.empty())
+        get_strings_and_reopen(true,false,false);
     return d->vendor;
 }
 
@@ -369,6 +376,8 @@ const std::string& Context::vendor()
  */
 const std::string& Context::description()
 {
+    if(d->description.empty())
+        get_strings_and_reopen(false,true,false);
     return d->description;
 }
 
@@ -376,6 +385,8 @@ const std::string& Context::description()
  */
 const std::string& Context::serial()
 {
+    if(d->serial.empty())
+        get_strings_and_reopen(false,false,true);
     return d->serial;
 }
 
