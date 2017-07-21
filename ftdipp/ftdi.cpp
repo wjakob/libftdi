@@ -106,7 +106,7 @@ int Context::open(int vendor, int product, const std::string& description, const
     if (ret < 0)
        return ret;
 
-    return get_strings_and_reopen(false,description.empty(),serial.empty());
+    return get_strings_and_reopen(false,!description.empty(),!serial.empty());
 }
 
 int Context::open(const std::string& description)
