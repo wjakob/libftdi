@@ -4,6 +4,7 @@ New in 1.4rcX - 2017-07-XX
 * Use BM/R series baud rate computation for FT230X
 * ftdi_get_error_string() now returns const char*
 * C++ API: Ability to open devices with empty descriptor strings
+* C++ API: Fix enumerations for buffer purge and modem controls
 * small build fixes and improvements in the python examples
 * ftdi_eeprom / eeprom handling:
   * New API function: ftdi_eeprom_get_strings()
