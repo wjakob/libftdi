@@ -219,7 +219,7 @@ int Context::read_chunk_size()
     return chunk;
 }
 
-int Context::write(unsigned char *buf, int size)
+int Context::write(const unsigned char *buf, int size)
 {
     return ftdi_write_data(d->ftdi, buf, size);
 }
