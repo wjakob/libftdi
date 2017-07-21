@@ -55,16 +55,16 @@ public:
      */
     enum Direction
     {
-        Input,
-        Output
+        Input = 0x2,
+        Output = 0x1,
     };
 
     /*! \brief Modem control flags.
      */
     enum ModemCtl
     {
-        Dtr,
-        Rts
+        Dtr = 0x2,
+        Rts = 0x1,
     };
 
     /* Constructor, Destructor */

@@ -144,12 +144,26 @@ int Context::reset()
 
 int Context::flush(int mask)
 {
-    int ret = 1;
+    int ret;
 
-    if (mask & Input)
-        ret &= ftdi_usb_purge_rx_buffer(d->ftdi);
-    if (mask & Output)
-        ret &= ftdi_usb_purge_tx_buffer(d->ftdi);
+    switch (mask & (Input | Output)) {
+    case Input:
+        ret = ftdi_usb_purge_rx_buffer(d->ftdi);
+        break;
+
+    case Output:
+        ret = ftdi_usb_purge_tx_buffer(d->ftdi);
+        break;
+
+    case Input | Output:
+        ret = ftdi_usb_purge_buffers(d->ftdi);
+        break;
+
+    default:
+        // Emulate behavior of previous version.
+        ret = 1;
+        break;
+    }
 
     return ret;
 }
