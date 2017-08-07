@@ -1,5 +1,5 @@
 --------------------------------------------------------------------
-libftdi version 1.4rcX
+libftdi version 1.4
 --------------------------------------------------------------------
 
 libftdi - A library (using libusb) to talk to FTDI's UART/FIFO chips
