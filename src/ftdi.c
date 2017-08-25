@@ -87,7 +87,7 @@ static void ftdi_usb_close_internal (struct ftdi_context *ftdi)
 */
 int ftdi_init(struct ftdi_context *ftdi)
 {
-    struct ftdi_eeprom* eeprom = (struct ftdi_eeprom *)malloc(sizeof(struct ftdi_eeprom));
+    struct ftdi_eeprom* eeprom;
     ftdi->usb_ctx = NULL;
     ftdi->usb_dev = NULL;
     ftdi->usb_read_timeout = 5000;
@@ -111,6 +111,7 @@ int ftdi_init(struct ftdi_context *ftdi)
     ftdi_set_interface(ftdi, INTERFACE_ANY);
     ftdi->bitbang_mode = 1; /* when bitbang is enabled this holds the number of the mode  */
 
+    eeprom = (struct ftdi_eeprom *)malloc(sizeof(struct ftdi_eeprom));
     if (eeprom == 0)
         ftdi_error_return(-2, "Can't malloc struct ftdi_eeprom");
     memset(eeprom, 0, sizeof(struct ftdi_eeprom));
