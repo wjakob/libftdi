@@ -41,7 +41,9 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#ifndef _WIN32
 #include <sys/time.h>
+#endif
 #include <libusb.h>
 
 #include "ftdi.h"
