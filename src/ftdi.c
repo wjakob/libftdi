@@ -2263,9 +2263,11 @@ int ftdi_poll_modem_status(struct ftdi_context *ftdi, unsigned short *status)
 /**
     Set flowcontrol for ftdi chip
 
+    Note: Do not use this function to enable XON/XOFF mode, use ftdi_setflowctrl_xonxoff() instead.
+
     \param ftdi pointer to ftdi_context
     \param flowctrl flow control to use. should be
-           SIO_DISABLE_FLOW_CTRL, SIO_RTS_CTS_HS, SIO_DTR_DSR_HS or SIO_XON_XOFF_HS
+           SIO_DISABLE_FLOW_CTRL, SIO_RTS_CTS_HS, SIO_DTR_DSR_HS
 
     \retval  0: all fine
     \retval -1: set flow control failed
@@ -2278,6 +2280,31 @@ int ftdi_setflowctrl(struct ftdi_context *ftdi, int flowctrl)
 
     if (libusb_control_transfer(ftdi->usb_dev, FTDI_DEVICE_OUT_REQTYPE,
                                 SIO_SET_FLOW_CTRL_REQUEST, 0, (flowctrl | ftdi->index),
+                                NULL, 0, ftdi->usb_write_timeout) < 0)
+        ftdi_error_return(-1, "set flow control failed");
+
+    return 0;
+}
+
+/**
+    Set XON/XOFF flowcontrol for ftdi chip
+
+    \param ftdi pointer to ftdi_context
+    \param xon character code used to resume transmission
+    \param xoff character code used to pause transmission
+
+    \retval  0: all fine
+    \retval -1: set flow control failed
+    \retval -2: USB device unavailable
+*/
+int ftdi_setflowctrl_xonxoff(struct ftdi_context *ftdi, unsigned char xon, unsigned char xoff)
+{
+    if (ftdi == NULL || ftdi->usb_dev == NULL)
+        ftdi_error_return(-2, "USB device unavailable");
+
+    uint16_t xonxoff = xon | (xoff << 8);
+    if (libusb_control_transfer(ftdi->usb_dev, FTDI_DEVICE_OUT_REQTYPE,
+                                SIO_SET_FLOW_CTRL_REQUEST, xonxoff, (SIO_XON_XOFF_HS | ftdi->index),
                                 NULL, 0, ftdi->usb_write_timeout) < 0)
         ftdi_error_return(-1, "set flow control failed");
 

@@ -546,6 +546,7 @@ extern "C"
 
     /* flow control */
     int ftdi_setflowctrl(struct ftdi_context *ftdi, int flowctrl);
+    int ftdi_setflowctrl_xonxoff(struct ftdi_context *ftdi, unsigned char xon, unsigned char xoff);
     int ftdi_setdtr_rts(struct ftdi_context *ftdi, int dtr, int rts);
     int ftdi_setdtr(struct ftdi_context *ftdi, int state);
     int ftdi_setrts(struct ftdi_context *ftdi, int state);
