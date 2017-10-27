@@ -1909,13 +1909,14 @@ int ftdi_write_data_get_chunksize(struct ftdi_context *ftdi, unsigned int *chunk
 int ftdi_read_data(struct ftdi_context *ftdi, unsigned char *buf, int size)
 {
     int offset = 0, ret, i, num_of_chunks, chunk_remains;
-    int packet_size = ftdi->max_packet_size;
+    int packet_size;
     int actual_length = 1;
 
     if (ftdi == NULL || ftdi->usb_dev == NULL)
         ftdi_error_return(-666, "USB device unavailable");
 
     // Packet size sanity check (avoid division by zero)
+    packet_size = ftdi->max_packet_size;
     if (packet_size == 0)
         ftdi_error_return(-1, "max_packet_size is bogus (zero)");
 
