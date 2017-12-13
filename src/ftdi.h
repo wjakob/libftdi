@@ -84,7 +84,8 @@ enum ftdi_interface
 enum ftdi_module_detach_mode
 {
     AUTO_DETACH_SIO_MODULE = 0,
-    DONT_DETACH_SIO_MODULE = 1
+    DONT_DETACH_SIO_MODULE = 1,
+    AUTO_DETACH_REATACH_SIO_MODULE = 2
 };
 
 /* Shifting commands IN MPSSE Mode*/
