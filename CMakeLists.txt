@@ -16,6 +16,8 @@ cmake_minimum_required(VERSION 2.6 FATAL_ERROR)
 
 add_definitions(-Wall)
 
+include(CMakeOptions.txt)
+
 # Debug build
 message("-- Build type: ${CMAKE_BUILD_TYPE}")
 if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
@@ -26,8 +28,10 @@ endif(${CMAKE_BUILD_TYPE} STREQUAL Debug)
 find_package ( USB1 REQUIRED )
 include_directories ( ${LIBUSB_INCLUDE_DIR} )
 
-# Find Boost (optional package)
-find_package(Boost)
+# Find Boost
+if (FTDIPP OR BUILD_TESTS)
+  find_package( Boost REQUIRED )
+endif()
 
 # Set components
 set(CPACK_COMPONENTS_ALL sharedlibs staticlibs headers)
@@ -45,8 +49,6 @@ set(CPACK_COMPONENT_HEADERS_DESCRIPTION
 set(CPACK_COMPONENT_SHAREDLIBS_GROUP "Development")
 set(CPACK_COMPONENT_STATICLIBS_GROUP "Development")
 set(CPACK_COMPONENT_HEADERS_GROUP    "Development")
-
-option ( STATICLIBS "Build static libraries" ON )
 
 # guess LIB_SUFFIX, don't take debian multiarch into account 
 if ( NOT DEFINED LIB_SUFFIX )
@@ -113,18 +115,8 @@ add_custom_target(dist
             | bzip2 > ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.bz2
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# Tests
-option ( BUILD_TESTS "Build unit tests with Boost Unit Test framework" ON )
-
-# Documentation
-option ( DOCUMENTATION "Generate API documentation with Doxygen" ON )
-
-
-find_package ( Doxygen )
-if ( DOCUMENTATION AND DOXYGEN_FOUND )
-
-   # Find doxy config
-   message(STATUS "Doxygen found.")
+if ( DOCUMENTATION )
+   find_package ( Doxygen REQUIRED)
 
    # Copy doxy.config.in
    set(top_srcdir ${CMAKE_SOURCE_DIR})
@@ -140,19 +132,25 @@ if ( DOCUMENTATION AND DOXYGEN_FOUND )
    )
 
    add_custom_target(docs ALL DEPENDS ${CMAKE_BINARY_DIR}/doc/html/index.html)
-
-   message(STATUS "Generating API documentation with Doxygen")
-else(DOCUMENTATION AND DOXYGEN_FOUND)
-   message(STATUS "Not generating API documentation")
-endif(DOCUMENTATION AND DOXYGEN_FOUND)
+endif ()
 
 add_subdirectory(src)
-add_subdirectory(ftdipp)
+if ( FTDIPP )
+  add_subdirectory(ftdipp)
+endif ()
+if ( PYTHON_BINDINGS )
 add_subdirectory(python)
-add_subdirectory(ftdi_eeprom)
-add_subdirectory(examples)
+endif ()
+if ( FTDI_EEPROM )
+  add_subdirectory(ftdi_eeprom)
+endif ()
+if ( EXAMPLES )
+  add_subdirectory(examples)
+endif ()
 add_subdirectory(packages)
-add_subdirectory(test)
+if ( BUILD_TESTS )
+  add_subdirectory(test)
+endif ()
 
 # PkgConfig
 set(prefix      ${CMAKE_INSTALL_PREFIX})
@@ -191,7 +189,7 @@ list ( APPEND LIBFTDI_LIBRARIES ${LIBUSB_LIBRARIES} )
 set ( LIBFTDI_STATIC_LIBRARY ftdi1.a )
 set ( LIBFTDI_STATIC_LIBRARIES ${LIBFTDI_STATIC_LIBRARY} )
 list ( APPEND LIBFTDI_STATIC_LIBRARIES ${LIBUSB_LIBRARIES} )
-if (FTDI_BUILD_CPP)
+if ( FTDIPP )
   set ( LIBFTDIPP_LIBRARY ftdipp1 )
   set ( LIBFTDIPP_LIBRARIES ${LIBFTDIPP_LIBRARY} )
   list ( APPEND LIBFTDIPP_LIBRARIES ${LIBUSB_LIBRARIES} )
@@ -238,7 +236,15 @@ install ( FILES
           DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
         )
 
-
-
-
 include(CPack)
+
+message (STATUS "Summary of build options:
+
+  Build static libs: ${STATICLIBS}
+  Build C++ bindings: ${FTDIPP}
+  Build Python bindings: ${PYTHON_BINDINGS}
+  Build ftdi_eeprom: ${FTDI_EEPROM}
+  Build examples: ${EXAMPLES}
+  Build tests: ${BUILD_TESTS}
+  Build API documentation: ${DOCUMENTATION}
+")
