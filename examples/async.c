@@ -1,7 +1,21 @@
-/* LIBFTDI EEPROM access example
+/* Libftdi example for asynchronous read/write.
 
    This program is distributed under the GPL, version 2
 */
+
+/* This programm switches to MPSSE mode, and sets and then reads back
+ * the high byte 3 times with three different values.
+ * The expected read values are hard coded in ftdi_init
+ * with 0x00, 0x55 and 0xaa
+ *
+ * Make sure that that nothing else drives some bit of the high byte
+ * or expect a collision for a very short time and some differences
+ * in the data read back.
+ *
+ * Result should be the same without any option or with either
+ * -r or -w or -b.
+ */
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,7 +63,7 @@ int main(int argc, char **argv)
         }
     }
 
-    // Select first interface
+    /* Select first free interface */
     ftdi_set_interface(ftdi, INTERFACE_ANY);
 
     struct ftdi_device_list *devlist;
@@ -101,41 +115,59 @@ int main(int argc, char **argv)
                 err, ftdi_get_error_string(ftdi));
         return -1;
     }
-    uint8_t ftdi_init[15] = {TCK_DIVISOR, 0x00, 0x00,
+#define DATA_TO_READ 3
+    uint8_t ftdi_init[] = {TCK_DIVISOR, 0x00, 0x00,
+                             /* Set High byte to zero.*/
                              SET_BITS_HIGH, 0, 0xff,
                              GET_BITS_HIGH,
+                             /* Set High byte to 0x55.*/
                              SET_BITS_HIGH, 0x55, 0xff,
                              GET_BITS_HIGH,
+                             /* Set High byte to 0xaa.*/
                              SET_BITS_HIGH, 0xaa, 0xff,
-                             GET_BITS_HIGH};
+                             GET_BITS_HIGH,
+                             /* Set back to high impedance.*/
+                             SET_BITS_HIGH, 0x00, 0x00 };
     struct ftdi_transfer_control *tc_read;
     struct ftdi_transfer_control *tc_write;
     uint8_t data[3];
     if (do_read) {
-        tc_read = ftdi_read_data_submit(ftdi, data, 3);
+        tc_read = ftdi_read_data_submit(ftdi, data, DATA_TO_READ);
     }
     if (do_write) {
-        tc_write = ftdi_write_data_submit(ftdi, ftdi_init, 15);
+        tc_write = ftdi_write_data_submit(ftdi, ftdi_init, sizeof(ftdi_init));
         int transfer = ftdi_transfer_data_done(tc_write);
-        printf("Async write %d\n", transfer);
+        if (transfer != sizeof(ftdi_init)) {
+            printf("Async write failed : %d\n", transfer);
+        }
     } else {
-        int written = ftdi_write_data(ftdi, ftdi_init, 15);
-        if (written != 15) {
-            printf("Sync write failed\n");
+        int written = ftdi_write_data(ftdi, ftdi_init, sizeof(ftdi_init));
+        if (written != sizeof(ftdi_init)) {
+            printf("Sync write failed: %d\n", written);
         }
     }
     if (do_read) {
         int transfer = ftdi_transfer_data_done(tc_read);
-        printf("Async Read %d\n", transfer);
+        if (transfer != DATA_TO_READ) {
+            printf("Async Read failed:%d\n", transfer);
+        }
     } else {
         int index = 0;
-        while (index < 3) {
+        ftdi->usb_read_timeout = 1;
+        int i = 1000; /* Fail if read did not succeed in 1 second.*/
+        while (i--) {
             int res = ftdi_read_data(ftdi, data + index, 3 - index);
             if (res < 0) {
                 printf("Async read failure at %d\n", index);
             } else {
                 index += res;
             }
+            if (res == 3) {
+                break;
+            }
+        }
+        if (i < 1) {
+            printf("Async read unsuccessfull\n");
         }
     }
     printf("Read %02x %02x %02x\n", data[0], data[1], data[2]);
