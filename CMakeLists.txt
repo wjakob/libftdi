@@ -5,7 +5,7 @@ set(MINOR_VERSION 4)
 set(PACKAGE libftdi1)
 set(VERSION_STRING ${MAJOR_VERSION}.${MINOR_VERSION})
 set(VERSION ${VERSION_STRING})
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # CMake
 if("${CMAKE_BUILD_TYPE}" STREQUAL "")
@@ -25,8 +25,10 @@ if(${CMAKE_BUILD_TYPE} STREQUAL Debug)
 endif(${CMAKE_BUILD_TYPE} STREQUAL Debug)
 
 # find libusb
-find_package ( USB1 REQUIRED )
-include_directories ( ${LIBUSB_INCLUDE_DIR} )
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+find_package ( LibUSB1 REQUIRED )
+include_directories ( ${LIBUSB1_INCLUDE_DIR} )
 
 # Find Boost
 if (FTDIPP OR BUILD_TESTS)
@@ -97,7 +99,7 @@ if ( WIN32 )
   set ( CPACK_NSIS_MODIFY_PATH             ON )
 endif ()
 
-set(CPACK_RESOURCE_FILE_LICENSE        ${CMAKE_SOURCE_DIR}/LICENSE)
+set(CPACK_RESOURCE_FILE_LICENSE        ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
 
 set(CPACK_SOURCE_GENERATOR             TGZ)
 set(CPACK_SOURCE_IGNORE_FILES          "\\\\.git;~$;build/")
@@ -112,26 +114,26 @@ endif ()
 set(ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${VERSION_STRING})
 add_custom_target(dist
     COMMAND git archive --prefix=${ARCHIVE_NAME}/ HEAD
-            | bzip2 > ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.bz2
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+            | bzip2 > ${CMAKE_CURRENT_BINARY_DIR}/${ARCHIVE_NAME}.tar.bz2
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 
 if ( DOCUMENTATION )
    find_package ( Doxygen REQUIRED)
 
    # Copy doxy.config.in
-   set(top_srcdir ${CMAKE_SOURCE_DIR})
-   configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_BINARY_DIR}/Doxyfile )
-   configure_file(${CMAKE_SOURCE_DIR}/doc/Doxyfile.xml.in ${CMAKE_BINARY_DIR}/Doxyfile.xml )
+   set(top_srcdir ${CMAKE_CURRENT_SOURCE_DIR})
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile )
+   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/doc/Doxyfile.xml.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile.xml )
 
    # Run doxygen
    add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/doc/html/index.html
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/doc
-    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_BINARY_DIR}/Doxyfile
+    OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/doc/html/index.html
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/doc
+    COMMAND ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     DEPENDS ${c_headers};${c_sources};${cpp_sources};${cpp_headers}
    )
 
-   add_custom_target(docs ALL DEPENDS ${CMAKE_BINARY_DIR}/doc/html/index.html)
+   add_custom_target(docs ALL DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/doc/html/index.html)
 endif ()
 
 add_subdirectory(src)
@@ -164,10 +166,10 @@ if(${WIN32})
    set(libdir      ${CMAKE_INSTALL_PREFIX}/bin)
 endif(${WIN32})
 
-configure_file(${CMAKE_SOURCE_DIR}/libftdi1.spec.in ${CMAKE_BINARY_DIR}/libftdi1.spec @ONLY)
-configure_file(${CMAKE_SOURCE_DIR}/libftdi1.pc.in ${CMAKE_BINARY_DIR}/libftdi1.pc @ONLY)
-configure_file(${CMAKE_SOURCE_DIR}/libftdipp1.pc.in ${CMAKE_BINARY_DIR}/libftdipp1.pc @ONLY)
-install(FILES ${CMAKE_BINARY_DIR}/libftdi1.pc ${CMAKE_BINARY_DIR}/libftdipp1.pc
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libftdi1.spec.in ${CMAKE_CURRENT_BINARY_DIR}/libftdi1.spec @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libftdi1.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libftdi1.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/libftdipp1.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libftdipp1.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libftdi1.pc ${CMAKE_CURRENT_BINARY_DIR}/libftdipp1.pc
         DESTINATION lib${LIB_SUFFIX}/pkgconfig)
 
 if (UNIX OR MINGW)
@@ -185,14 +187,14 @@ set ( LIBFTDI_INCLUDE_DIR ${includedir} )
 set ( LIBFTDI_INCLUDE_DIRS ${LIBFTDI_INCLUDE_DIR} )
 set ( LIBFTDI_LIBRARY ftdi1 )
 set ( LIBFTDI_LIBRARIES ${LIBFTDI_LIBRARY} )
-list ( APPEND LIBFTDI_LIBRARIES ${LIBUSB_LIBRARIES} )
+list ( APPEND LIBFTDI_LIBRARIES ${LIBUSB1_LIBRARIES} )
 set ( LIBFTDI_STATIC_LIBRARY ftdi1.a )
 set ( LIBFTDI_STATIC_LIBRARIES ${LIBFTDI_STATIC_LIBRARY} )
-list ( APPEND LIBFTDI_STATIC_LIBRARIES ${LIBUSB_LIBRARIES} )
+list ( APPEND LIBFTDI_STATIC_LIBRARIES ${LIBUSB1_LIBRARIES} )
 if ( FTDIPP )
   set ( LIBFTDIPP_LIBRARY ftdipp1 )
   set ( LIBFTDIPP_LIBRARIES ${LIBFTDIPP_LIBRARY} )
-  list ( APPEND LIBFTDIPP_LIBRARIES ${LIBUSB_LIBRARIES} )
+  list ( APPEND LIBFTDIPP_LIBRARIES ${LIBUSB1_LIBRARIES} )
 endif ()
 set ( LIBFTDI_LIBRARY_DIRS ${libdir} )
 set ( LIBFTDI_ROOT_DIR ${prefix} )
@@ -209,7 +211,7 @@ else ()
   include(CMakePackageConfigHelpers)
 
   configure_package_config_file (
-    cmake/LibFTDI1Config.cmake.in
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/LibFTDI1Config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/LibFTDI1Config.cmake
     INSTALL_DESTINATION ${LIBFTDI_CMAKE_CONFIG_DIR}
     PATH_VARS
@@ -238,13 +240,13 @@ install ( FILES
 
 include(CPack)
 
-message (STATUS "Summary of build options:
-
-  Build static libs: ${STATICLIBS}
-  Build C++ bindings: ${FTDIPP}
-  Build Python bindings: ${PYTHON_BINDINGS}
-  Build ftdi_eeprom: ${FTDI_EEPROM}
-  Build examples: ${EXAMPLES}
-  Build tests: ${BUILD_TESTS}
-  Build API documentation: ${DOCUMENTATION}
-")
+#message (STATUS "Summary of build options:
+#
+#  Build static libs: ${STATICLIBS}
+#  Build C++ bindings: ${FTDIPP}
+#  Build Python bindings: ${PYTHON_BINDINGS}
+#  Build ftdi_eeprom: ${FTDI_EEPROM}
+#  Build examples: ${EXAMPLES}
+#  Build tests: ${BUILD_TESTS}
+#  Build API documentation: ${DOCUMENTATION}
+#")

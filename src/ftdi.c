@@ -3372,7 +3372,7 @@ int ftdi_eeprom_build(struct ftdi_context *ftdi)
             i = 0x40;
         }
         if ((ftdi->type == TYPE_230X) && (i >=  0x40) && (i < 0x50)) {
-            uint16_t data;
+            uint16_t data = 0;
             if (ftdi_read_eeprom_location(ftdi, i, &data)) {
                 fprintf(stderr, "Reading Factory Configuration Data failed\n");
                 i = 0x50;

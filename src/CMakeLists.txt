@@ -3,17 +3,21 @@ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR}
                      ${CMAKE_CURRENT_SOURCE_DIR}
                      )
 
+if (UNIX)
+  add_compile_options(-Wno-sign-compare -Wno-missing-field-initializers)
+endif()
+
 # Version information
 set(SNAPSHOT_VERSION "unknown")
-execute_process(COMMAND git describe
-                OUTPUT_VARIABLE GIT_DESCRIBE_OUTPUT
-                RESULT_VARIABLE GIT_DESCRIBE_RESULT
-                OUTPUT_STRIP_TRAILING_WHITESPACE
-                )
-if(${GIT_DESCRIBE_RESULT} STREQUAL 0)
-  set(SNAPSHOT_VERSION ${GIT_DESCRIBE_OUTPUT})
-endif ()
-message(STATUS "Detected git snapshot version: ${SNAPSHOT_VERSION}")
+#execute_process(COMMAND git describe
+#                OUTPUT_VARIABLE GIT_DESCRIBE_OUTPUT
+#                RESULT_VARIABLE GIT_DESCRIBE_RESULT
+#                OUTPUT_STRIP_TRAILING_WHITESPACE
+#                )
+#if(${GIT_DESCRIBE_RESULT} STREQUAL 0)
+#  set(SNAPSHOT_VERSION ${GIT_DESCRIBE_OUTPUT})
+#endif ()
+#message(STATUS "Detected git snapshot version: ${SNAPSHOT_VERSION}")
 
 configure_file(ftdi_version_i.h.in "${CMAKE_CURRENT_BINARY_DIR}/ftdi_version_i.h" @ONLY)
 
@@ -30,7 +34,7 @@ set_target_properties ( ftdi1 PROPERTIES CLEAN_DIRECT_OUTPUT 1 )
 
 
 # Dependencies
-target_link_libraries(ftdi1 ${LIBUSB_LIBRARIES})
+target_link_libraries(ftdi1 PUBLIC ${LIBUSB1_LIBRARIES})
 
 install ( TARGETS ftdi1
           RUNTIME DESTINATION bin
@@ -40,7 +44,7 @@ install ( TARGETS ftdi1
 
 if ( STATICLIBS )
   add_library(ftdi1-static STATIC ${c_sources})
-  target_link_libraries(ftdi1-static ${LIBUSB_LIBRARIES})
+  target_link_libraries(ftdi1-static PUBLIC ${LIBUSB1_LIBRARIES})
   set_target_properties(ftdi1-static PROPERTIES OUTPUT_NAME "ftdi1")
   set_target_properties(ftdi1-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)
   install ( TARGETS ftdi1-static

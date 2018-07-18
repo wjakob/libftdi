@@ -51,3 +51,8 @@ CMakeFiles
 # Misc. binaries
 *.dylib
 opt
+
+LibFTDI1Config.cmake
+LibFTDI1ConfigVersion.cmake
+src/ftdi_version_i.h
+src/libftdi1.so.*
