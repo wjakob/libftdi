@@ -4,7 +4,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR}
                      )
 
 if (UNIX)
-  add_compile_options(-Wno-sign-compare -Wno-missing-field-initializers)
+  add_compile_options(-Wno-sign-compare -Wno-missing-field-initializers -Wno-implicit-fallthrough)
 endif()
 
 # Version information
@@ -51,6 +51,9 @@ if ( STATICLIBS )
             ARCHIVE DESTINATION lib${LIB_SUFFIX}
             COMPONENT staticlibs
           )
+  if (UNIX)
+    target_compile_options(ftdi1-static PRIVATE -fPIC)
+  endif()
 endif ()
 
 install ( FILES ${c_headers}
